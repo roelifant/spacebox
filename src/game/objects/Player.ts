@@ -76,7 +76,7 @@ export class Player extends Sprite implements IPhysics{
             }
         }
 
-        if(Keyboard.get('KeyD' || Keyboard.get('ArrowRight'))){
+        if(Keyboard.get('KeyD') || Keyboard.get('ArrowRight')){
             // right
             if(Math.abs(this.momentumX) < this.maxSpeed) {
                 this.momentumX -= this.acceleration;
