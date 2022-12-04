@@ -54,7 +54,7 @@ export class Player extends Sprite implements IPhysics{
     }
 
     public update(){
-        if(Keyboard.get('KeyS')){
+        if(Keyboard.get('KeyS') || Keyboard.get('ArrowDown')){
             // down
             if(Math.abs(this.momentumY) < this.maxSpeed) {
                 this.momentumY -= this.acceleration;
@@ -65,7 +65,7 @@ export class Player extends Sprite implements IPhysics{
             }
         }
 
-        if(Keyboard.get('KeyW')){
+        if(Keyboard.get('KeyW') || Keyboard.get('ArrowUp')){
             // up
             if(Math.abs(this.momentumY) < this.maxSpeed) {
                 this.momentumY += this.acceleration;
@@ -76,7 +76,7 @@ export class Player extends Sprite implements IPhysics{
             }
         }
 
-        if(Keyboard.get('KeyD')){
+        if(Keyboard.get('KeyD' || Keyboard.get('ArrowRight'))){
             // right
             if(Math.abs(this.momentumX) < this.maxSpeed) {
                 this.momentumX -= this.acceleration;
@@ -87,7 +87,7 @@ export class Player extends Sprite implements IPhysics{
             }
         }
 
-        if(Keyboard.get('KeyA')){
+        if(Keyboard.get('KeyA') || Keyboard.get('ArrowLeft')){
             // left
             if(Math.abs(this.momentumX) < this.maxSpeed) {
                 this.momentumX += this.acceleration;
