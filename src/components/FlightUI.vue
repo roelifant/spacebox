@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { Manager } from "../game/Manager";
 import {computed, Ref, ref, watch} from 'vue';
-import FlightUIService from '../game/services/FlightUIService';
+import GameStateService from '../game/services/GameStateService';
 
     const paused: Ref<boolean> = ref(false);
 
@@ -23,9 +23,7 @@ import FlightUIService from '../game/services/FlightUIService';
         }
     }
 
-    const fuelPercent = computed(() => Math.floor(FlightUIService.inventory.value.fuel / FlightUIService.inventory.value.maxFuel * 100));
-
-    setTimeout(() => console.log(FlightUIService.inventory.value.fuel), 5000);
+    const fuelPercent = computed(() => Math.floor(GameStateService.inventory.value.fuel / GameStateService.inventory.value.maxFuel * 100));
 </script>
 
 <template>
@@ -34,7 +32,7 @@ import FlightUIService from '../game/services/FlightUIService';
       <div class="w-full h-12 flex justify-between items-center px-1.5">
           <div class="w-4/12"/>
           <div class="w-4/12 p-1 flex justify-center self-start">
-            <div class="w-full border-2 border-white h-5 p-0.5">
+            <div class="w-full border-2 border-white h-4 p-0.5">
                 <div class="bg-orange-300 h-full transition-all" :class="'w-['+fuelPercent+'%]'" />
             </div>
           </div>
@@ -47,7 +45,7 @@ import FlightUIService from '../game/services/FlightUIService';
       <div class="w-full h-12 px-1.5">
           <div class="w-full flex justify-center items-center">
               <transition>
-                <p v-show="FlightUIService.canLand.value" class="bg-gray-600 text-gray-400 uppercase px-3 py-1 text-xs font-bold">
+                <p v-show="GameStateService.canLand.value" class="bg-gray-600 text-gray-400 uppercase px-3 py-1 text-xs font-bold">
                     Press <span class="text-white">Space</span> to land
                 </p>
               </transition>

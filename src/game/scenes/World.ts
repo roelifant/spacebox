@@ -10,7 +10,7 @@ import {IGameObject} from "../interfaces/IGameObject";
 import {Target} from "../objects/Target";
 import { WrappingBackground } from "../objects/WrappingBackground";
 import { Keyboard } from "../Keyboard";
-import FlightUIService from "../services/FlightUIService";
+import GameStateService from "../services/GameStateService";
 
 export class World extends Container implements IScene {
 
@@ -146,8 +146,8 @@ export class World extends Container implements IScene {
         }
 
         // sync flight UI
-        FlightUIService.inventory.value.fuel = this.player.inventory.fuel;
-        FlightUIService.inventory.value.maxFuel = this.player.inventory.maxFuel;
+        GameStateService.inventory.value.fuel = this.player.inventory.fuel;
+        GameStateService.inventory.value.maxFuel = this.player.inventory.maxFuel;
     }
 
     private track(target: DisplayObject){

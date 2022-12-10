@@ -7,6 +7,7 @@
   import FlightUI from './components/FlightUI.vue';
   import LoadUI from './components/LoadUI.vue';
   import PlanetUI from './components/PlanetUI.vue';
+  import GameOverUI from './components/GameOverUI.vue';
 
 
   onMounted(() => {
@@ -23,6 +24,7 @@
     <canvas id="pixi-canvas" />
   </div>
   <LoadUI/>
+  <GameOverUI/>
   <PlanetUI/>
   <FlightUI/>
 </template>

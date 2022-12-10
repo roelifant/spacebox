@@ -8,11 +8,10 @@ import {Vector} from "../utils/Vector";
 import {Target} from "./Target";
 import {IPhysics} from "../interfaces/IPhysics";
 import emitterSettings from "./../../assets/json/emitter.json";
-import FlightUIService from "../services/FlightUIService";
+import GameStateService from "../services/GameStateService";
 import PlanetUIService from "../services/PlanetUIService";
 import { Planet } from "./Planet";
 import { IGameObject } from "../interfaces/IGameObject";
-import {reactive} from 'vue';
 import Inventory from "../interfaces/Inventory";
 
 export class Player extends Sprite implements IPhysics{
@@ -135,7 +134,7 @@ export class Player extends Sprite implements IPhysics{
             this.latestPlanet = <Planet>planet;
             this.canLand = true;
         }, this);
-        FlightUIService.canLand.value = this.canLand;
+        GameStateService.canLand.value = this.canLand;
 
         if(Math.abs(this.momentumX) > this.maxSpeed){
             console.log('over max');
@@ -169,7 +168,9 @@ export class Player extends Sprite implements IPhysics{
         }
 
         if(this.inventory.fuel <= 0){
-            console.log('game over');
+            GameStateService.gameOver.value = true;
+            GameStateService.gameOverMessage.value = 'You ran out of fuel...';
+            Manager.pauseScene();
         }
 
         let angle = this.getAngle(this.momentumX * Manager.time, this.momentumY * Manager.time);

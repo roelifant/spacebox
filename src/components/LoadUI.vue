@@ -17,7 +17,7 @@ watch(() => LoadUIService.progress.value, () => {
 <template>
     <div
         class="
-            absolute top-0 left-0 z-90
+            absolute top-0 left-0 z-50
             w-full h-full
             pointer-events-none
             text-white bg-black
