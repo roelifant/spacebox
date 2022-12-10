@@ -31,6 +31,7 @@ export class Load extends Container implements IScene {
     private loaded(){
         console.log('loading complete');
         Manager.changeScene(new World());
+        Manager.loaded = true;
     }
 
     public update(){

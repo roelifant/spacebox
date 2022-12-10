@@ -11,6 +11,8 @@ export class Manager {
     private static loadingScene: IScene | null;
     private static globalTicker: Ticker;
 
+    public static loaded: boolean = false;
+
     public static get width(): number {
         return Math.max(document.documentElement.clientWidth, window.innerWidth || 0);
     }

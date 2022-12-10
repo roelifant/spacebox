@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { Manager } from "../game/Manager";
-import {computed, Ref, ref} from 'vue';
+import {computed, Ref, ref, watch} from 'vue';
 import FlightUIService from '../game/services/FlightUIService';
 
     const paused: Ref<boolean> = ref(false);
@@ -22,13 +22,25 @@ import FlightUIService from '../game/services/FlightUIService';
             Manager.pauseScene();
         }
     }
+
+    const fuelPercent = computed(() => Math.floor(FlightUIService.inventory.value.fuel / FlightUIService.inventory.value.maxFuel * 100));
+
+    setTimeout(() => console.log(FlightUIService.inventory.value.fuel), 5000);
 </script>
 
 <template>
   <div class="absolute top-0 left-0 w-full h-full pointer-events-none text-white flex flex-col justify-between">
       <!-- header -->
-      <div class="w-full h-12 flex justify-end items-center px-1.5">
-          <!-- <button @click="onPauseButton($event)" class="pointer-events-auto bg-gray-200 text-black font-bold uppercase px-3 py-1">{{pauseButtonText}}</button> -->
+      <div class="w-full h-12 flex justify-between items-center px-1.5">
+          <div class="w-4/12"/>
+          <div class="w-4/12 p-1 flex justify-center self-start">
+            <div class="w-full border-2 border-white h-5 p-0.5">
+                <div class="bg-orange-300 h-full transition-all" :class="'w-['+fuelPercent+'%]'" />
+            </div>
+          </div>
+          <div class="w-4/12">
+            <!-- <button @click="onPauseButton($event)" class="pointer-events-auto bg-gray-200 text-black font-bold uppercase px-3 py-1">{{pauseButtonText}}</button> -->
+          </div>
       </div>
 
       <!-- bottom -->

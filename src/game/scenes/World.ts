@@ -10,7 +10,7 @@ import {IGameObject} from "../interfaces/IGameObject";
 import {Target} from "../objects/Target";
 import { WrappingBackground } from "../objects/WrappingBackground";
 import { Keyboard } from "../Keyboard";
-
+import FlightUIService from "../services/FlightUIService";
 
 export class World extends Container implements IScene {
 
@@ -83,6 +83,7 @@ export class World extends Container implements IScene {
         let humble = new Planet('planet.humble', 0, 0);
         this.groups.get('planets')?.addChild(humble);
         this.objects.push(humble);
+        this.player.latestPlanet = humble;
 
         // set interactions
         this.on('pointertap', () => {
@@ -143,6 +144,10 @@ export class World extends Container implements IScene {
             // give parallax to all planets
             this.planetGroup.position.set(this.player.position.x * .4, this.player.position.y * .4);
         }
+
+        // sync flight UI
+        FlightUIService.inventory.value.fuel = this.player.inventory.fuel;
+        FlightUIService.inventory.value.maxFuel = this.player.inventory.maxFuel;
     }
 
     private track(target: DisplayObject){

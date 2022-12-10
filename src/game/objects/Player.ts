@@ -1,4 +1,4 @@
-import {Loader, Sprite} from "pixi.js";
+import {Sprite} from "pixi.js";
 import {Keyboard} from "../Keyboard";
 import {Manager} from "../Manager";
 import {Bullet} from "./Bullet";
@@ -12,6 +12,8 @@ import FlightUIService from "../services/FlightUIService";
 import PlanetUIService from "../services/PlanetUIService";
 import { Planet } from "./Planet";
 import { IGameObject } from "../interfaces/IGameObject";
+import {reactive} from 'vue';
+import Inventory from "../interfaces/Inventory";
 
 export class Player extends Sprite implements IPhysics{
 
@@ -26,7 +28,13 @@ export class Player extends Sprite implements IPhysics{
 
     public canLand: boolean = false;
     public landed: boolean = false;
-    private latestPlanet: Planet|null = null;
+    public latestPlanet: Planet|null = null;
+
+    public inventory: Inventory = {
+        fuel: 500.00,
+        maxFuel: 500,
+        money: 1000
+    };
 
     constructor(texture: string){
         super();
@@ -54,11 +62,14 @@ export class Player extends Sprite implements IPhysics{
     }
 
     public update(){
+        let accelerating = false;
+
         if(Keyboard.get('KeyS') || Keyboard.get('ArrowDown')){
             // down
             if(Math.abs(this.momentumY) < this.maxSpeed) {
                 this.momentumY -= this.acceleration;
             }
+            accelerating = true;
         } else {
             if(Math.abs(this.momentumY) > 0 && this.momentumY < 0){
                 this.momentumY += this.drag;
@@ -70,6 +81,7 @@ export class Player extends Sprite implements IPhysics{
             if(Math.abs(this.momentumY) < this.maxSpeed) {
                 this.momentumY += this.acceleration;
             }
+            accelerating = true;
         } else {
             if(Math.abs(this.momentumY) > 0 && this.momentumY > 0){
                 this.momentumY -= this.drag;
@@ -81,6 +93,7 @@ export class Player extends Sprite implements IPhysics{
             if(Math.abs(this.momentumX) < this.maxSpeed) {
                 this.momentumX -= this.acceleration;
             }
+            accelerating = true;
         } else {
             if(Math.abs(this.momentumX) > 0 && this.momentumX < 0){
                 this.momentumX += this.drag;
@@ -92,6 +105,7 @@ export class Player extends Sprite implements IPhysics{
             if(Math.abs(this.momentumX) < this.maxSpeed) {
                 this.momentumX += this.acceleration;
             }
+            accelerating = true;
         } else {
             if(Math.abs(this.momentumX) > 0 && this.momentumX > 0){
                 this.momentumX -= this.drag;
@@ -142,6 +156,21 @@ export class Player extends Sprite implements IPhysics{
 
         this.y = this.y - this.momentumY * Manager.time;
         this.x = this.x - this.momentumX * Manager.time;
+
+        // calculate fuel drain
+        if(accelerating){
+            this.inventory.fuel-= .01 * Manager.time;
+        }
+        if(this.momentumX > 0.01 || this.momentumY > 0.01){
+            this.inventory.fuel-= .01 * Manager.time;
+        }
+        if(this.momentumX > 0.03 || this.momentumY > 0.03){
+            this.inventory.fuel-= .01 * Manager.time;
+        }
+
+        if(this.inventory.fuel <= 0){
+            console.log('game over');
+        }
 
         let angle = this.getAngle(this.momentumX * Manager.time, this.momentumY * Manager.time);
         this.lastAngle = angle;

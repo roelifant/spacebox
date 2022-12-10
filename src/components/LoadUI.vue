@@ -28,7 +28,7 @@ watch(() => LoadUIService.progress.value, () => {
     >
         <div class="border-2 border-white w-6/12 h-6 p-0.5">
             <div
-                class="h-full bg-white"
+                class="h-full bg-white transition-all duration-300"
                 :class="'w-['+progress+'%]'"
             />
         </div>
