@@ -145,9 +145,12 @@ export class World extends Container implements IScene {
             this.planetGroup.position.set(this.player.position.x * .4, this.player.position.y * .4);
         }
 
-        // sync flight UI
-        GameStateService.inventory.value.fuel = this.player.inventory.fuel;
-        GameStateService.inventory.value.maxFuel = this.player.inventory.maxFuel;
+        // check game over conditions
+        if(GameStateService.inventory.value.fuel <= 0){
+            GameStateService.gameOver.value = true;
+            GameStateService.gameOverMessage.value = 'You ran out of fuel...';
+            Manager.pauseScene();
+        }
     }
 
     private track(target: DisplayObject){

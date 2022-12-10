@@ -12,7 +12,6 @@ import GameStateService from "../services/GameStateService";
 import PlanetUIService from "../services/PlanetUIService";
 import { Planet } from "./Planet";
 import { IGameObject } from "../interfaces/IGameObject";
-import Inventory from "../interfaces/Inventory";
 
 export class Player extends Sprite implements IPhysics{
 
@@ -28,12 +27,6 @@ export class Player extends Sprite implements IPhysics{
     public canLand: boolean = false;
     public landed: boolean = false;
     public latestPlanet: Planet|null = null;
-
-    public inventory: Inventory = {
-        fuel: 500.00,
-        maxFuel: 500,
-        money: 1000
-    };
 
     constructor(texture: string){
         super();
@@ -132,7 +125,7 @@ export class Player extends Sprite implements IPhysics{
         this.canLand = false;
         Manager.circleCollideWith(['planet'], (planet: IGameObject) => {
             this.latestPlanet = <Planet>planet;
-            this.canLand = true;
+            if(!GameStateService.gameOver.value)this.canLand = true;
         }, this);
         GameStateService.canLand.value = this.canLand;
 
@@ -158,19 +151,13 @@ export class Player extends Sprite implements IPhysics{
 
         // calculate fuel drain
         if(accelerating){
-            this.inventory.fuel-= .01 * Manager.time;
+            GameStateService.inventory.value.fuel-= .01 * Manager.time;
         }
         if(this.momentumX > 0.01 || this.momentumY > 0.01){
-            this.inventory.fuel-= .01 * Manager.time;
+            GameStateService.inventory.value.fuel-= .01 * Manager.time;
         }
         if(this.momentumX > 0.03 || this.momentumY > 0.03){
-            this.inventory.fuel-= .01 * Manager.time;
-        }
-
-        if(this.inventory.fuel <= 0){
-            GameStateService.gameOver.value = true;
-            GameStateService.gameOverMessage.value = 'You ran out of fuel...';
-            Manager.pauseScene();
+            GameStateService.inventory.value.fuel-= .01 * Manager.time;
         }
 
         let angle = this.getAngle(this.momentumX * Manager.time, this.momentumY * Manager.time);
@@ -202,6 +189,7 @@ export class Player extends Sprite implements IPhysics{
     public land(){
         if(!!this.latestPlanet){
             this.landed = true;
+            GameStateService.landed.value = true;
             PlanetUIService.show(this.latestPlanet);
             Manager.pauseScene();
         }
@@ -209,6 +197,7 @@ export class Player extends Sprite implements IPhysics{
 
     public takeOff(){
         this.landed = false;
+        GameStateService.landed.value = false;
         PlanetUIService.hide();
         Manager.continueScene();
     }
