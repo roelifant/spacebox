@@ -114,9 +114,7 @@ export class World extends Container implements IScene {
         /** keyboard events */
         Keyboard.registerEvent('KeyP', () => this.pauseTrigger());
         Keyboard.registerEvent('Space', () => {
-            console.log(this.player.canLand);
-            console.log(this.player.landed);
-            if(this.player.canLand){
+            if(this.player.canLand && !GameStateService.gameOver.value){
                 if(this.player.landed){
                     this.player.takeOff();
                 } else {
