@@ -12,6 +12,7 @@ import GameStateService from "../services/GameStateService";
 import PlanetUIService from "../services/PlanetUIService";
 import { Planet } from "./Planet";
 import { IGameObject } from "../interfaces/IGameObject";
+import { Asteroid } from "./Asteroid";
 
 export class Player extends Sprite implements IPhysics{
 
@@ -54,6 +55,10 @@ export class Player extends Sprite implements IPhysics{
     }
 
     public update(){
+
+        /**
+         *  Keypress inputs
+         */
         let accelerating = false;
 
         if(Keyboard.get('KeyS') || Keyboard.get('ArrowDown')){
@@ -104,6 +109,9 @@ export class Player extends Sprite implements IPhysics{
             }
         }
 
+        /**
+         *  Particles
+         */
         this.emitter.updateSpawnPos(this.x, this.y);
         if(new Vector(this.momentumX, this.momentumY).length < 0.1){
             this.emitter.emit = false;
@@ -118,17 +126,45 @@ export class Player extends Sprite implements IPhysics{
             this.emitter.frequency = 0.001;
         }
 
+        /**
+         *  Collisions
+         */
+
+        /**
+         *      Targets (TODO: remove this at some point)
+         */
         Manager.circleCollideWith(['target'], (target: Target) => {
             Manager.physicsBounce(this, target);
         }, this);
 
+        /**
+         *      Asteroids
+         */
+        let onAsteroid = false;
+        Manager.circleCollideWith(['asteroid'], (asteroid: Asteroid) => {
+            console.log('coliding with asteroid');
+            onAsteroid = true;
+            GameStateService.miningProgress.value += Manager.time;
+            if(GameStateService.miningProgress.value >= GameStateService.miningProgressLimit.value){
+                asteroid.mine();
+                GameStateService.miningProgress.value = 0;
+            }
+        }, this);
+        if(!onAsteroid){ GameStateService.miningProgress.value = 0}
+
+        /**
+         *      Planets
+         */
         this.canLand = false;
         Manager.circleCollideWith(['planet'], (planet: IGameObject) => {
             this.latestPlanet = <Planet>planet;
-            if(!GameStateService.gameOver.value)this.canLand = true;
+            if(!GameStateService.gameOver.value) this.canLand = true;
         }, this);
         GameStateService.canLand.value = this.canLand;
 
+        /**
+         *  Translate momentum into movement
+         */
         if(Math.abs(this.momentumX) > this.maxSpeed){
             console.log('over max');
             if(this.momentumX < 0){
@@ -149,7 +185,15 @@ export class Player extends Sprite implements IPhysics{
         this.y = this.y - this.momentumY * Manager.time;
         this.x = this.x - this.momentumX * Manager.time;
 
-        // calculate fuel drain
+        // calculate angle
+        let angle = this.getAngle(this.momentumX * Manager.time, this.momentumY * Manager.time);
+        this.lastAngle = angle;
+        this.angle = angle;
+
+
+        /**
+         *  Fuel drain
+         */ 
         if(accelerating){
             GameStateService.inventory.value.fuel-= .01 * Manager.time;
         }
@@ -159,11 +203,6 @@ export class Player extends Sprite implements IPhysics{
         if(this.momentumX > 0.03 || this.momentumY > 0.03){
             GameStateService.inventory.value.fuel-= .01 * Manager.time;
         }
-
-        let angle = this.getAngle(this.momentumX * Manager.time, this.momentumY * Manager.time);
-        this.lastAngle = angle;
-        // console.log(angle);
-        this.angle = angle;
     }
 
     private getAngle(velocityX: number, velocityY: number): number{

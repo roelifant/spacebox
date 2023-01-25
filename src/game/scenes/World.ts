@@ -36,8 +36,6 @@ export class World extends Container implements IScene {
         super();
         Manager.setLoadingScene(this);
 
-        console.log('World constructor');
-
         // background
         // this.background = new Background('sky');
         // this.addChild(this.background);
@@ -91,9 +89,15 @@ export class World extends Container implements IScene {
         this.player.latestPlanet = humble;
 
         // asteroids (temp)
-        let asteroid = new Asteroid(0, 0);
-        this.groups.get('asteroids')?.addChild(asteroid);
-        this.objects.push(asteroid);
+        let asteroid1 = new Asteroid(100, -100);
+        let asteroid2 = new Asteroid(-100, 100);
+        let asteroid3 = new Asteroid(50, 50);
+        this.groups.get('asteroids')?.addChild(asteroid1);
+        this.groups.get('asteroids')?.addChild(asteroid2);
+        this.groups.get('asteroids')?.addChild(asteroid3);
+        this.objects.push(asteroid1);
+        this.objects.push(asteroid2);
+        this.objects.push(asteroid3);
 
         // set interactions
         this.on('pointertap', () => {

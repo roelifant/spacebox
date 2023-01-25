@@ -1,6 +1,7 @@
 import { Sprite } from "pixi.js";
 import { IGameObject } from "../interfaces/IGameObject";
 import { Manager } from "../Manager";
+import GameStateService from "../services/GameStateService";
 
 export class Asteroid extends Sprite implements IGameObject {
 
@@ -50,5 +51,18 @@ export class Asteroid extends Sprite implements IGameObject {
         } else {
             this.angle += (Manager.time * this.spinSpeed);
         }
+    }
+
+    mine(){
+        GameStateService.minedMatter.value++;
+        if(GameStateService.minedMatter.value >= GameStateService.minedMatterLimit.value){
+            GameStateService.minedMatter.value = 0;
+            GameStateService.inventory.value.matter++;
+        }
+
+        console.log('You mined an asteroid!');
+        Manager.remove(this, 'asteroids');
+
+        
     }
 }
