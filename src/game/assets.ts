@@ -43,8 +43,8 @@ export const assets = [
 
     // asteroids
     {name: 'asteroid.1', url: asteroid1},
-    {name: 'asteroid.2', url: asteroid1},
-    {name: 'asteroid.3', url: asteroid1},
-    {name: 'asteroid.4', url: asteroid1},
-    {name: 'asteroid.5', url: asteroid1}
+    {name: 'asteroid.2', url: asteroid2},
+    {name: 'asteroid.3', url: asteroid3},
+    {name: 'asteroid.4', url: asteroid4},
+    {name: 'asteroid.5', url: asteroid5}
 ]

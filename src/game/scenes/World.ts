@@ -11,6 +11,7 @@ import {Target} from "../objects/Target";
 import { WrappingBackground } from "../objects/WrappingBackground";
 import { Keyboard } from "../Keyboard";
 import GameStateService from "../services/GameStateService";
+import { Asteroid } from "../objects/Asteroid";
 
 export class World extends Container implements IScene {
 
@@ -23,12 +24,11 @@ export class World extends Container implements IScene {
     public player: Player;
     public objects: Array<IGameObject> = [];
     public particles: ParticleContainer;
+    public asteroidGroup: Container;
     public groups: Map<string, Container> = new Map<string, Container>();
     private planetGroup: Container;
 
     private target: Target;
-    private target2: Target;
-    private target3: Target;
 
     public paused: boolean = false;
 
@@ -55,6 +55,11 @@ export class World extends Container implements IScene {
         // particles container
         this.particles = new ParticleContainer();
         this.addChild(this.particles);
+
+        // add asteroids Group
+        this.asteroidGroup = new Container();
+        this.addChild(this.asteroidGroup);
+        this.groups.set('asteroids', this.asteroidGroup);
 
         // add bullets group
         const bulletsGroup = new Container();
@@ -85,6 +90,11 @@ export class World extends Container implements IScene {
         this.objects.push(humble);
         this.player.latestPlanet = humble;
 
+        // asteroids (temp)
+        let asteroid = new Asteroid(0, 0);
+        this.groups.get('asteroids')?.addChild(asteroid);
+        this.objects.push(asteroid);
+
         // set interactions
         this.on('pointertap', () => {
             this.player.shoot(Mouse.x, Mouse.y);
@@ -97,21 +107,8 @@ export class World extends Container implements IScene {
         this.addChild(this.target);
         this.objects.push(this.target);
 
-        this.target2 = new Target();
-        this.target2.x = 200;
-        this.target2.y = 200;
-        this.addChild(this.target2);
-        this.objects.push(this.target2);
-
-        this.target3 = new Target();
-        this.target3.x = 400;
-        this.target3.y = 200;
-        this.addChild(this.target3);
-        this.objects.push(this.target3);
-
         /** keyboard events */
         Keyboard.registerEvent('KeyP', () => this.pauseTrigger());
-        /** keyboard events */
         Keyboard.registerEvent('Space', () => {
             console.log(this.player.canLand);
             console.log(this.player.landed);
