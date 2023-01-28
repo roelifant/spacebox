@@ -4,6 +4,9 @@ import { computed, ComputedRef, Ref, ref, watch } from "vue";
 import GameStateService from "../game/services/GameStateService";
 import "vue3-circle-progress/dist/circle-progress.css";
 import CircleProgress from "vue3-circle-progress";
+import PlanetUIService from '../game/services/PlanetUIService';
+import Market from '../game/services/Market';
+import {Cargo} from '../game/enums/Cargo';
 
 const paused: Ref<boolean> = ref(false);
 
@@ -55,6 +58,8 @@ watch(
     setTimeout(() => (minedChunksMessage.value = false), 1500);
   }
 );
+
+const matterSellingPrice: ComputedRef = computed(() => Market.getSellingPrice(Cargo.Matter));
 </script>
 
 <template>
@@ -192,11 +197,34 @@ watch(
               items-center
               w-16
               py-1
+              relative
             "
             :class="{'jump-animation': gainedMatter}"
-            v-if="GameStateService.inventory.value.matter > 0"
           >
-            <p class="font-bold">
+            <p
+                class="text-center uppercase font-bold absolute -top-7 opacity-0 transition-opacity"
+                :class="{'opacity-100': PlanetUIService.shown.value && GameStateService.inventory.value.matter > 0}"
+            >§ {{matterSellingPrice}}</p>
+            <div class="
+                absolute top-0 left-0
+                w-full h-full
+                bg-black border-2
+                opacity-0 hover:opacity-100 transition-opacity
+                flex flex-col justify-center
+                cursor-pointer
+            "
+            @click="Market.sell(Cargo.Matter)"
+            :class="{'pointer-events-auto': PlanetUIService.shown.value && GameStateService.inventory.value.matter > 0}"
+            >
+                <p class="font-bold text-center">
+                {{ GameStateService.inventory.value.matter }}
+                </p>
+                <p class="text-center uppercase text-xs font-bold">sell</p>
+            </div>
+            <p
+                class="font-bold"
+                :class="{'opacity-70': GameStateService.inventory.value.matter <= 0}"
+            >
               {{ GameStateService.inventory.value.matter }}
             </p>
             <p class="text-xs uppercase">Matter</p>
