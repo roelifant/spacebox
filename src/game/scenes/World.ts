@@ -89,9 +89,9 @@ export class World extends Container implements IScene {
         this.player.latestPlanet = humble;
 
         // asteroids (temp)
-        let asteroid1 = new Asteroid(100, -100);
-        let asteroid2 = new Asteroid(-100, 100);
-        let asteroid3 = new Asteroid(50, 50);
+        let asteroid1 = new Asteroid(100, -1600);
+        let asteroid2 = new Asteroid(-100, -1700);
+        let asteroid3 = new Asteroid(50, -1750);
         this.groups.get('asteroids')?.addChild(asteroid1);
         this.groups.get('asteroids')?.addChild(asteroid2);
         this.groups.get('asteroids')?.addChild(asteroid3);

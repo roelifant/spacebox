@@ -31,7 +31,7 @@ import PlanetUIService from '../game/services/PlanetUIService';
         'opacity-0': !PlanetUIService.shown.value,
         'pointer-events-auto': PlanetUIService.shown.value
     }">
-        <div class="mx-auto w-8/12 mt-20">
+        <div class="mx-auto w-10/12 mt-20">
             <h1 class="text-2xl font-bold mb-2">Planet name</h1>
             <div class="w-full border-2 p-4 flex justify-between">
                 <div class="w-4/12">

@@ -1,7 +1,9 @@
 <script setup lang="ts">
 import { Manager } from "../game/Manager";
-import { computed, Ref, ref, watch } from "vue";
+import { computed, ComputedRef, Ref, ref, watch } from "vue";
 import GameStateService from "../game/services/GameStateService";
+import "vue3-circle-progress/dist/circle-progress.css";
+import CircleProgress from "vue3-circle-progress";
 
 const paused: Ref<boolean> = ref(false);
 
@@ -22,7 +24,7 @@ const onPauseButton = (e: Event) => {
   }
 };
 
-const fuelPercent = computed(() => {
+const fuelPercent: ComputedRef = computed(() => {
   if (GameStateService.inventory.value.fuel < 0) return 0;
   else
     return Math.floor(
@@ -31,6 +33,23 @@ const fuelPercent = computed(() => {
         100
     );
 });
+
+const miningPercent: ComputedRef = computed(() => {
+  return (
+    (GameStateService.miningProgress.value /
+      GameStateService.miningProgressLimit.value) *
+    100
+  );
+});
+
+const minedChunksMessage: Ref<boolean> = ref(false);
+watch(
+  () => GameStateService.minedMatter.value,
+  () => {
+    minedChunksMessage.value = true;
+    setTimeout(() => (minedChunksMessage.value = false), 1500);
+  }
+);
 </script>
 
 <template>
@@ -86,11 +105,37 @@ const fuelPercent = computed(() => {
       </div>
     </div>
 
+    <!-- mining progress bar -->
+    <div
+      class="
+        opacity-0
+        transition-opacity
+        duration-300
+        absolute
+        top-[50%]
+        left-[50%]
+        translate-x-[-50%] translate-y-[-50%]
+      "
+      :class="{ 'opacity-50': miningPercent > 0 }"
+    >
+      <circle-progress
+        :percent="miningPercent"
+        class="m-auto"
+        empty-color="transparent"
+        fill-color="white"
+        :border-width="4"
+        :size="120"
+        :transition="0"
+      />
+    </div>
+
     <!-- bottom -->
     <div class="w-full px-1.5">
+      <!-- Messages -->
       <div class="w-full flex justify-center items-center">
+
         <transition>
-          <p
+            <p
             v-show="
               GameStateService.canLand.value && !GameStateService.landed.value
             "
@@ -106,15 +151,43 @@ const fuelPercent = computed(() => {
           >
             Press <span class="text-white">Space</span> to land
           </p>
+          </transition>
+
+        <transition>
+          <p
+            v-show="
+              minedChunksMessage
+            "
+            class="
+              text-gray-400
+              uppercase
+              px-3
+              py-1
+              text-xs
+              font-bold
+            "
+          >
+            You mined 1 matter chunk
+          </p>
         </transition>
       </div>
+
       <div class="w-full flex justify-between items-end h-16 pb-1">
         <div class="w-3/12">
-          {{ GameStateService.minedMatter.value }}/{{GameStateService.minedMatterLimit.value}}
+          {{ GameStateService.minedMatter.value }}/{{
+            GameStateService.minedMatterLimit.value
+          }}
         </div>
         <div class="w-6/12 flex justify-center items-center">
           <div
-            class="bg-gray-400 flex flex-col justify-center items-center w-16 py-1"
+            class="
+              bg-gray-400
+              flex flex-col
+              justify-center
+              items-center
+              w-16
+              py-1
+            "
             v-if="GameStateService.inventory.value.matter > 0"
           >
             <p class="font-bold">
@@ -123,7 +196,7 @@ const fuelPercent = computed(() => {
             <p class="text-xs uppercase">Matter</p>
           </div>
         </div>
-        <div class="w-3/12"/>
+        <div class="w-3/12" />
       </div>
     </div>
   </div>
