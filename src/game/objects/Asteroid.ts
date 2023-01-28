@@ -43,6 +43,8 @@ export class Asteroid extends Sprite implements IGameObject {
         }
         this.spinSpeed = (1+Math.random()) / 100;
         this.angle = Math.floor(360 * Math.random());
+
+        Manager.scene?.groups.get('asteroids')?.addChild(this);
     }
 
     update(){
@@ -62,7 +64,5 @@ export class Asteroid extends Sprite implements IGameObject {
 
         console.log('You mined an asteroid!');
         Manager.remove(this, 'asteroids');
-
-        
     }
 }

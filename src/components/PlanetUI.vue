@@ -16,7 +16,7 @@ import PlanetUIService from '../game/services/PlanetUIService';
 
         if(!canBuyFuel.value) return;
         GameStateService.inventory.value.money -= 25;
-        GameStateService.gainFuel(100);
+        GameStateService.gainFuel(125);
     }
 </script>
 

@@ -43,9 +43,14 @@ const miningPercent: ComputedRef = computed(() => {
 });
 
 const minedChunksMessage: Ref<boolean> = ref(false);
+const gainedMatter: Ref<boolean> = ref(false);
 watch(
   () => GameStateService.minedMatter.value,
   () => {
+      if(GameStateService.minedMatter.value === 0){
+          gainedMatter.value = true;
+          setTimeout(() => (gainedMatter.value = false), 1000);
+      }
     minedChunksMessage.value = true;
     setTimeout(() => (minedChunksMessage.value = false), 1500);
   }
@@ -174,9 +179,9 @@ watch(
 
       <div class="w-full flex justify-between items-end h-16 pb-1">
         <div class="w-3/12">
-          {{ GameStateService.minedMatter.value }}/{{
-            GameStateService.minedMatterLimit.value
-          }}
+            <div class="py-1 px-2 w-fit bg-gray-400 font-bold text-sm" :class="{'jump-animation': minedChunksMessage}">
+                {{ GameStateService.minedMatter.value }}/{{GameStateService.minedMatterLimit.value}}
+            </div>
         </div>
         <div class="w-6/12 flex justify-center items-center">
           <div
@@ -188,6 +193,7 @@ watch(
               w-16
               py-1
             "
+            :class="{'jump-animation': gainedMatter}"
             v-if="GameStateService.inventory.value.matter > 0"
           >
             <p class="font-bold">
@@ -211,5 +217,15 @@ watch(
 .v-enter-from,
 .v-leave-to {
   opacity: 0;
+}
+
+.jump-animation {
+    animation: jump .3s linear;
+}
+
+@keyframes jump {
+    0%{transform: translateY(0)}
+    50%{transform: translateY(-10px)}
+    100%{transform: translateY(0)}
 }
 </style>

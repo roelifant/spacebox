@@ -89,15 +89,12 @@ export class World extends Container implements IScene {
         this.player.latestPlanet = humble;
 
         // asteroids (temp)
-        let asteroid1 = new Asteroid(100, -1600);
-        let asteroid2 = new Asteroid(-100, -1700);
-        let asteroid3 = new Asteroid(50, -1750);
-        this.groups.get('asteroids')?.addChild(asteroid1);
-        this.groups.get('asteroids')?.addChild(asteroid2);
-        this.groups.get('asteroids')?.addChild(asteroid3);
-        this.objects.push(asteroid1);
-        this.objects.push(asteroid2);
-        this.objects.push(asteroid3);
+        for (let i = 0; i < 20; i++) {
+            let x = 500 - Math.floor(Math.random() * 1000);
+            let y = 500 - Math.floor(Math.random() * 1000);
+            let asteroid = new Asteroid(0 + x, -1500 + y);
+            this.objects.push(asteroid);
+        }
 
         // set interactions
         this.on('pointertap', () => {
