@@ -2,7 +2,7 @@
 
 ## Demos
 
-temporary url: `https://roelifant.com/brol/spacebox/`.
+[Latest build](https://roelifant.com/brol/spacebox/)
 
 ## Stack
 - typescript
