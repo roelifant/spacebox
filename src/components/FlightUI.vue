@@ -7,6 +7,8 @@ import CircleProgress from "vue3-circle-progress";
 import PlanetUIService from '../game/services/PlanetUIService';
 import Market from '../game/services/Market';
 import {Cargo} from '../game/enums/Cargo';
+import Inventory from '../game/interfaces/Inventory';
+import gsap from 'gsap';
 
 const paused: Ref<boolean> = ref(false);
 
@@ -60,6 +62,17 @@ watch(
 );
 
 const matterSellingPrice: ComputedRef = computed(() => Market.getSellingPrice(Cargo.Matter));
+
+const moneyPopAnimation: Ref<boolean> = ref(false);
+const onSell = (cargo: Cargo) => {
+    Market.sell(cargo);
+    moneyPopAnimation.value = true;
+    setTimeout(() => moneyPopAnimation.value = false, 300);
+}
+const animatedMoney: Ref<any> = ref({value: GameStateService.inventory.value.money});
+watch(() => GameStateService.inventory.value.money, (currentMoney) => {
+    gsap.to(animatedMoney.value, {value: currentMoney, duration: .5});
+});
 </script>
 
 <template>
@@ -106,10 +119,10 @@ const matterSellingPrice: ComputedRef = computed(() => Market.getSellingPrice(Ca
         </div>
       </div>
       <div class="w-4/12 flex justify-end py-1">
-        <p class="px-2 font-bold text-lgl bg-gray-600 text-gray-400">
+        <p class="px-2 font-bold text-lgl bg-gray-600 text-gray-400" :class="{'pop-animation': moneyPopAnimation}">
           §
           <span class="text-white">{{
-            GameStateService.inventory.value.money
+            Math.floor(animatedMoney.value)
           }}</span>
         </p>
       </div>
@@ -198,22 +211,24 @@ const matterSellingPrice: ComputedRef = computed(() => Market.getSellingPrice(Ca
               w-16
               py-1
               relative
+              group
             "
             :class="{'jump-animation': gainedMatter}"
           >
             <p
                 class="text-center uppercase font-bold absolute -top-7 opacity-0 transition-opacity"
-                :class="{'opacity-100': PlanetUIService.shown.value && GameStateService.inventory.value.matter > 0}"
+                :class="{'opacity-70 group-hover:opacity-100': PlanetUIService.shown.value && GameStateService.inventory.value.matter > 0}"
             >§ {{matterSellingPrice}}</p>
             <div class="
                 absolute top-0 left-0
                 w-full h-full
                 bg-black border-2
-                opacity-0 hover:opacity-100 transition-opacity
+                opacity-0 hover:opacity-100 transition-all
                 flex flex-col justify-center
                 cursor-pointer
+                group-active:bg-gray-800
             "
-            @click="Market.sell(Cargo.Matter)"
+            @click="onSell(Cargo.Matter)"
             :class="{'pointer-events-auto': PlanetUIService.shown.value && GameStateService.inventory.value.matter > 0}"
             >
                 <p class="font-bold text-center">
@@ -248,12 +263,22 @@ const matterSellingPrice: ComputedRef = computed(() => Market.getSellingPrice(Ca
 }
 
 .jump-animation {
-    animation: jump .3s linear;
+    animation: jump .3s ease;
+}
+
+.pop-animation{
+    animation: pop .3s ease;
 }
 
 @keyframes jump {
     0%{transform: translateY(0)}
     50%{transform: translateY(-10px)}
     100%{transform: translateY(0)}
+}
+
+@keyframes pop {
+    0%{transform: scale(1)}
+    33%{transform: scale(1.1)}
+    100%{transform: scale(1)}
 }
 </style>
