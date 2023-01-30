@@ -12,6 +12,7 @@ import { WrappingBackground } from "../objects/WrappingBackground";
 import { Keyboard } from "../Keyboard";
 import GameStateService from "../services/GameStateService";
 import { Asteroid } from "../objects/Asteroid";
+import { Cargo } from "../enums/Cargo";
 
 export class World extends Container implements IScene {
 
@@ -83,7 +84,28 @@ export class World extends Container implements IScene {
         this.groups.get('stars')?.addChild(this.stars4);
 
         // planets
-        let humble = new Planet('planet.humble', 0, 0);
+        let humble = new Planet({
+            name: 'Humble',
+            info: 'Located within an asteroid cloud, planet humble is a simple freezing ocean world with glaciers and seas. It\'s inhabbited by only some scientists and terraformers. Because while the planet has abundant mass and water, settlers are still looking for efficient ways to beat the cold. All that is subject to change though. Ever since the surrounding skies were discovered by asteroid miners, these humble beginnings have started to look more promising.',
+            asset: 'planet.humble',
+            x: 0,
+            y: 0,
+            needs: [Cargo.Energy, Cargo.Technology],
+            products: [
+                {
+                    type: Cargo.Matter,
+                    max: 5
+                },
+                {
+                    type: Cargo.Water,
+                    max: 5
+                },
+                {
+                    type: Cargo.Minerals,
+                    max: 3
+                }
+            ]
+        });
         this.groups.get('planets')?.addChild(humble);
         this.objects.push(humble);
         this.player.latestPlanet = humble;

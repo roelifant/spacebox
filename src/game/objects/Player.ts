@@ -158,6 +158,7 @@ export class Player extends Sprite implements IPhysics{
         this.canLand = false;
         Manager.circleCollideWith(['planet'], (planet: IGameObject) => {
             this.latestPlanet = <Planet>planet;
+            GameStateService.planet.value = this.latestPlanet;
             if(!GameStateService.gameOver.value) this.canLand = true;
         }, this);
         GameStateService.canLand.value = this.canLand;

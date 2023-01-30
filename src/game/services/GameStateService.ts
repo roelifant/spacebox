@@ -1,6 +1,7 @@
 import { Ref, ref } from "vue";
 
 import Inventory from "../interfaces/Inventory";
+import { Planet } from "../objects/Planet";
 
 class GameStateService {
     public canLand: Ref<boolean> = ref(false);
@@ -11,6 +12,8 @@ class GameStateService {
         money: 300,
         matter: 0
     });
+
+    public planet: Ref<Planet|null> = ref(null);
 
     public gameOver: Ref<boolean> = ref(false);
     public gameOverMessage: Ref<string> = ref('');

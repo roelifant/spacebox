@@ -1,7 +1,7 @@
 <script setup lang="ts">
     import { computed } from 'vue';
-import GameStateService from '../game/services/GameStateService';
-import PlanetUIService from '../game/services/PlanetUIService';
+    import GameStateService from '../game/services/GameStateService';
+    import PlanetUIService from '../game/services/PlanetUIService';
 
     const onTakeOffButtonClick = (e: Event) => {
         (<HTMLButtonElement>e.target).blur();
@@ -32,11 +32,11 @@ import PlanetUIService from '../game/services/PlanetUIService';
         'pointer-events-auto': PlanetUIService.shown.value
     }">
         <div class="mx-auto w-10/12 mt-20">
-            <h1 class="text-2xl font-bold mb-2">Planet name</h1>
+            <h1 class="text-2xl font-bold mb-2">{{ PlanetUIService.planet?.name}}</h1>
             <div class="w-full border-2 p-4 flex justify-between">
                 <div class="w-4/12">
                     <h2 class="text-lg font-bold">Info</h2>
-                    <p class="text-sm">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+                    <p class="text-sm">{{ PlanetUIService.planet?.info}}</p>
                 </div>
                 <div class="w-8/12 pl-12">
                     <h2 class="text-lg font-bold">Shop</h2>
