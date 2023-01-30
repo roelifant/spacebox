@@ -86,7 +86,7 @@ export class World extends Container implements IScene {
         // planets
         let humble = new Planet({
             name: 'Humble',
-            info: 'Located within an asteroid cloud, planet humble is a simple freezing ocean world with glaciers and seas. It\'s inhabbited by only some scientists and terraformers. Because while the planet has abundant mass and water, settlers are still looking for efficient ways to beat the cold. All that is subject to change though. Ever since the surrounding skies were discovered by asteroid miners, these humble beginnings have started to look more promising.',
+            info: 'Located within an asteroid cloud, planet humble is a simple freezing ocean world with glaciers and seas. It\'s inhabbited by only some scientists and terraformers. Because while the planet has abundant mass and water, its settlers are still looking for efficient ways to beat the cold. All that is subject to change though. Ever since the surrounding skies were discovered by asteroid miners, these humble beginnings have started to look more promising.',
             asset: 'planet.humble',
             x: 0,
             y: 0,

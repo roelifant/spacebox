@@ -13,8 +13,6 @@ class GameStateService {
         matter: 0
     });
 
-    public planet: Ref<Planet|null> = ref(null);
-
     public gameOver: Ref<boolean> = ref(false);
     public gameOverMessage: Ref<string> = ref('');
 
