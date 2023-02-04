@@ -1,18 +1,15 @@
 import { Cargo } from "../enums/Cargo";
 import GameStateService from "./GameStateService";
 import Inventory from "../interfaces/Inventory";
-import { Player } from "../objects/Player";
-import { Manager } from "../Manager";
 import PlanetUIService from "./PlanetUIService";
 import { PlanetCargoInventory } from "../interfaces/PlanetConfig";
-import { Planet } from "../objects/Planet";
 
 class Market {
     public low: Cargo;
     public high: Cargo;
 
     constructor(){
-        this.low = Cargo.Matter;
+        this.low = Cargo.Water;
         this.high = Cargo.Energy;
     }
 
@@ -45,8 +42,9 @@ class Market {
             price += 10;
         }
 
-        // TODO: tweak price according to planet demands & needs here
+        // tweak price according to planet demands & needs here
         if(PlanetUIService.planet){
+
             if(PlanetUIService.planet.needs.includes(cargo)){
                 switch (cargo) {
                     case Cargo.Minerals:
@@ -66,29 +64,21 @@ class Market {
                 }
             }
 
-            let inProducts = false;
-            PlanetUIService.planet.products.forEach(product => {
-                if(product.type === cargo){
-                    inProducts = true;
-                }
-            });
-
-            if(inProducts){
-                console.log('in products');
+            if(this.cargoInPlanetProducts(cargo)){
                 switch (cargo) {
                     case Cargo.Minerals:
                     case Cargo.Fauna:
                     case Cargo.Fungi:
                     case Cargo.Energy:
-                        price -= 10;
+                        price -= 15;
                         break;
                     case Cargo.Weaponry:
                     case Cargo.Wisdom:
                     case Cargo.Technology:
-                        price -= 5;
+                        price -= 10;
                         break;
                     default:
-                        price -= 15;
+                        price -= 20;
                         break;
                 }
             }
@@ -108,9 +98,19 @@ class Market {
             price += 10;
         }
 
-        // TODO: tweak price according to planet demands & needs here
-
         return price;
+    }
+
+    private cargoInPlanetProducts(cargo: Cargo) {
+        let inProducts = false;
+        if(PlanetUIService.planet){
+            PlanetUIService.planet.products.forEach(product => {
+                if(product.type === cargo){
+                    inProducts = true;
+                }
+            });
+        }
+        return inProducts;
     }
 
     canBuy(cargo: Cargo) {
@@ -129,6 +129,11 @@ class Market {
 
         GameStateService.inventory.value[inventoryKey]--;
         GameStateService.inventory.value.money += price;
+
+        if(PlanetUIService.planet && this.cargoInPlanetProducts(cargo)) {
+            PlanetUIService.cargoInventory.value[cargo]++;
+            // PlanetUIService.updateCargo();
+        }
     }
 
     buy(cargo: Cargo){
@@ -137,8 +142,8 @@ class Market {
         GameStateService.inventory.value.money -= this.getBuyingPrice(cargo);
         GameStateService.inventory.value[cargo as keyof Inventory]++;
         if(PlanetUIService.planet){
-            PlanetUIService.planet.cargoInventory[cargo as keyof PlanetCargoInventory]--;
             PlanetUIService.cargoInventory.value[cargo]--;
+            // PlanetUIService.updateCargo();
         }
     }
 }

@@ -22,8 +22,14 @@ class PlanetUIService {
 
     show(planet: Planet){
         this.planet = planet;
-        this.cargoInventory.value = planet.cargoInventory;
+        this.updateCargo();
         this.shown.value = true;
+    }
+
+    updateCargo(){
+        if(this.planet){
+            this.cargoInventory.value = this.planet.cargoInventory;
+        }
     }
 
     hide(){

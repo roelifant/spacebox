@@ -98,7 +98,7 @@ export class World extends Container implements IScene {
                 },
                 {
                     type: Cargo.Water,
-                    max: 5
+                    max: 8
                 },
                 {
                     type: Cargo.Minerals,
@@ -109,6 +109,31 @@ export class World extends Container implements IScene {
         this.groups.get('planets')?.addChild(humble);
         this.objects.push(humble);
         this.player.latestPlanet = humble;
+
+        let mycen = new Planet({
+            name: 'Mycen',
+            info: 'Lorem ipsum.',
+            asset: 'planet.mycen',
+            x: 2000,
+            y: -5000,
+            needs: [Cargo.Matter, Cargo.Minerals],
+            products: [
+                {
+                    type: Cargo.Fungi,
+                    max: 8
+                },
+                {
+                    type: Cargo.Fauna,
+                    max: 3
+                },
+                {
+                    type: Cargo.Flora,
+                    max: 2
+                }
+            ]
+        });
+        this.groups.get('planets')?.addChild(mycen);
+        this.objects.push(mycen);
 
         // asteroids (temp)
         for (let i = 0; i < 20; i++) {

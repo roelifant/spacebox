@@ -3,7 +3,7 @@
     import GameStateService from '../game/services/GameStateService';
     import PlanetUIService from '../game/services/PlanetUIService';
     import Market from '../game/services/Market';
-import { Cargo } from '../game/enums/Cargo';
+    import { Cargo } from '../game/enums/Cargo';
 
     const onTakeOffButtonClick = (e: Event) => {
         (<HTMLButtonElement>e.target).blur();
