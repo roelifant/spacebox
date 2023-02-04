@@ -13,6 +13,7 @@ import PlanetUIService from "../services/PlanetUIService";
 import { Planet } from "./Planet";
 import { IGameObject } from "../interfaces/IGameObject";
 import { Asteroid } from "./Asteroid";
+import { World } from "../scenes/World";
 
 export class Player extends Sprite implements IPhysics{
 
@@ -28,6 +29,7 @@ export class Player extends Sprite implements IPhysics{
     public canLand: boolean = false;
     public landed: boolean = false;
     public latestPlanet: Planet|null = null;
+    public respawnPoint: Vector|null = null;
 
     constructor(texture: string){
         super();
@@ -55,6 +57,8 @@ export class Player extends Sprite implements IPhysics{
     }
 
     public update(){
+
+        const world: World = <World>Manager.scene;
 
         /**
          *  Keypress inputs
@@ -157,8 +161,17 @@ export class Player extends Sprite implements IPhysics{
          */
         this.canLand = false;
         Manager.circleCollideWith(['planet'], (planet: IGameObject) => {
+
+
             this.latestPlanet = <Planet>planet;
+
+            this.respawnPoint = new Vector(
+                this.latestPlanet.x + world.planetGroup.x,
+                this.latestPlanet.y + world.planetGroup.y
+            );
+
             if(!GameStateService.gameOver.value) this.canLand = true;
+
         }, this);
         GameStateService.canLand.value = this.canLand;
 
@@ -239,5 +252,32 @@ export class Player extends Sprite implements IPhysics{
         GameStateService.landed.value = false;
         PlanetUIService.hide();
         Manager.continueScene();
+    }
+
+    public teleport(x: number, y: number, keepMomentum: boolean = true){
+        
+        if(!keepMomentum){
+            this.momentumX = 0;
+            this.momentumY = 0;
+        }
+        
+        const oldX = this.x;
+        const oldY = this.y;
+        this.x = x;
+        this.y = y;
+            
+        if((oldX - x) < 0){
+            Manager.scene.x -= (oldX - x);
+        } else {
+            Manager.scene.x += (oldX - x);
+        }
+
+        if((oldY - y) < 0){
+            Manager.scene.y -= (oldY - y);
+        } else {
+            Manager.scene.y += (oldY - y);
+        }
+
+        console.log(x, y);
     }
 }

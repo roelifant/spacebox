@@ -27,7 +27,7 @@ export class World extends Container implements IScene {
     public particles: ParticleContainer;
     public asteroidGroup: Container;
     public groups: Map<string, Container> = new Map<string, Container>();
-    private planetGroup: Container;
+    public planetGroup: Container;
 
     private target: Target;
 
@@ -185,7 +185,7 @@ export class World extends Container implements IScene {
             this.track(this.player);
 
             // give parallax to all planets
-            this.planetGroup.position.set(this.player.position.x * .4, this.player.position.y * .4);
+            this.setPlanetParallax();
         }
 
         // check game over conditions
@@ -196,10 +196,14 @@ export class World extends Container implements IScene {
         }
     }
 
+    public setPlanetParallax(x: number = this.player.position.x, y: number = this.player.position.y){
+        this.planetGroup.position.set(x * .4, y * .4);
+    }
+
     private track(target: DisplayObject){
         // get position of center of screen
-        let stageXHalf = Manager.width/2;
-        let stageYHalf = Manager.height/2;
+        const stageXHalf = Manager.width/2;
+        const stageYHalf = Manager.height/2;
 
         // get player position in stage
         let {x, y} = target.getGlobalPosition();
@@ -207,6 +211,8 @@ export class World extends Container implements IScene {
         // move this scene the right amount so the player stays centered
         let xDiff = x - stageXHalf;
         let yDiff = y - stageYHalf;
+
+        // console.log(target.getGlobalPosition());
 
         if(x > 0){
             this.x = this.x - xDiff;
@@ -219,6 +225,8 @@ export class World extends Container implements IScene {
         } else {
             this.y = this.y + yDiff;
         }
+
+        // console.log(this.x, this.y);
     }
 
     public resize(width: number, height: number){

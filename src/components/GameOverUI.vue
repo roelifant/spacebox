@@ -3,6 +3,7 @@ import { Manager } from "../game/Manager";
 import {computed, Ref, ref} from 'vue';
 import GameStateService from '../game/services/GameStateService';
 
+const respawn = () => GameStateService.respawn();
 </script>
 
 <template>
@@ -13,7 +14,7 @@ import GameStateService from '../game/services/GameStateService';
             <p class="uppercase font-bold text-3xl text-center">Game over</p>
             <p class="text-center">{{GameStateService.gameOverMessage.value}}</p>
             <div class="w-full flex justify-center">
-                <button class="border-2 border-white uppercase font-bold text-sm py-1 px-2 transition-color duration-300 hover:text-red-600 hover:bg-white">Respawn</button>
+                <button @click="respawn" class="border-2 border-white uppercase font-bold text-sm py-1 px-2 transition-color duration-300 hover:text-red-600 hover:bg-white">Respawn</button>
             </div>
         </div>
     </div>
