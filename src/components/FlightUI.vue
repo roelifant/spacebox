@@ -7,8 +7,8 @@ import CircleProgress from "vue3-circle-progress";
 import PlanetUIService from '../game/services/PlanetUIService';
 import Market from '../game/services/Market';
 import {Cargo} from '../game/enums/Cargo';
-import Inventory from '../game/interfaces/Inventory';
 import gsap from 'gsap';
+import { Planet } from "../game/objects/Planet";
 
 const paused: Ref<boolean> = ref(false);
 
@@ -61,8 +61,18 @@ watch(
   }
 );
 
-const matterSellingPrice: ComputedRef = computed(() => Market.getSellingPrice(Cargo.Matter));
-const waterSellingPrice: ComputedRef = computed(() => Market.getSellingPrice(Cargo.Water));
+
+const matterSellingPrice: Ref = ref(Market.getSellingPrice(Cargo.Matter));
+const waterSellingPrice: Ref = ref(Market.getSellingPrice(Cargo.Water));
+const floraSellingPrice: Ref = ref(Market.getSellingPrice(Cargo.Flora));
+
+watch(() => PlanetUIService.shown.value, () => {
+  if(PlanetUIService.shown.value){
+    matterSellingPrice.value = Market.getSellingPrice(Cargo.Matter);
+    waterSellingPrice.value = Market.getSellingPrice(Cargo.Water);
+    floraSellingPrice.value = Market.getSellingPrice(Cargo.Flora);
+  }
+})
 
 const moneyPopAnimation: Ref<boolean> = ref(false);
 const onSell = (cargo: Cargo) => {
@@ -260,7 +270,6 @@ watch(() => GameStateService.inventory.value.money, (currentMoney) => {
               relative
               group
             "
-            :class="{'jump-animation': gainedWater}"
           >
             <p
                 class="text-center uppercase font-bold absolute -top-7 opacity-0 transition-opacity"
@@ -308,7 +317,7 @@ watch(() => GameStateService.inventory.value.money, (currentMoney) => {
             <p
                 class="text-center uppercase font-bold absolute -top-7 opacity-0 transition-opacity"
                 :class="{'opacity-70 group-hover:opacity-100': PlanetUIService.shown.value && GameStateService.inventory.value.flora > 0}"
-            >§ {{waterSellingPrice}}</p>
+            >§ {{floraSellingPrice}}</p>
             <div class="
                 absolute top-0 left-0
                 w-full h-full
