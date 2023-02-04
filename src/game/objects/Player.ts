@@ -20,8 +20,7 @@ export class Player extends Sprite implements IPhysics{
     public maxSpeed: number;
     public acceleration: number;
     public drag: number;
-    public momentumX: number;
-    public momentumY: number;
+    public momentum: Vector;
     public collisionWeight: number = 3;
     private lastAngle: number;
     private emitter: Emitter;
@@ -35,8 +34,7 @@ export class Player extends Sprite implements IPhysics{
         super();
 
         this.maxSpeed = .5;
-        this.momentumX = 0;
-        this.momentumY = 0;
+        this.momentum = new Vector(0, 0);
         this.acceleration = 0.005;
         this.drag = 0.001;
         this.lastAngle = 0;
@@ -67,49 +65,49 @@ export class Player extends Sprite implements IPhysics{
 
         if(Keyboard.get('KeyS') || Keyboard.get('ArrowDown')){
             // down
-            if(Math.abs(this.momentumY) < this.maxSpeed) {
-                this.momentumY -= this.acceleration;
+            if(Math.abs(this.momentum.y) < this.maxSpeed) {
+                this.momentum.y -= this.acceleration;
             }
             accelerating = true;
         } else {
-            if(Math.abs(this.momentumY) > 0 && this.momentumY < 0){
-                this.momentumY += this.drag;
+            if(Math.abs(this.momentum.y) > 0 && this.momentum.y < 0){
+                this.momentum.y += this.drag;
             }
         }
 
         if(Keyboard.get('KeyW') || Keyboard.get('ArrowUp')){
             // up
-            if(Math.abs(this.momentumY) < this.maxSpeed) {
-                this.momentumY += this.acceleration;
+            if(Math.abs(this.momentum.y) < this.maxSpeed) {
+                this.momentum.y += this.acceleration;
             }
             accelerating = true;
         } else {
-            if(Math.abs(this.momentumY) > 0 && this.momentumY > 0){
-                this.momentumY -= this.drag;
+            if(Math.abs(this.momentum.y) > 0 && this.momentum.y > 0){
+                this.momentum.y -= this.drag;
             }
         }
 
         if(Keyboard.get('KeyD') || Keyboard.get('ArrowRight')){
             // right
-            if(Math.abs(this.momentumX) < this.maxSpeed) {
-                this.momentumX -= this.acceleration;
+            if(Math.abs(this.momentum.x) < this.maxSpeed) {
+                this.momentum.x -= this.acceleration;
             }
             accelerating = true;
         } else {
-            if(Math.abs(this.momentumX) > 0 && this.momentumX < 0){
-                this.momentumX += this.drag;
+            if(Math.abs(this.momentum.x) > 0 && this.momentum.x < 0){
+                this.momentum.x += this.drag;
             }
         }
 
         if(Keyboard.get('KeyA') || Keyboard.get('ArrowLeft')){
             // left
-            if(Math.abs(this.momentumX) < this.maxSpeed) {
-                this.momentumX += this.acceleration;
+            if(Math.abs(this.momentum.x) < this.maxSpeed) {
+                this.momentum.x += this.acceleration;
             }
             accelerating = true;
         } else {
-            if(Math.abs(this.momentumX) > 0 && this.momentumX > 0){
-                this.momentumX -= this.drag;
+            if(Math.abs(this.momentum.x) > 0 && this.momentum.x > 0){
+                this.momentum.x -= this.drag;
             }
         }
 
@@ -117,12 +115,12 @@ export class Player extends Sprite implements IPhysics{
          *  Particles
          */
         this.emitter.updateSpawnPos(this.x, this.y);
-        if(new Vector(this.momentumX, this.momentumY).length < 0.1){
+        if(new Vector(this.momentum.x, this.momentum.y).length < 0.1){
             this.emitter.emit = false;
-        } else if(new Vector(this.momentumX, this.momentumY).length < 0.3) {
+        } else if(new Vector(this.momentum.x, this.momentum.y).length < 0.3) {
             this.emitter.emit = true;
             this.emitter.frequency = 0.01;
-        } else if(new Vector(this.momentumX, this.momentumY).length < 0.7) {
+        } else if(new Vector(this.momentum.x, this.momentum.y).length < 0.7) {
             this.emitter.emit = true;
             this.emitter.frequency = 0.005;
         } else {
@@ -178,28 +176,17 @@ export class Player extends Sprite implements IPhysics{
         /**
          *  Translate momentum into movement
          */
-        if(Math.abs(this.momentumX) > this.maxSpeed){
+        console.log(this.momentum.length);
+        if(this.momentum.length > this.maxSpeed){
             console.log('over max');
-            if(this.momentumX < 0){
-                this.momentumX = -this.maxSpeed;
-            } else {
-                this.momentumX = this.maxSpeed;
-            }
-        }
-        if(Math.abs(this.momentumY) > this.maxSpeed){
-            console.log('over max');
-            if(this.momentumY < 0){
-                this.momentumY = -this.maxSpeed;
-            } else {
-                this.momentumY = this.maxSpeed;
-            }
+            this.momentum = this.momentum.normalize().scale(this.maxSpeed);
         }
 
-        this.y = this.y - this.momentumY * Manager.time;
-        this.x = this.x - this.momentumX * Manager.time;
+        this.y = this.y - this.momentum.y * Manager.time;
+        this.x = this.x - this.momentum.x * Manager.time;
 
         // calculate angle
-        let angle = this.getAngle(this.momentumX * Manager.time, this.momentumY * Manager.time);
+        let angle = this.getAngle(this.momentum.x * Manager.time, this.momentum.y * Manager.time);
         this.lastAngle = angle;
         this.angle = angle;
 
@@ -210,10 +197,10 @@ export class Player extends Sprite implements IPhysics{
         if(accelerating){
             GameStateService.inventory.value.fuel-= .01 * Manager.time;
         }
-        if(this.momentumX > 0.01 || this.momentumY > 0.01){
+        if(this.momentum.x > 0.01 || this.momentum.y > 0.01){
             GameStateService.inventory.value.fuel-= .01 * Manager.time;
         }
-        if(this.momentumX > 0.03 || this.momentumY > 0.03){
+        if(this.momentum.x > 0.03 || this.momentum.y > 0.03){
             GameStateService.inventory.value.fuel-= .01 * Manager.time;
         }
     }
@@ -224,7 +211,7 @@ export class Player extends Sprite implements IPhysics{
     }
 
     public shoot(x: number, y: number){
-        let bullet = new Bullet(x, y, this.momentumX, this.momentumY);
+        let bullet = new Bullet(x, y, this.momentum.x, this.momentum.y);
         Manager.add(bullet, 'bullets');
         bullet.x = this.x;
         bullet.y = this.y;
@@ -257,8 +244,8 @@ export class Player extends Sprite implements IPhysics{
     public teleport(x: number, y: number, keepMomentum: boolean = true){
         
         if(!keepMomentum){
-            this.momentumX = 0;
-            this.momentumY = 0;
+            this.momentum.x = 0;
+            this.momentum.y = 0;
         }
         
         const oldX = this.x;

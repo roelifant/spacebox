@@ -2,14 +2,14 @@ import {Loader, Sprite, Texture} from "pixi.js";
 import {IGameObject} from "../interfaces/IGameObject";
 import {Manager} from "../Manager";
 import {IPhysics} from "../interfaces/IPhysics";
+import { Vector } from "../utils/Vector";
 
 export class Target extends Sprite implements IGameObject, IPhysics {
 
     public maxSpeed: number = 1;
     public acceleration: number = 0.005;
     public drag: number = 0.002;
-    public momentumX: number = 0;
-    public momentumY: number = 0;
+    public momentum: Vector = new Vector(0,0);
     public collisionWeight: number = 1;
     public tags: Array<string> = ['target'];
 
@@ -37,37 +37,37 @@ export class Target extends Sprite implements IGameObject, IPhysics {
             console.log(bullet);
         }, this);
 
-        if(Math.abs(this.momentumY) > 0 && this.momentumY < 0){
-            this.momentumY += this.drag;
+        if(Math.abs(this.momentum.y) > 0 && this.momentum.y < 0){
+            this.momentum.y += this.drag;
         }
-        if(Math.abs(this.momentumY) > 0 && this.momentumY > 0){
-            this.momentumY -= this.drag;
+        if(Math.abs(this.momentum.y) > 0 && this.momentum.y > 0){
+            this.momentum.y -= this.drag;
         }
-        if(Math.abs(this.momentumX) > 0 && this.momentumX < 0){
-            this.momentumX += this.drag;
+        if(Math.abs(this.momentum.x) > 0 && this.momentum.x < 0){
+            this.momentum.x += this.drag;
         }
-        if(Math.abs(this.momentumX) > 0 && this.momentumX > 0){
-            this.momentumX -= this.drag;
+        if(Math.abs(this.momentum.x) > 0 && this.momentum.x > 0){
+            this.momentum.x -= this.drag;
         }
 
-        if(Math.abs(this.momentumX) > this.maxSpeed){
+        if(Math.abs(this.momentum.x) > this.maxSpeed){
             console.log('over max');
-            if(this.momentumX < 0){
-                this.momentumX = -this.maxSpeed;
+            if(this.momentum.x < 0){
+                this.momentum.x = -this.maxSpeed;
             } else {
-                this.momentumX = this.maxSpeed;
+                this.momentum.x = this.maxSpeed;
             }
         }
-        if(Math.abs(this.momentumY) > this.maxSpeed){
+        if(Math.abs(this.momentum.y) > this.maxSpeed){
             console.log('over max');
-            if(this.momentumY < 0){
-                this.momentumY = -this.maxSpeed;
+            if(this.momentum.y < 0){
+                this.momentum.y = -this.maxSpeed;
             } else {
-                this.momentumY = this.maxSpeed;
+                this.momentum.y = this.maxSpeed;
             }
         }
-        this.y = this.y - this.momentumY * Manager.time;
-        this.x = this.x - this.momentumX * Manager.time;
+        this.y = this.y - this.momentum.y * Manager.time;
+        this.x = this.x - this.momentum.x * Manager.time;
 
         // Manager.circleCollideWith(['target'], (target: Target) => {d
     }

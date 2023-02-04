@@ -260,8 +260,8 @@ export class Manager {
         );
 
         const vRelativeVelocity = new Point(
-            obj2.momentumX - obj1.momentumX,
-            obj2.momentumY - obj1.momentumY,
+            obj2.momentum.x - obj1.momentum.x,
+            obj2.momentum.y - obj1.momentum.y,
         );
 
         const speed = vRelativeVelocity.x * vCollisionNorm.x
@@ -273,11 +273,11 @@ export class Manager {
         console.log(impulse * vCollisionNorm.x);
         console.log(impulse * vCollisionNorm.y)
 
-        obj2.momentumX += -impulse * vCollisionNorm.x;
-        obj2.momentumY += -impulse * vCollisionNorm.y;
+        obj2.momentum.x += -impulse * vCollisionNorm.x;
+        obj2.momentum.y += -impulse * vCollisionNorm.y;
 
-        obj1.momentumX += targetImpulse * vCollisionNorm.x;
-        obj1.momentumY += targetImpulse * vCollisionNorm.y;
+        obj1.momentum.x += targetImpulse * vCollisionNorm.x;
+        obj1.momentum.y += targetImpulse * vCollisionNorm.y;
     }
 
     public static pauseScene(){
