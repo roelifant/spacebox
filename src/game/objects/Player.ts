@@ -174,22 +174,24 @@ export class Player extends Sprite implements IPhysics{
         GameStateService.canLand.value = this.canLand;
 
         /**
-         *  Translate momentum into movement
+         * Throttle momentum
          */
-        console.log(this.momentum.length);
         if(this.momentum.length > this.maxSpeed){
-            console.log('over max');
             this.momentum = this.momentum.normalize().scale(this.maxSpeed);
         }
 
+        /**
+         *  Translate momentum into movement
+         */
         this.y = this.y - this.momentum.y * Manager.time;
         this.x = this.x - this.momentum.x * Manager.time;
 
         // calculate angle
-        let angle = this.getAngle(this.momentum.x * Manager.time, this.momentum.y * Manager.time);
-        this.lastAngle = angle;
-        this.angle = angle;
-
+        if(this.momentum.length > 0.03) {
+            let angle = this.getAngle(this.momentum.x * Manager.time, this.momentum.y * Manager.time);
+            this.lastAngle = angle;
+            this.angle = angle;
+        }
 
         /**
          *  Fuel drain
@@ -197,10 +199,10 @@ export class Player extends Sprite implements IPhysics{
         if(accelerating){
             GameStateService.inventory.value.fuel-= .01 * Manager.time;
         }
-        if(this.momentum.x > 0.01 || this.momentum.y > 0.01){
+        if(this.momentum.length > 0.01){
             GameStateService.inventory.value.fuel-= .01 * Manager.time;
         }
-        if(this.momentum.x > 0.03 || this.momentum.y > 0.03){
+        if(this.momentum.length > 0.03){
             GameStateService.inventory.value.fuel-= .01 * Manager.time;
         }
     }
