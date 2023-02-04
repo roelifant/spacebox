@@ -1,7 +1,6 @@
 import { Ref, ref } from "vue";
 
 import Inventory from "../interfaces/Inventory";
-import { Planet } from "../objects/Planet";
 
 class GameStateService {
     public canLand: Ref<boolean> = ref(false);
@@ -10,7 +9,9 @@ class GameStateService {
         fuel: 750.00,
         maxFuel: 750,
         money: 300,
-        matter: 0
+        matter: 3,
+        water: 2,
+        flora: 1,
     });
 
     public gameOver: Ref<boolean> = ref(false);

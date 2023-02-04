@@ -62,6 +62,7 @@ watch(
 );
 
 const matterSellingPrice: ComputedRef = computed(() => Market.getSellingPrice(Cargo.Matter));
+const waterSellingPrice: ComputedRef = computed(() => Market.getSellingPrice(Cargo.Water));
 
 const moneyPopAnimation: Ref<boolean> = ref(false);
 const onSell = (cargo: Cargo) => {
@@ -182,7 +183,7 @@ watch(() => GameStateService.inventory.value.money, (currentMoney) => {
               minedChunksMessage
             "
             class="
-              text-gray-400
+              text-gray-300
               uppercase
               px-3
               py-1
@@ -201,7 +202,9 @@ watch(() => GameStateService.inventory.value.money, (currentMoney) => {
                 {{ GameStateService.minedMatter.value }}/{{GameStateService.minedMatterLimit.value}}
             </div>
         </div>
-        <div class="w-6/12 flex justify-center items-center">
+        <div class="w-6/12 flex justify-center items-center gap-2">
+
+          <!-- Matter -->
           <div
             class="
               bg-gray-400
@@ -244,6 +247,94 @@ watch(() => GameStateService.inventory.value.money, (currentMoney) => {
             </p>
             <p class="text-xs uppercase">Matter</p>
           </div>
+
+          <!-- Water -->
+          <div
+            class="
+              bg-blue-300
+              flex flex-col
+              justify-center
+              items-center
+              w-16
+              py-1
+              relative
+              group
+            "
+            :class="{'jump-animation': gainedWater}"
+          >
+            <p
+                class="text-center uppercase font-bold absolute -top-7 opacity-0 transition-opacity"
+                :class="{'opacity-70 group-hover:opacity-100': PlanetUIService.shown.value && GameStateService.inventory.value.water > 0}"
+            >§ {{waterSellingPrice}}</p>
+            <div class="
+                absolute top-0 left-0
+                w-full h-full
+                bg-black border-2
+                opacity-0 hover:opacity-100 transition-all
+                flex flex-col justify-center
+                cursor-pointer
+                group-active:bg-gray-800
+            "
+            @click="onSell(Cargo.Water)"
+            :class="{'pointer-events-auto': PlanetUIService.shown.value && GameStateService.inventory.value.water > 0}"
+            >
+                <p class="font-bold text-center">
+                {{ GameStateService.inventory.value.water }}
+                </p>
+                <p class="text-center uppercase text-xs font-bold">sell</p>
+            </div>
+            <p
+                class="font-bold"
+                :class="{'opacity-70': GameStateService.inventory.value.water <= 0}"
+            >
+              {{ GameStateService.inventory.value.water }}
+            </p>
+            <p class="text-xs uppercase">Water</p>
+          </div>
+
+          <!-- Flora -->
+          <div
+            class="
+              bg-green-400
+              flex flex-col
+              justify-center
+              items-center
+              w-16
+              py-1
+              relative
+              group
+            "
+          >
+            <p
+                class="text-center uppercase font-bold absolute -top-7 opacity-0 transition-opacity"
+                :class="{'opacity-70 group-hover:opacity-100': PlanetUIService.shown.value && GameStateService.inventory.value.flora > 0}"
+            >§ {{waterSellingPrice}}</p>
+            <div class="
+                absolute top-0 left-0
+                w-full h-full
+                bg-black border-2
+                opacity-0 hover:opacity-100 transition-all
+                flex flex-col justify-center
+                cursor-pointer
+                group-active:bg-gray-800
+            "
+            @click="onSell(Cargo.Flora)"
+            :class="{'pointer-events-auto': PlanetUIService.shown.value && GameStateService.inventory.value.flora > 0}"
+            >
+                <p class="font-bold text-center">
+                {{ GameStateService.inventory.value.flora }}
+                </p>
+                <p class="text-center uppercase text-xs font-bold">sell</p>
+            </div>
+            <p
+                class="font-bold"
+                :class="{'opacity-70': GameStateService.inventory.value.flora <= 0}"
+            >
+              {{ GameStateService.inventory.value.flora }}
+            </p>
+            <p class="text-xs uppercase">Flora</p>
+          </div>
+
         </div>
         <div class="w-3/12" />
       </div>

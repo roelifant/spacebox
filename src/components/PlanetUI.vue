@@ -1,7 +1,9 @@
 <script setup lang="ts">
-    import { computed } from 'vue';
+    import { computed, ComputedRef } from 'vue';
     import GameStateService from '../game/services/GameStateService';
     import PlanetUIService from '../game/services/PlanetUIService';
+    import Market from '../game/services/Market';
+import { Cargo } from '../game/enums/Cargo';
 
     const onTakeOffButtonClick = (e: Event) => {
         (<HTMLButtonElement>e.target).blur();
@@ -18,6 +20,24 @@
         GameStateService.inventory.value.money -= 25;
         GameStateService.gainFuel(150);
     }
+
+
+    const buyCargo = (e: Event, cargo: Cargo) => {
+        (<HTMLButtonElement>e.target).blur();
+
+        Market.buy(cargo);
+    }
+
+    const selling = computed(() => {
+        const raw = [...Object.entries(PlanetUIService.cargoInventory.value)];
+        let selling: Array<any> = [];
+        raw.forEach(entry => {
+            if(entry[1] > 0){
+                selling.push({key: entry[0], count: entry[1]});
+            }
+        });
+        return selling;
+    });
 </script>
 
 <template>
@@ -41,8 +61,8 @@
                 <div class="w-8/12 pl-12">
                     <h2 class="text-lg font-bold">Shop</h2>
                     <h3 class="text-md">Essentials:</h3>
-                    <div class="flex w-full justify-between gap-2 p-4">
-                        <div class="p-2 border-2 flex flex-col justify-between items-center w-28 gap-2">
+                    <div class="flex w-full gap-4 p-4">
+                        <div class="p-2 border-2 flex flex-col justify-between items-center w-28 gap-1">
                             <p class="font-bold">Fuel</p>
                             <p class="text-sm">§ 25</p>
                             <button @click="buyFuel($event)" :disabled="!canBuyFuel"
@@ -60,6 +80,27 @@
                         </div>
                     </div>
                     <h3 class="text-md">Cargo:</h3>
+                    <div class="flex w-full gap-4 p-4">
+                        <div
+                            class="p-2 border-2 flex flex-col justify-between items-center w-28 gap-2"
+                            v-for="cargo in selling" :key="cargo.key"
+                        >
+                            <p><span class="font-bold">{{cargo.key}}</span> ({{cargo.count}})</p>
+                            <p class="text-sm">§ {{ Market.getBuyingPrice(cargo.key) }}</p>
+                            <button @click="buyCargo($event, cargo.key)" :disabled="!Market.canBuy(cargo.key)"
+                                class="
+                                    border-2
+                                    text-white
+                                    uppercase text-sm font-bold
+                                    px-2 py-1 transition-colors
+                                " :class="{
+                                    'cursor-pointer opacity-100 hover:bg-white hover:text-black': Market.canBuy(cargo.key),
+                                    'opacity-50 hover:bg-transparent hover:text-white': !Market.canBuy(cargo.key)
+                                    }">
+                                buy
+                            </button>
+                        </div>
+                    </div>
                     <h3 class="text-md">Upgrades:</h3>
                 </div>
             </div>

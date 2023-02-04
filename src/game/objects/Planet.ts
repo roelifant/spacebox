@@ -1,4 +1,5 @@
 import { Sprite } from "pixi.js";
+import { ref, Ref } from "vue";
 import { Cargo } from "../enums/Cargo";
 import { IGameObject } from "../interfaces/IGameObject";
 import PlanetConfig, { CargoProduct, PlanetCargoInventory } from "../interfaces/PlanetConfig";
@@ -18,7 +19,7 @@ export class Planet extends Sprite implements IGameObject {
         matter: 0,
         water: 0,
         flora: 0,
-        mineral: 0,
+        minerals: 0,
         fauna: 0,
         fungi: 0,
         energy: 0,

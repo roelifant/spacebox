@@ -9,7 +9,7 @@ export interface PlanetCargoInventory {
     matter: number,
     water: number,
     flora: number,
-    mineral: number,
+    minerals: number,
     fauna: number,
     fungi: number,
     energy: number,

@@ -1,7 +1,10 @@
 import { Cargo } from "../enums/Cargo";
-import { Planet } from "../objects/Planet";
 import GameStateService from "./GameStateService";
 import Inventory from "../interfaces/Inventory";
+import { Player } from "../objects/Player";
+import { Manager } from "../Manager";
+import PlanetUIService from "./PlanetUIService";
+import { PlanetCargoInventory } from "../interfaces/PlanetConfig";
 
 class Market {
     public low: Cargo;
@@ -53,6 +56,10 @@ class Market {
         return price;
     }
 
+    canBuy(cargo: Cargo) {
+        return this.getBuyingPrice(cargo) <= GameStateService.inventory.value.money;
+    }
+
     sell(cargo: Cargo){
         const price: number = this.getSellingPrice(cargo);
 
@@ -65,6 +72,17 @@ class Market {
 
         GameStateService.inventory.value[inventoryKey]--;
         GameStateService.inventory.value.money += price;
+    }
+
+    buy(cargo: Cargo){
+        if(!this.canBuy(cargo)) return;
+
+        GameStateService.inventory.value.money -= this.getBuyingPrice(cargo);
+        GameStateService.inventory.value[cargo as keyof Inventory]++;
+        if(PlanetUIService.planet){
+            PlanetUIService.planet.cargoInventory[cargo as keyof PlanetCargoInventory]--;
+            PlanetUIService.cargoInventory.value[cargo]--;
+        }
     }
 }
 
