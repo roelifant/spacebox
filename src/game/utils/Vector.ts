@@ -39,14 +39,14 @@ export class Vector {
     }
 
     add(vector: Vector) {
-        let { components } = vector;
+        const { components } = vector;
         return new Vector(
             ...components.map((component, index) => this.components[index] + component)
         )
     }
 
     subtract(vector: Vector) {
-        let { components } = vector;
+        const { components } = vector;
         return new Vector(
             ...components.map((component, index) => this.components[index] - component)
         )
@@ -71,7 +71,7 @@ export class Vector {
      */
     dot(vector: Vector): number {
         if (this.components.length !== vector.components.length) {
-            throw Error("Vectors must have the same amount of components!")
+            throw Error("Vectors must have the same amount of components!");
         }
         let res = 0;
         this.components.forEach((component: number, index: number) => {

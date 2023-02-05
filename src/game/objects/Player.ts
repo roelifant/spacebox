@@ -63,51 +63,65 @@ export class Player extends Sprite implements IPhysics{
          */
         let accelerating = false;
 
-        if(Keyboard.get('KeyS') || Keyboard.get('ArrowDown')){
-            // down
-            if(Math.abs(this.momentum.y) < this.maxSpeed) {
-                this.momentum.y -= this.acceleration;
-            }
-            accelerating = true;
-        } else {
-            if(Math.abs(this.momentum.y) > 0 && this.momentum.y < 0){
-                this.momentum.y += this.drag;
-            }
-        }
+        if(Keyboard.get('Space') && this.momentum.length > 0){
+            // breaking
 
-        if(Keyboard.get('KeyW') || Keyboard.get('ArrowUp')){
-            // up
-            if(Math.abs(this.momentum.y) < this.maxSpeed) {
-                this.momentum.y += this.acceleration;
-            }
-            accelerating = true;
-        } else {
-            if(Math.abs(this.momentum.y) > 0 && this.momentum.y > 0){
-                this.momentum.y -= this.drag;
-            }
-        }
+            const slowDownVector = this.momentum.normalize().scale(this.maxSpeed).divide(50);
 
-        if(Keyboard.get('KeyD') || Keyboard.get('ArrowRight')){
-            // right
-            if(Math.abs(this.momentum.x) < this.maxSpeed) {
-                this.momentum.x -= this.acceleration;
-            }
-            accelerating = true;
-        } else {
-            if(Math.abs(this.momentum.x) > 0 && this.momentum.x < 0){
-                this.momentum.x += this.drag;
-            }
-        }
+            this.momentum = this.momentum.subtract(slowDownVector);
 
-        if(Keyboard.get('KeyA') || Keyboard.get('ArrowLeft')){
-            // left
-            if(Math.abs(this.momentum.x) < this.maxSpeed) {
-                this.momentum.x += this.acceleration;
+            if(this.momentum.length < 0.01){
+                this.momentum.x = 0;
+                this.momentum.y = 0;
             }
-            accelerating = true;
+
         } else {
-            if(Math.abs(this.momentum.x) > 0 && this.momentum.x > 0){
-                this.momentum.x -= this.drag;
+            if(Keyboard.get('KeyS') || Keyboard.get('ArrowDown')){
+                // down
+                if(Math.abs(this.momentum.y) < this.maxSpeed) {
+                    this.momentum.y -= this.acceleration;
+                }
+                accelerating = true;
+            } else {
+                if(Math.abs(this.momentum.y) > 0 && this.momentum.y < 0){
+                    this.momentum.y += this.drag;
+                }
+            }
+    
+            if(Keyboard.get('KeyW') || Keyboard.get('ArrowUp')){
+                // up
+                if(Math.abs(this.momentum.y) < this.maxSpeed) {
+                    this.momentum.y += this.acceleration;
+                }
+                accelerating = true;
+            } else {
+                if(Math.abs(this.momentum.y) > 0 && this.momentum.y > 0){
+                    this.momentum.y -= this.drag;
+                }
+            }
+    
+            if(Keyboard.get('KeyD') || Keyboard.get('ArrowRight')){
+                // right
+                if(Math.abs(this.momentum.x) < this.maxSpeed) {
+                    this.momentum.x -= this.acceleration;
+                }
+                accelerating = true;
+            } else {
+                if(Math.abs(this.momentum.x) > 0 && this.momentum.x < 0){
+                    this.momentum.x += this.drag;
+                }
+            }
+    
+            if(Keyboard.get('KeyA') || Keyboard.get('ArrowLeft')){
+                // left
+                if(Math.abs(this.momentum.x) < this.maxSpeed) {
+                    this.momentum.x += this.acceleration;
+                }
+                accelerating = true;
+            } else {
+                if(Math.abs(this.momentum.x) > 0 && this.momentum.x > 0){
+                    this.momentum.x -= this.drag;
+                }
             }
         }
 
@@ -183,8 +197,10 @@ export class Player extends Sprite implements IPhysics{
         /**
          *  Translate momentum into movement
          */
-        this.y = this.y - this.momentum.y * Manager.time;
-        this.x = this.x - this.momentum.x * Manager.time;
+        this.y = this.y - (this.momentum.y * Manager.time);
+        this.x = this.x - (this.momentum.x * Manager.time);
+
+        console.log(this.x, this.y);
 
         // calculate angle
         if(this.momentum.length > 0.03) {

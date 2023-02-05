@@ -51,12 +51,12 @@ class GameStateService {
 
         this.inventory.value.fuel = this.inventory.value.maxFuel;
 
+        this.minedMatter.value = 0;
+
         const world = <World>Manager.scene;
 
         if(world.player && world.player.respawnPoint){
-
             world.player.teleport(world.player.respawnPoint.x, world.player.respawnPoint.y, false);
-            
         }
 
         this.gameOver.value = false;
