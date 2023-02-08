@@ -29,9 +29,12 @@
     }
 
     const selling = computed(() => {
+
+        if(!PlanetUIService.cargoInventory.value) return [];
+
         const raw = [...Object.entries(PlanetUIService.cargoInventory.value)];
         let selling: Array<any> = [];
-        raw.forEach(entry => {
+        raw.forEach((entry: any) => {
             if(entry[1] > 0){
                 selling.push({key: entry[0], count: entry[1]});
             }

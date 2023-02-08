@@ -13,6 +13,7 @@ import { Keyboard } from "../Keyboard";
 import GameStateService from "../services/GameStateService";
 import { Asteroid } from "../objects/Asteroid";
 import { Cargo } from "../enums/Cargo";
+import Scheduler from "../services/Scheduler";
 
 export class World extends Container implements IScene {
 
@@ -32,10 +33,13 @@ export class World extends Container implements IScene {
     private target: Target;
 
     public paused: boolean = false;
+    public scheduler: Scheduler;
 
     constructor(){
         super();
         Manager.setLoadingScene(this);
+
+        this.scheduler = new Scheduler();
 
         // background
         // this.background = new Background('sky');
@@ -186,6 +190,9 @@ export class World extends Container implements IScene {
 
             // give parallax to all planets
             this.setPlanetParallax();
+
+            // update scheduler
+            this.scheduler.update();
         }
 
         // check game over conditions

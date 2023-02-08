@@ -3,6 +3,8 @@ import { Cargo } from "../enums/Cargo";
 import { IGameObject } from "../interfaces/IGameObject";
 import PlanetConfig, { CargoProduct, PlanetCargoInventory } from "../interfaces/PlanetConfig";
 import { Manager } from "../Manager";
+import { World } from "../scenes/World";
+import PlanetUIService from "../services/PlanetUIService";
 
 export class Planet extends Sprite implements IGameObject {
 
@@ -46,6 +48,25 @@ export class Planet extends Sprite implements IGameObject {
 
         this.name = config.name;
         this.info = config.info;
+
+        const world: World = <World>Manager.scene;
+        world.scheduler.set(() => {
+            this.restock();
+        }, 15, true);
+    }
+
+    restock() {
+        // select random cargo product and update if needed
+        const updatedProduct = this.products[Math.floor(Math.random() * this.products.length)];
+        const typeKey = updatedProduct.type as keyof PlanetCargoInventory;
+
+        if(this.cargoInventory[typeKey] < updatedProduct.max){
+            this.cargoInventory[typeKey]++;
+        }
+
+        if(this.cargoInventory[typeKey] > updatedProduct.max){
+            this.cargoInventory[typeKey]--;
+        }
     }
 
     update() {

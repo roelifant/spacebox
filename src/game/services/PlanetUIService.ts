@@ -7,7 +7,7 @@ class PlanetUIService {
     public planet: Planet|null = null;
     public shown: Ref<boolean> = ref(false);
 
-    public cargoInventory: Ref<PlanetCargoInventory> = ref({
+    public cargoInventory: Ref<PlanetCargoInventory|null> = ref({
         matter: 0,
         water: 0,
         flora: 0,
@@ -21,6 +21,8 @@ class PlanetUIService {
     })
 
     show(planet: Planet){
+        this.cargoInventory.value = null;
+
         this.planet = planet;
         this.updateCargo();
         this.shown.value = true;

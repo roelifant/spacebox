@@ -65,7 +65,6 @@ export class Player extends Sprite implements IPhysics{
 
         if(Keyboard.get('Space') && this.momentum.length > 0){
             // breaking
-
             const slowDownVector = this.momentum.normalize().scale(this.maxSpeed).divide(50);
 
             this.momentum = this.momentum.subtract(slowDownVector);
@@ -200,8 +199,6 @@ export class Player extends Sprite implements IPhysics{
         this.y = this.y - (this.momentum.y * Manager.time);
         this.x = this.x - (this.momentum.x * Manager.time);
 
-        console.log(this.x, this.y);
-
         // calculate angle
         if(this.momentum.length > 0.03) {
             let angle = this.getAngle(this.momentum.x * Manager.time, this.momentum.y * Manager.time);
@@ -282,7 +279,5 @@ export class Player extends Sprite implements IPhysics{
         } else {
             Manager.scene.y += (oldY - y);
         }
-
-        console.log(x, y);
     }
 }
