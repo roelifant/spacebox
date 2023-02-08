@@ -130,9 +130,8 @@ class Market {
         GameStateService.inventory.value[inventoryKey]--;
         GameStateService.inventory.value.money += price;
 
-        if(PlanetUIService.planet && this.cargoInPlanetProducts(cargo)) {
+        if(PlanetUIService.planet && PlanetUIService.cargoInventory.value && this.cargoInPlanetProducts(cargo)) {
             PlanetUIService.cargoInventory.value[cargo]++;
-            // PlanetUIService.updateCargo();
         }
     }
 
@@ -141,9 +140,8 @@ class Market {
 
         GameStateService.inventory.value.money -= this.getBuyingPrice(cargo);
         GameStateService.inventory.value[cargo as keyof Inventory]++;
-        if(PlanetUIService.planet){
+        if(PlanetUIService.planet && PlanetUIService.cargoInventory.value){
             PlanetUIService.cargoInventory.value[cargo]--;
-            // PlanetUIService.updateCargo();
         }
     }
 }
