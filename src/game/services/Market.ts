@@ -2,15 +2,30 @@ import { Cargo } from "../enums/Cargo";
 import GameStateService from "./GameStateService";
 import Inventory from "../interfaces/Inventory";
 import PlanetUIService from "./PlanetUIService";
-import { PlanetCargoInventory } from "../interfaces/PlanetConfig";
+import { World } from "../scenes/World";
+import { Manager } from "../Manager";
 
 class Market {
+
     public low: Cargo;
     public high: Cargo;
+
+    private cycles: number = 0;
 
     constructor(){
         this.low = Cargo.Water;
         this.high = Cargo.Energy;
+    }
+
+    init(){
+
+        GameStateService.updateMarketState(this.low, this.high);
+
+        const world = <World>Manager.scene;
+
+        world.scheduler.set(() => {
+            this.cycle();
+        }, 60);
     }
 
     getBasePrice(cargo: Cargo) {
@@ -143,6 +158,43 @@ class Market {
         if(PlanetUIService.planet && PlanetUIService.cargoInventory.value){
             PlanetUIService.cargoInventory.value[cargo]--;
         }
+    }
+
+    cycle(){
+        const world = <World>Manager.scene;
+        const options = Object.values(Cargo);
+
+        console.log(options);
+
+        let newCargo: Cargo = Cargo.Matter;
+        let chosen = false;
+        while(chosen === false){
+            newCargo = options[Math.floor(Math.random() * options.length)];
+            if(newCargo === this.low || newCargo === this.high) continue;
+            chosen = true;
+        }
+
+        this.cycles++;
+
+        if(this.cycles % 2 === 0){
+            this.low = newCargo;
+        } else {
+            this.high = newCargo;
+        }
+
+        console.log('market:');
+        console.table({
+            low: this.low,
+            high: this.high
+        });
+        const seconds = (Math.floor(Math.random() * 10) + 5) * 15;
+        console.log('New cycle in '+seconds+' seconds');
+
+        GameStateService.updateMarketState(this.low, this.high);
+
+        world.scheduler.set(() => {
+            this.cycle();
+        }, seconds);
     }
 }
 

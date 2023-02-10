@@ -1,4 +1,5 @@
 import { Ref, ref } from "vue";
+import { Cargo } from "../enums/Cargo";
 
 import Inventory from "../interfaces/Inventory";
 import { Manager } from "../Manager";
@@ -35,6 +36,14 @@ class GameStateService {
     gainFuel(amount: number){
         this.inventory.value.fuel += amount;
         if(this.inventory.value.fuel > this.inventory.value.maxFuel) this.inventory.value.fuel = this.inventory.value.maxFuel;
+    }
+
+    public marketHigh: Ref<Cargo> = ref(Cargo.Matter);
+    public marketLow: Ref<Cargo> = ref(Cargo.Energy);
+
+    updateMarketState(low: Cargo, high: Cargo) {
+        this.marketLow.value = low;
+        this.marketHigh.value = high;
     }
 
     respawn(){

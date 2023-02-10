@@ -84,6 +84,9 @@ const animatedMoney: Ref<any> = ref({value: GameStateService.inventory.value.mon
 watch(() => GameStateService.inventory.value.money, (currentMoney) => {
     gsap.to(animatedMoney.value, {value: currentMoney, duration: .5});
 });
+
+const marketHigh: ComputedRef<Cargo> = computed(() => GameStateService.marketHigh.value);
+const marketLow: ComputedRef<Cargo> = computed(() => GameStateService.marketLow.value);
 </script>
 
 <template>
@@ -103,7 +106,24 @@ watch(() => GameStateService.inventory.value.money, (currentMoney) => {
   >
     <!-- header -->
     <div class="w-full h-12 flex justify-between items-start px-1.5">
-      <div class="w-4/12" />
+      <div class="w-4/12 flex">
+        <div class="grid grid-cols-[45px_auto] pt-1">
+          <p class="text-xs border-2 border-white p-1 border-r-0 bg-gray-300 text-black font-bold uppercase text-center">high</p>
+          <p
+            class="text-xs border-2 border-white p-1 px-2 uppercase"
+            :class="'bg-cargo-'+marketHigh"
+          >
+            {{marketHigh}}
+          </p>
+          <p class="text-xs border-2 border-white p-1 border-r-0 border-t-0 bg-gray-500 text-black font-bold uppercase text-center">Low</p>
+          <p
+            class="text-xs border-2 border-white p-1 px-2 border-t-0 uppercase"
+            :class="'bg-cargo-'+marketLow"
+          >
+            {{marketLow}}
+          </p>
+        </div>
+      </div>
       <div class="w-4/12 p-1 flex justify-center">
         <div class="w-full border-2 border-white h-4 p-0.5">
           <div
@@ -129,7 +149,7 @@ watch(() => GameStateService.inventory.value.money, (currentMoney) => {
           </transition>
         </div>
       </div>
-      <div class="w-4/12 flex justify-end py-1">
+      <div class="w-4/12 flex flex-col items-end justify-end py-1">
         <p class="px-2 font-bold text-lgl bg-gray-600 text-gray-400" :class="{'pop-animation': moneyPopAnimation}">
           §
           <span class="text-white">{{
@@ -217,7 +237,7 @@ watch(() => GameStateService.inventory.value.money, (currentMoney) => {
           <!-- Matter -->
           <div
             class="
-              bg-gray-400
+              bg-cargo-matter
               flex flex-col
               justify-center
               items-center
@@ -261,7 +281,7 @@ watch(() => GameStateService.inventory.value.money, (currentMoney) => {
           <!-- Water -->
           <div
             class="
-              bg-blue-300
+              bg-cargo-water
               flex flex-col
               justify-center
               items-center
@@ -304,7 +324,7 @@ watch(() => GameStateService.inventory.value.money, (currentMoney) => {
           <!-- Flora -->
           <div
             class="
-              bg-green-400
+              bg-cargo-flora
               flex flex-col
               justify-center
               items-center

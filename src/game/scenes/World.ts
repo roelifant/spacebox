@@ -14,6 +14,7 @@ import GameStateService from "../services/GameStateService";
 import { Asteroid } from "../objects/Asteroid";
 import { Cargo } from "../enums/Cargo";
 import Scheduler from "../services/Scheduler";
+import Market from "../services/Market";
 
 export class World extends Container implements IScene {
 
@@ -170,6 +171,8 @@ export class World extends Container implements IScene {
                 }
             }
         });
+
+        Market.init();
     }
 
     public update(){
