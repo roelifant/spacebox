@@ -62,9 +62,11 @@ export class Player extends Sprite implements IPhysics{
          *  Keypress inputs
          */
         let accelerating = false;
+        let breaking = false;
 
         if(Keyboard.get('Space') && this.momentum.length > 0){
             // breaking
+            breaking = true;
             const slowDownVector = this.momentum.normalize().scale(this.maxSpeed).divide(50);
 
             this.momentum = this.momentum.subtract(slowDownVector);
@@ -157,7 +159,6 @@ export class Player extends Sprite implements IPhysics{
          */
         let onAsteroid = false;
         Manager.circleCollideWith(['asteroid'], (asteroid: Asteroid) => {
-            console.log('coliding with asteroid');
             onAsteroid = true;
             GameStateService.miningProgress.value += Manager.time;
             if(GameStateService.miningProgress.value >= GameStateService.miningProgressLimit.value){
@@ -209,15 +210,10 @@ export class Player extends Sprite implements IPhysics{
         /**
          *  Fuel drain
          */ 
-        if(accelerating){
-            GameStateService.inventory.value.fuel-= .01 * Manager.time;
-        }
-        if(this.momentum.length > 0.01){
-            GameStateService.inventory.value.fuel-= .01 * Manager.time;
-        }
-        if(this.momentum.length > 0.03){
-            GameStateService.inventory.value.fuel-= .01 * Manager.time;
-        }
+        if(accelerating) GameStateService.inventory.value.fuel-= .015 * Manager.time;
+        if(breaking) GameStateService.inventory.value.fuel-= .015 * Manager.time;
+        GameStateService.inventory.value.fuel-= (this.momentum.length * .015) * Manager.time;
+        
     }
 
     private getAngle(velocityX: number, velocityY: number): number{
