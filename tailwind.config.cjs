@@ -37,7 +37,7 @@ module.exports = {
           'flora': '#52c754',
           'water': '#7ccdfc',
           'minerals': '#70b3a6',
-          'fungi': '#9c70b3',
+          'fungi': '#d472c2',
           'fauna': '#b39070',
           'energy': '#8fe3e3',
           'technology': '#9d4ced',

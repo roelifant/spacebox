@@ -2,6 +2,8 @@ import { Sprite } from "pixi.js";
 import { IGameObject } from "../interfaces/IGameObject";
 import { Manager } from "../Manager";
 import GameStateService from "../services/GameStateService";
+import { World } from "../scenes/World";
+import { AsteroidField } from "./AsteroidField";
 
 export class Asteroid extends Sprite implements IGameObject {
 
@@ -17,9 +19,13 @@ export class Asteroid extends Sprite implements IGameObject {
 
     private spinDirection: boolean;
     private spinSpeed: number;
+    
+    private field: AsteroidField|null;
 
-    constructor(x: number, y: number){
+    constructor(x: number, y: number, field: AsteroidField|null = null){
         super();
+
+        this.field = field;
 
         this.texture = Manager.getTexture(this.assets[Math.floor(Math.random()*this.assets.length)]);
         this.anchor.set(0.5, 0.5);
@@ -45,6 +51,9 @@ export class Asteroid extends Sprite implements IGameObject {
         this.angle = Math.floor(360 * Math.random());
 
         Manager.scene?.groups.get('asteroids')?.addChild(this);
+
+        const world = <World>Manager.scene;
+        world.objects.push(this);
     }
 
     update(){
@@ -63,6 +72,11 @@ export class Asteroid extends Sprite implements IGameObject {
         }
 
         console.log('You mined an asteroid!');
+
+        if(this.field){
+            this.field.removeAsteroid(this);
+        }
+
         Manager.remove(this, 'asteroids');
     }
 }

@@ -15,6 +15,7 @@ import { Asteroid } from "../objects/Asteroid";
 import { Cargo } from "../enums/Cargo";
 import Scheduler from "../services/Scheduler";
 import Market from "../services/Market";
+import { AsteroidField } from "../objects/AsteroidField";
 
 export class World extends Container implements IScene {
 
@@ -140,13 +141,10 @@ export class World extends Container implements IScene {
         this.groups.get('planets')?.addChild(mycen);
         this.objects.push(mycen);
 
-        // asteroids (temp)
-        for (let i = 0; i < 20; i++) {
-            let x = 500 - Math.floor(Math.random() * 1000);
-            let y = 500 - Math.floor(Math.random() * 1000);
-            let asteroid = new Asteroid(0 + x, -1500 + y);
-            this.objects.push(asteroid);
-        }
+        // asteroids
+        new AsteroidField(1000,-3000);
+        new AsteroidField(-2000,2500);
+        new AsteroidField(-3500,-1500);
 
         // set interactions
         this.on('pointertap', () => {

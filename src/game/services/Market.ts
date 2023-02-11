@@ -164,8 +164,6 @@ class Market {
         const world = <World>Manager.scene;
         const options = Object.values(Cargo);
 
-        console.log(options);
-
         let newCargo: Cargo = Cargo.Matter;
         let chosen = false;
         while(chosen === false){

@@ -91,4 +91,11 @@ export class Vector {
         }
         return ((Math.PI * 2) - radian) * (180 / Math.PI);
     }
+
+    distance(vector: Vector){
+        if(this.components.length > 2 || vector.components.length > 2) {
+            throw Error('This method only works for two-dimensional vectors!');
+        }
+        return Math.sqrt(Math.pow((this.x - vector.x), 2) + Math.pow((this.y - vector.y), 2));
+    }
 }
