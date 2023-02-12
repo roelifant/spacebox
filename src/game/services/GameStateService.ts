@@ -10,8 +10,8 @@ class GameStateService {
     public canLand: Ref<boolean> = ref(false);
     public landed: Ref<boolean> = ref(false);
     public inventory: Ref<Inventory> = ref({
-        fuel: 750.00,
-        maxFuel: 750,
+        fuel: 500.00,
+        maxFuel: 500,
         money: 300,
         matter: 3,
         water: 2,

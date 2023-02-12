@@ -117,6 +117,7 @@ export class World extends Container implements IScene {
                     key: 'cargo_minerals',
                     name: 'Minerals cargo module',
                     description: 'Allows you to transport precious minerals across the galaxy. Minerals are slightly more valuable than raw matter.',
+                    icon: 'upgrades/mineralsStorage.png',
                     price: 500
                 }),
                 new Upgrade({
@@ -125,8 +126,21 @@ export class World extends Container implements IScene {
                     description: 'Increase your available cargo space so you can carry 5 more of any cargo types.',
                     price: 250,
                     stackWith: 'cargo_capacity',
+                    icon: 'upgrades/cargoExpansion.png',
                     action: () => {
                         GameStateService.inventory.value.maxCargo += 5;
+                    }
+                }),
+                new Upgrade({
+                    key: 'fuel_capacity',
+                    name: 'Fuel capacity',
+                    description: 'Increase your fuel capacity so you can fly longer distances without needing to refuel.',
+                    price: 250,
+                    stackWith: 'fuel_capacity',
+                    icon: 'upgrades/extraFuel.png',
+                    action: () => {
+                        GameStateService.inventory.value.maxFuel += 250;
+                        GameStateService.inventory.value.fuel += 250;
                     }
                 })
             ]
@@ -161,6 +175,7 @@ export class World extends Container implements IScene {
                     key: 'cargo_fungi',
                     name: 'Fungi cargo module',
                     description: 'Allows you to keep and maintain fungi habitats on your spaceship, so they can be transported and traded across the galaxy.',
+                    icon: 'upgrades/fungiStorage.png',
                     price: 1000
                 }),
                 new Upgrade({
@@ -169,8 +184,21 @@ export class World extends Container implements IScene {
                     description: 'Increase your available cargo space so you can carry 5 more of any cargo types.',
                     price: 250,
                     stackWith: 'cargo_capacity',
+                    icon: 'upgrades/cargoExpansion.png',
                     action: () => {
                         GameStateService.inventory.value.maxCargo += 5;
+                    }
+                }),
+                new Upgrade({
+                    key: 'fuel_capacity',
+                    name: 'Fuel capacity',
+                    description: 'Increase your fuel capacity so you can fly longer distances without needing to refuel.',
+                    price: 250,
+                    stackWith: 'fuel_capacity',
+                    icon: 'upgrades/extraFuel.png',
+                    action: () => {
+                        GameStateService.inventory.value.maxFuel += 250;
+                        GameStateService.inventory.value.fuel += 250;
                     }
                 })
             ]

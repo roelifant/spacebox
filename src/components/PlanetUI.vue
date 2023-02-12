@@ -1,10 +1,11 @@
 <script setup lang="ts">
-    import { computed, ComputedRef } from 'vue';
+    import { computed } from 'vue';
     import GameStateService from '../game/services/GameStateService';
     import PlanetUIService from '../game/services/PlanetUIService';
     import Market from '../game/services/Market';
     import { Cargo } from '../game/enums/Cargo';
-import { Upgrade } from '../game/objects/Upgrade';
+    import { Upgrade } from '../game/objects/Upgrade';
+    import {title} from '../game/utils/StringManipulation';
 
     const onTakeOffButtonClick = (e: Event) => {
         (<HTMLButtonElement>e.target).blur();
@@ -67,78 +68,109 @@ import { Upgrade } from '../game/objects/Upgrade';
         'opacity-0': !PlanetUIService.shown.value,
         'pointer-events-auto': PlanetUIService.shown.value
     }">
-        <div class="mx-auto w-10/12 mt-20">
+        <div class="mx-auto w-full mt-20 px-6">
             <h1 class="text-2xl font-bold mb-2">{{ PlanetUIService.planet?.name}}</h1>
             <div class="w-full border-2 p-4 flex justify-between">
-                <div class="w-4/12">
+                <div class="w-3/12">
                     <h2 class="text-lg font-bold">Info</h2>
                     <p class="text-sm">{{ PlanetUIService.planet?.info}}</p>
                 </div>
-                <div class="w-8/12 pl-12">
-                    <h2 class="text-lg font-bold">Shop</h2>
-                    <h3 class="text-md">Essentials:</h3>
-                    <div class="flex w-full gap-4 p-4">
-                        <div class="p-2 border-2 flex flex-col justify-between items-center w-28 gap-1">
-                            <p class="font-bold">Fuel</p>
-                            <p class="text-sm">§ 25</p>
-                            <button @click="buyFuel($event)" :disabled="!canBuyFuel"
-                                class="
-                                    border-2
-                                    text-white
-                                    uppercase text-sm font-bold
-                                    px-2 py-1 transition-colors
-                                " :class="{
-                                    'cursor-pointer opacity-100 hover:bg-white hover:text-black': canBuyFuel,
-                                    'opacity-50 hover:bg-transparent hover:text-white': !canBuyFuel
-                                    }">
-                                buy
-                            </button>
-                        </div>
-                    </div>
-                    <h3 class="text-md">Cargo:</h3>
-                    <div class="flex w-full gap-4 p-4">
-                        <div
-                            class="p-2 border-2 flex flex-col justify-between items-center w-28 gap-2"
-                            v-for="cargo in selling" :key="cargo.key"
-                        >
-                            <p><span class="font-bold">{{cargo.key}}</span> ({{cargo.count}})</p>
-                            <p class="text-sm">§ {{ Market.getBuyingPrice(cargo.key) }}</p>
-                            <button @click="buyCargo($event, cargo.key)" :disabled="!Market.canBuy(cargo.key)"
-                                class="
-                                    border-2
-                                    text-white
-                                    uppercase text-sm font-bold
-                                    px-2 py-1 transition-colors
-                                " :class="{
-                                    'cursor-pointer opacity-100 hover:bg-white hover:text-black': Market.canBuy(cargo.key),
-                                    'opacity-50 hover:bg-transparent hover:text-white': !Market.canBuy(cargo.key)
-                                    }">
-                                buy
-                            </button>
-                        </div>
-                    </div>
-                    <h3 class="text-md">Upgrades:</h3>
-                    <div class="flex w-full gap-4 p-4">
-                        <div
-                            class="p-2 border-2 flex flex-col justify-between items-center w-28 gap-2"
-                            v-for="upgrade in upgrades" :key="upgrade.key"
-                        >
-                            <p><span class="font-bold">{{upgrade.name}}</span></p>
-                            <p class="text-sm">§ {{ upgrade.price }}</p>
-                            <button @click="upgrade.purchase()" :disabled="!upgrade.canBuy()"
-                                class="
-                                    border-2
-                                    text-white
-                                    uppercase text-sm font-bold
-                                    px-2 py-1 transition-colors
-                                " :class="{
-                                    'cursor-pointer opacity-100 hover:bg-white hover:text-black': upgrade.canBuy(),
-                                    'opacity-50 hover:bg-transparent hover:text-white': !upgrade.canBuy()
-                                    }">
-                                buy
-                            </button>
-                        </div>
-                    </div>
+                <div class="w-9/12 pl-12">
+
+                    <h2 class="text-lg font-bold border-b-2 pb-1">Shop</h2>
+
+                            <h3 class="text-md pt-4">Basic</h3>
+
+                            <div class="grid grid-cols-3 xl:grid-cols-4 w-full py-2 gap-2">
+                                
+                                <div class="border-2 flex items-center w-full gap-2">
+                                    
+                                    <div class="w-14 h-14 flex justify-center items-center border-r-2">
+                                        <img :src="'./img/icons/Matter.png'" alt="fuel" class="w-8">
+                                    </div>
+
+                                    <div class="flex flex-col h-full justify-center pl-2 overflow-hidden flex-grow">
+                                        <p class="truncate text-sm"><span class="font-bold">Fuel</span></p>
+                                        <p class="text-xs">§ 25</p>
+                                    </div>
+                                    <button @click="buyFuel($event)" :disabled="!canBuyFuel"
+                                        class="
+                                            border-2
+                                            text-white
+                                            uppercase text-xs font-bold
+                                            px-2 py-1 transition-colors
+                                            ml-auto mr-2
+                                        " :class="{
+                                            'cursor-pointer opacity-100 hover:bg-white hover:text-black': canBuyFuel,
+                                            'opacity-50 hover:bg-transparent hover:text-white': !canBuyFuel
+                                            }">
+                                        buy
+                                    </button>
+                                </div>
+                            </div>
+                            <h3 class="text-md pt-4">Cargo</h3>
+                            <div class="grid grid-cols-3 xl:grid-cols-4 w-full py-2 gap-2">
+
+                                <div
+                                    class="border-2 flex items-center gap-2 w-full"
+                                    v-for="cargo in selling" :key="cargo.key"
+                                >
+                                    <div class="w-14 h-14 flex justify-center items-center border-r-2">
+                                        <img :src="'./img/icons/'+title(cargo.key)+'.png'" :alt="cargo.key" class="w-8">
+                                    </div>
+
+                                    <div class="flex flex-col h-full justify-center pl-2 overflow-hidden flex-grow">
+                                        <p class="truncate text-sm"><span class="font-bold">{{title(cargo.key)}}</span> ({{cargo.count}})</p>
+                                        <p class="text-xs">§ {{ Market.getBuyingPrice(cargo.key) }}</p>
+                                    </div>
+
+                                    <button @click="buyCargo($event, cargo.key)" :disabled="!Market.canBuy(cargo.key)"
+                                        class="
+                                            border-2
+                                            text-white
+                                            uppercase text-xs font-bold
+                                            px-2 py-1 transition-colors
+                                            ml-auto mr-2
+                                        " :class="{
+                                            'cursor-pointer opacity-100 hover:bg-white hover:text-black': Market.canBuy(cargo.key),
+                                            'opacity-50 hover:bg-transparent hover:text-white': !Market.canBuy(cargo.key)
+                                            }">
+                                        buy
+                                    </button>
+                                </div>
+                            </div>
+                            
+                            <h3 class="text-md pt-4">Upgrades</h3>
+                            <div class="grid grid-cols-3 xl:grid-cols-4 w-full py-2 gap-2">
+                                <div
+                                    class="border-2 flex items-center gap-2 w-full"
+                                    v-for="upgrade in upgrades" :key="upgrade.key"
+                                >
+                                    
+                                    <div class="w-14 h-14 flex justify-center items-center border-r-2">
+                                        <img :src="'./img/icons/'+upgrade.icon" alt="matter" class="w-8">
+                                    </div>
+
+                                    <div class="flex flex-col h-full justify-center pl-2 overflow-hidden flex-grow">
+                                        <p class="truncate text-sm"><span class="font-bold">{{upgrade.name}}</span></p>
+                                        <p class="text-xs">§ {{ upgrade.price }}</p>
+                                    </div>
+
+                                    <button @click="upgrade.purchase()" :disabled="!upgrade.canBuy()"
+                                        class="
+                                            border-2
+                                            text-white
+                                            uppercase text-xs font-bold
+                                            px-2 py-1 transition-colors
+                                            ml-auto mr-2
+                                        " :class="{
+                                            'cursor-pointer opacity-100 hover:bg-white hover:text-black':  upgrade.canBuy(),
+                                            'opacity-50 hover:bg-transparent hover:text-white': !upgrade.canBuy()
+                                            }">
+                                        buy
+                                    </button>
+                                </div>
+                            </div>
                 </div>
             </div>
             <div class="w-full flex justify-end">
