@@ -8,7 +8,6 @@ import PlanetUIService from '../game/services/PlanetUIService';
 import Market from '../game/services/Market';
 import {Cargo} from '../game/enums/Cargo';
 import gsap from 'gsap';
-import { Planet } from "../game/objects/Planet";
 
 const paused: Ref<boolean> = ref(false);
 
@@ -183,15 +182,14 @@ watch(() => marketLow.value, () => {
           </transition>
         </div>
       </div>
-      <div class="w-4/12 flex justify-end py-1">
-        <div class="flex items-center pr-6 gap-2">
-          <p class="text-xs uppercase">progress</p>
-          <div class="w-28 border-2 border-white h-2">
-            <div :class="'w-['+GameStateService.upgradePercent?.value+'%]'" class="h-full bg-white transition-all">
-
-            </div>
+      <div class="w-4/12 flex justify-end items-start py-1">
+        <div class="flex items-center pr-10 gap-2">
+          <p v-if="GameStateService.upgradePercent.value === 100" class="text-yellow-300 text-xs uppercase">Complete</p>
+          <p v-else class="text-xs uppercase">progress</p>
+          <div class="w-32 border-2 border-white h-2">
+            <div :class="['w-['+GameStateService.upgradePercent.value+'%]', {'bg-yellow-300': GameStateService.upgradePercent.value === 100}]" class="h-full bg-white transition-all"/>
           </div>
-          <p class="text-xs">{{GameStateService.upgradePercent?.value}}%</p>
+          <!-- <p class="text-xs">{{GameStateService.upgradePercent?.value}}%</p> -->
         </div>
         <p class="px-2 font-bold text-lgl bg-gray-600 text-gray-400" :class="{'pop-animation': moneyPopAnimation}">
           §
@@ -716,7 +714,13 @@ watch(() => marketLow.value, () => {
           </div>
 
         </div>
-        <div class="w-3/12" />
+        <div class="w-3/12 flex justify-end">
+          <div :class="GameStateService.totalCargo.value >= GameStateService.inventory.value.maxCargo ? 'bg-red-500 pop-animation' : 'bg-gray-900'">
+            <p class="text-gray-100 font-bold text-sm px-2 py-1 uppercase">
+              {{GameStateService.totalCargo.value}}/{{GameStateService.inventory.value.maxCargo}}
+            </p>
+          </div>
+        </div>
       </div>
     </div>
   </div>

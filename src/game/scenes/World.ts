@@ -118,6 +118,16 @@ export class World extends Container implements IScene {
                     name: 'Minerals cargo module',
                     description: 'Allows you to transport precious minerals across the galaxy. Minerals are slightly more valuable than raw matter.',
                     price: 500
+                }),
+                new Upgrade({
+                    key: 'cargo_capacity',
+                    name: 'Cargo capacity',
+                    description: 'Increase your available cargo space so you can carry 5 more of any cargo types.',
+                    price: 250,
+                    stackWith: 'cargo_capacity',
+                    action: () => {
+                        GameStateService.inventory.value.maxCargo += 5;
+                    }
                 })
             ]
         });
@@ -152,6 +162,16 @@ export class World extends Container implements IScene {
                     name: 'Fungi cargo module',
                     description: 'Allows you to keep and maintain fungi habitats on your spaceship, so they can be transported and traded across the galaxy.',
                     price: 1000
+                }),
+                new Upgrade({
+                    key: 'cargo_capacity',
+                    name: 'Cargo capacity',
+                    description: 'Increase your available cargo space so you can carry 5 more of any cargo types.',
+                    price: 250,
+                    stackWith: 'cargo_capacity',
+                    action: () => {
+                        GameStateService.inventory.value.maxCargo += 5;
+                    }
                 })
             ]
         });

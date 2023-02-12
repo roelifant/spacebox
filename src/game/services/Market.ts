@@ -130,6 +130,10 @@ class Market {
 
     canBuy(cargo: Cargo) {
 
+        if(GameStateService.totalCargo.value >= GameStateService.inventory.value.maxCargo) {
+            return false;
+        }
+
         // check if we have the needed upgrades
         if(Cargo.Minerals == cargo && !GameStateService.hasUpgrade('cargo_minerals')) return false;
         if(Cargo.Fauna == cargo && !GameStateService.hasUpgrade('cargo_fauna')) return false;

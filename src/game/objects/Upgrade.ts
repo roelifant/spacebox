@@ -8,7 +8,7 @@ interface IUpgradeConfig {
     icon?: string,
     action?: CallableFunction,
     price: number,
-    stackPrices?: boolean;
+    stackWith?: string;
 }
 
 export class Upgrade {
@@ -20,8 +20,8 @@ export class Upgrade {
     public active: boolean = false;
 
     private callback: CallableFunction|undefined;
-    private stackPrices: boolean = false;
-    private value: number;
+    private stackWith: string|undefined;
+    public value: number;
 
     constructor(config: IUpgradeConfig){
         this.key = config.key;
@@ -37,8 +37,8 @@ export class Upgrade {
             this.requirements = config.requirements;
         }
 
-        if(config.stackPrices){
-            this.stackPrices = true;
+        if(config.stackWith){
+            this.stackWith = config.stackWith;
         }
 
         if(config.action){
@@ -49,9 +49,12 @@ export class Upgrade {
     }
 
     get price(){
-        if(this.stackPrices){
-            // TODO: do something here to add sum of this upgrade's price + price of its requirements
-            return this.value;
+        if(this.stackWith){
+            let price = this.value;
+            GameStateService.getActiveUpgrades(this.stackWith)
+                .forEach(upgrade => price += upgrade.value);
+
+            return price;
         }
         return this.value;
     }

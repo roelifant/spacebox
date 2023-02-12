@@ -160,6 +160,7 @@ export class Player extends Sprite implements IPhysics{
         let onAsteroid = false;
         Manager.circleCollideWith(['asteroid'], (asteroid: Asteroid) => {
             onAsteroid = true;
+            if(GameStateService.totalCargo.value >= GameStateService.inventory.value.maxCargo) return;
             GameStateService.miningProgress.value += Manager.time;
             if(GameStateService.miningProgress.value >= GameStateService.miningProgressLimit.value){
                 asteroid.mine();

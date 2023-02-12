@@ -2,7 +2,6 @@ import { Manager } from "../Manager";
 import { World } from "../scenes/World";
 import { Vector } from "../utils/Vector";
 import { Asteroid } from "./Asteroid";
-import { Player } from "./Player";
 
 
 export class AsteroidField {
@@ -58,7 +57,7 @@ export class AsteroidField {
 
         this.asteroids.forEach(asteroid => {
             const asteroidPosition = new Vector(asteroid.x, asteroid.y);
-            if(asteroidPosition.distance(fieldPosition) < 100) {
+            if(asteroidPosition.distance(fieldPosition) < 150) {
                 return false;
             }
         })

@@ -23,6 +23,22 @@ class GameStateService {
         wisdom: 0,
         weaponry: 0,
         technology: 0,
+        maxCargo: 10,
+    });
+
+    public totalCargo: ComputedRef<number> = computed(() => {
+        let result = 0;
+        result += this.inventory.value.matter;
+        result += this.inventory.value.water;
+        result += this.inventory.value.flora;
+        result += this.inventory.value.minerals;
+        result += this.inventory.value.fauna;
+        result += this.inventory.value.fungi;
+        result += this.inventory.value.energy;
+        result += this.inventory.value.wisdom;
+        result += this.inventory.value.weaponry;
+        result += this.inventory.value.technology;
+        return result;
     });
 
     public gameOver: Ref<boolean> = ref(false);
@@ -45,6 +61,10 @@ class GameStateService {
 
         return Math.floor((active / total) * 100);
     })
+
+    getActiveUpgrades(key: string){
+        return [...this.upgrades.value].filter(upgrade => upgrade.active && upgrade.key === key);
+    }
 
     hasUpgrade(key: string){
         return !!this.upgrades.value.find(upgrade => upgrade.active && upgrade.key === key);
