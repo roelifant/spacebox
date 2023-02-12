@@ -129,6 +129,16 @@ class Market {
     }
 
     canBuy(cargo: Cargo) {
+
+        // check if we have the needed upgrades
+        if(Cargo.Minerals == cargo && !GameStateService.hasUpgrade('cargo_minerals')) return false;
+        if(Cargo.Fauna == cargo && !GameStateService.hasUpgrade('cargo_fauna')) return false;
+        if(Cargo.Fungi == cargo && !GameStateService.hasUpgrade('cargo_fungi')) return false;
+        if(Cargo.Energy == cargo && !GameStateService.hasUpgrade('cargo_energy')) return false;
+        if(Cargo.Wisdom == cargo && !GameStateService.hasUpgrade('cargo_wisdom')) return false;
+        if(Cargo.Weaponry == cargo && !GameStateService.hasUpgrade('cargo_weaponry')) return false;
+        if(Cargo.Technology == cargo && !GameStateService.hasUpgrade('cargo_technology')) return false;
+
         return this.getBuyingPrice(cargo) <= GameStateService.inventory.value.money;
     }
 

@@ -4,6 +4,7 @@
     import PlanetUIService from '../game/services/PlanetUIService';
     import Market from '../game/services/Market';
     import { Cargo } from '../game/enums/Cargo';
+import { Upgrade } from '../game/objects/Upgrade';
 
     const onTakeOffButtonClick = (e: Event) => {
         (<HTMLButtonElement>e.target).blur();
@@ -20,7 +21,6 @@
         GameStateService.inventory.value.money -= 25;
         GameStateService.gainFuel(150);
     }
-
 
     const buyCargo = (e: Event, cargo: Cargo) => {
         (<HTMLButtonElement>e.target).blur();
@@ -41,6 +41,19 @@
         });
         return selling;
     });
+
+    const upgrades = computed(() => {
+        if(!PlanetUIService.upgrades.value) return [];
+
+        const raw = [...PlanetUIService.upgrades.value];
+        let upgrades: Array<Upgrade> = [];
+        raw.forEach((upgrade: Upgrade) => {
+            if(!upgrade.active){
+                upgrades.push(upgrade);
+            }
+        });
+    return upgrades;
+    })
 </script>
 
 <template>
@@ -105,6 +118,27 @@
                         </div>
                     </div>
                     <h3 class="text-md">Upgrades:</h3>
+                    <div class="flex w-full gap-4 p-4">
+                        <div
+                            class="p-2 border-2 flex flex-col justify-between items-center w-28 gap-2"
+                            v-for="upgrade in upgrades" :key="upgrade.key"
+                        >
+                            <p><span class="font-bold">{{upgrade.name}}</span></p>
+                            <p class="text-sm">§ {{ upgrade.price }}</p>
+                            <button @click="upgrade.purchase()" :disabled="!upgrade.canBuy()"
+                                class="
+                                    border-2
+                                    text-white
+                                    uppercase text-sm font-bold
+                                    px-2 py-1 transition-colors
+                                " :class="{
+                                    'cursor-pointer opacity-100 hover:bg-white hover:text-black': upgrade.canBuy(),
+                                    'opacity-50 hover:bg-transparent hover:text-white': !upgrade.canBuy()
+                                    }">
+                                buy
+                            </button>
+                        </div>
+                    </div>
                 </div>
             </div>
             <div class="w-full flex justify-end">

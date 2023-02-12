@@ -1,8 +1,9 @@
-import { Ref, ref } from "vue";
+import { computed, ComputedRef, Ref, ref } from "vue";
 import { Cargo } from "../enums/Cargo";
 
 import Inventory from "../interfaces/Inventory";
 import { Manager } from "../Manager";
+import { Upgrade } from "../objects/Upgrade";
 import { World } from "../scenes/World";
 
 class GameStateService {
@@ -27,19 +28,32 @@ class GameStateService {
     public gameOver: Ref<boolean> = ref(false);
     public gameOverMessage: Ref<string> = ref('');
 
+    public marketHigh: Ref<Cargo> = ref(Cargo.Matter);
+    public marketLow: Ref<Cargo> = ref(Cargo.Energy);
+
     public miningProgress: Ref<number> = ref(0);
     public miningProgressLimit: Ref<number> = ref(1000);
 
     public minedMatter: Ref<number> = ref(0);
     public minedMatterLimit: Ref<number> = ref(3);
 
+    public upgrades: Ref<Array<Upgrade>> = ref([]);
+
+    public upgradePercent: ComputedRef<number> = computed(() => {
+        const total = this.upgrades.value.length;
+        const active = this.upgrades.value.filter(x => x.active).length;
+
+        return Math.floor((active / total) * 100);
+    })
+
+    hasUpgrade(key: string){
+        return !!this.upgrades.value.find(upgrade => upgrade.active && upgrade.key === key);
+    }
+
     gainFuel(amount: number){
         this.inventory.value.fuel += amount;
         if(this.inventory.value.fuel > this.inventory.value.maxFuel) this.inventory.value.fuel = this.inventory.value.maxFuel;
     }
-
-    public marketHigh: Ref<Cargo> = ref(Cargo.Matter);
-    public marketLow: Ref<Cargo> = ref(Cargo.Energy);
 
     updateMarketState(low: Cargo, high: Cargo) {
         this.marketLow.value = low;

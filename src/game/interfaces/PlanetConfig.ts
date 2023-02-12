@@ -1,4 +1,5 @@
 import { Cargo } from "../enums/Cargo";
+import { Upgrade } from "../objects/Upgrade";
 
 export interface CargoProduct {
     type: Cargo,
@@ -25,5 +26,6 @@ export default interface PlanetConfig {
     needs: Array<Cargo>,
     products: Array<CargoProduct>,
     name: string,
-    info: string
+    info: string,
+    upgrades?: Array<Upgrade>
 }

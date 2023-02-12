@@ -16,6 +16,7 @@ import { Cargo } from "../enums/Cargo";
 import Scheduler from "../services/Scheduler";
 import Market from "../services/Market";
 import { AsteroidField } from "../objects/AsteroidField";
+import { Upgrade } from "../objects/Upgrade";
 
 export class World extends Container implements IScene {
 
@@ -110,6 +111,14 @@ export class World extends Container implements IScene {
                     type: Cargo.Minerals,
                     max: 3
                 }
+            ],
+            upgrades: [
+                new Upgrade({
+                    key: 'cargo_minerals',
+                    name: 'Minerals cargo module',
+                    description: 'Allows you to transport precious minerals across the galaxy. Minerals are slightly more valuable than raw matter.',
+                    price: 500
+                })
             ]
         });
         this.groups.get('planets')?.addChild(humble);
@@ -136,6 +145,14 @@ export class World extends Container implements IScene {
                     type: Cargo.Flora,
                     max: 2
                 }
+            ],
+            upgrades: [
+                new Upgrade({
+                    key: 'cargo_fungi',
+                    name: 'Fungi cargo module',
+                    description: 'Allows you to keep and maintain fungi habitats on your spaceship, so they can be transported and traded across the galaxy.',
+                    price: 1000
+                })
             ]
         });
         this.groups.get('planets')?.addChild(mycen);

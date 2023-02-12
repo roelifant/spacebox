@@ -4,7 +4,7 @@ import { IGameObject } from "../interfaces/IGameObject";
 import PlanetConfig, { CargoProduct, PlanetCargoInventory } from "../interfaces/PlanetConfig";
 import { Manager } from "../Manager";
 import { World } from "../scenes/World";
-import PlanetUIService from "../services/PlanetUIService";
+import { Upgrade } from "./Upgrade";
 
 export class Planet extends Sprite implements IGameObject {
 
@@ -15,6 +15,7 @@ export class Planet extends Sprite implements IGameObject {
 
     public needs: Array<Cargo>;
     public products: Array<CargoProduct>;
+    public upgrades: Array<Upgrade> = [];
 
     public cargoInventory: PlanetCargoInventory = {
         matter: 0,
@@ -48,6 +49,10 @@ export class Planet extends Sprite implements IGameObject {
 
         this.name = config.name;
         this.info = config.info;
+
+        if(config.upgrades){
+            this.upgrades = config.upgrades;
+        }
 
         const world: World = <World>Manager.scene;
         world.scheduler.set(() => {

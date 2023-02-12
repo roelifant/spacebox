@@ -2,6 +2,7 @@ import { Ref, ref } from "vue";
 import { PlanetCargoInventory } from "../interfaces/PlanetConfig";
 import { Manager } from "../Manager";
 import { Planet } from "../objects/Planet";
+import { Upgrade } from "../objects/Upgrade";
 
 class PlanetUIService {
     public planet: Planet|null = null;
@@ -18,19 +19,28 @@ class PlanetUIService {
         technology: 0,
         weaponry: 0,
         wisdom: 0,
-    })
+    });
+
+    public upgrades: Ref<Array<Upgrade>> = ref([]);
 
     show(planet: Planet){
         this.cargoInventory.value = null;
 
         this.planet = planet;
         this.updateCargo();
+        this.updateUpgrades();
         this.shown.value = true;
     }
 
     updateCargo(){
         if(this.planet){
             this.cargoInventory.value = this.planet.cargoInventory;
+        }
+    }
+
+    updateUpgrades(){
+        if(this.planet){
+            this.upgrades.value = this.planet.upgrades;
         }
     }
 
