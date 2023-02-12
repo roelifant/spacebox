@@ -183,7 +183,16 @@ watch(() => marketLow.value, () => {
           </transition>
         </div>
       </div>
-      <div class="w-4/12 flex flex-col items-end justify-end py-1">
+      <div class="w-4/12 flex justify-end py-1">
+        <div class="flex items-center pr-6 gap-2">
+          <p class="text-xs uppercase">progress</p>
+          <div class="w-28 border-2 border-white h-2">
+            <div :class="'w-['+GameStateService.upgradePercent?.value+'%]'" class="h-full bg-white transition-all">
+
+            </div>
+          </div>
+          <p class="text-xs">{{GameStateService.upgradePercent?.value}}%</p>
+        </div>
         <p class="px-2 font-bold text-lgl bg-gray-600 text-gray-400" :class="{'pop-animation': moneyPopAnimation}">
           §
           <span class="text-white">{{
