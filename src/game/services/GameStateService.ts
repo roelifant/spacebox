@@ -5,6 +5,7 @@ import Inventory from "../interfaces/Inventory";
 import { Manager } from "../Manager";
 import { Upgrade } from "../objects/Upgrade";
 import { World } from "../scenes/World";
+import { Vector } from "../utils/Vector";
 
 class GameStateService {
     public canLand: Ref<boolean> = ref(false);
@@ -57,6 +58,7 @@ class GameStateService {
 
     public chosenHeading: Ref<number> = ref(0);
     public headingText: Ref<string> = ref('');
+    public headingPosition: Ref<Vector> = ref(new Vector(0,0))
 
     public upgradePercent: ComputedRef<number> = computed(() => {
         const total = this.upgrades.value.length;

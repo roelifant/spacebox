@@ -2,6 +2,7 @@ import stars1 from './../assets/img/backgrounds/stars.png';
 import stars2 from './../assets/img/backgrounds/stars2.png';
 
 import player from './../assets/img/objects/ships/spaceship1_white.png';
+import radar from './../assets/img/objects/radar2.png';
 
 import bullet from './../assets/img/objects/projectiles/bullet.png';
 
@@ -23,11 +24,12 @@ export const assets = [
     // particles
 
     // stars
-    {name:'stars1', url: stars1},
-    {name:'stars2', url: stars2},
+    {name:'stars.1', url: stars1},
+    {name:'stars.2', url: stars2},
 
     // ships
     {name: 'player', url: player},
+    {name: 'player.radar', url: radar},
 
     // projectiles
     {name: 'bullet', url: bullet},
@@ -46,5 +48,5 @@ export const assets = [
     {name: 'asteroid.2', url: asteroid2},
     {name: 'asteroid.3', url: asteroid3},
     {name: 'asteroid.4', url: asteroid4},
-    {name: 'asteroid.5', url: asteroid5}
+    {name: 'asteroid.5', url: asteroid5},
 ]

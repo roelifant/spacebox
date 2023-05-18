@@ -86,13 +86,13 @@ export class World extends Container implements IScene {
         // this.background.startTracking(this.player);
 
         // parallax stars
-        this.stars1 = new WrappingBackground(Manager.getTexture('stars1'), this.player, .95, .15);
+        this.stars1 = new WrappingBackground(Manager.getTexture('stars.1'), this.player, .95, .15);
         this.groups.get('stars')?.addChild(this.stars1);
-        this.stars2 = new WrappingBackground(Manager.getTexture('stars1'), this.player, .9, .2);
+        this.stars2 = new WrappingBackground(Manager.getTexture('stars.1'), this.player, .9, .2);
         this.groups.get('stars')?.addChild(this.stars2);
-        this.stars3 = new WrappingBackground(Manager.getTexture('stars2'), this.player, .85, .25);
+        this.stars3 = new WrappingBackground(Manager.getTexture('stars.2'), this.player, .85, .25);
         this.groups.get('stars')?.addChild(this.stars3);
-        this.stars4 = new WrappingBackground(Manager.getTexture('stars2'), this.player, .8, .3);
+        this.stars4 = new WrappingBackground(Manager.getTexture('stars.2'), this.player, .8, .3);
         this.groups.get('stars')?.addChild(this.stars4);
 
         // planets

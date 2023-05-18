@@ -15,8 +15,9 @@ import { IGameObject } from "../interfaces/IGameObject";
 import { Asteroid } from "./Asteroid";
 import { World } from "../scenes/World";
 import { IHeadingOption } from "../interfaces/IHeadingOption";
+import { Radar } from "./Radar";
 
-export class Player extends Sprite implements IPhysics{
+export class Player extends Sprite implements IPhysics {
 
     public maxSpeed: number;
     public acceleration: number;
@@ -32,6 +33,7 @@ export class Player extends Sprite implements IPhysics{
 
     private lastAngle: number;
     private emitter: Emitter;
+    private radar: Radar|undefined;
 
     constructor(texture: string) {
         super();
@@ -55,6 +57,8 @@ export class Player extends Sprite implements IPhysics{
         this.emitter.autoUpdate = true; // If you keep it false, you have to update your particles yourself.
         this.emitter.updateSpawnPos(0, 0);
         this.emitter.emit = true;
+
+        this.radar = new Radar();
     }
 
     public update() {
@@ -220,7 +224,7 @@ export class Player extends Sprite implements IPhysics{
         if(breaking) GameStateService.inventory.value.fuel-= .015 * Manager.time;
         GameStateService.inventory.value.fuel-= (this.momentum.length * .015) * Manager.time;
 
-        this.calculateHeadings();
+        this.updateRadar();
     }
 
     public shoot(x: number, y: number){
@@ -286,7 +290,9 @@ export class Player extends Sprite implements IPhysics{
         return (Math.atan2(velocityY, velocityX) * 180 / Math.PI) - 90;
     }
 
-    private calculateHeadings(): void {
+    private updateRadar(): void {
+        if(!this.radar) throw Error('player radar object is not set');
+
         const world: World = <World>Manager.scene;
         const positionVector = new Vector(this.position.x, this.position.y);
 
@@ -315,7 +321,18 @@ export class Player extends Sprite implements IPhysics{
 
         const heading = this.headings[index];
         let distanceString = ' ('+(Math.floor(heading.distance)/1000).toFixed(2)+' parsecs)';
-        if(heading.distance === 0) distanceString = '';
+        if(heading.distance === 0) {
+            distanceString = '';
+            this.radar.show = false;
+        } else {
+            this.radar.show = true;
+            GameStateService.headingPosition.value = new Vector(
+                heading.object.position.x + world.planetGroup.position.x,
+                heading.object.position.x + world.planetGroup.position.y,
+            );
+        }
         GameStateService.headingText.value = heading.name+distanceString;
+
+        this.radar.position.set(this.position.x, this.position.y);
     }
 }
