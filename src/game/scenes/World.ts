@@ -17,8 +17,21 @@ import Scheduler from "../services/Scheduler";
 import Market from "../services/Market";
 import { AsteroidField } from "../objects/AsteroidField";
 import { Upgrade } from "../objects/Upgrade";
+import { IHeadingOption } from "../interfaces/IHeadingOption";
 
 export class World extends Container implements IScene {
+
+    public player: Player;
+    public objects: Array<IGameObject> = [];
+    public planets: Array<Planet> = [];
+    public particles: ParticleContainer;
+    public asteroidGroup: Container;
+    public groups: Map<string, Container> = new Map<string, Container>();
+    public planetGroup: Container;
+
+    public paused: boolean = false;
+    public scheduler: Scheduler;
+    public headings: Array<IHeadingOption> = [];
 
     // private background: Background;
     private stars1: WrappingBackground;
@@ -26,17 +39,9 @@ export class World extends Container implements IScene {
     private stars3: WrappingBackground;
     private stars4: WrappingBackground;
 
-    public player: Player;
-    public objects: Array<IGameObject> = [];
-    public particles: ParticleContainer;
-    public asteroidGroup: Container;
-    public groups: Map<string, Container> = new Map<string, Container>();
-    public planetGroup: Container;
-
     private target: Target;
 
-    public paused: boolean = false;
-    public scheduler: Scheduler;
+    
 
     constructor(){
         super();
@@ -93,7 +98,7 @@ export class World extends Container implements IScene {
         // planets
         let humble = new Planet({
             name: 'Humble',
-            info: 'Located within an asteroid cloud, planet humble is a simple freezing ocean world with glaciers and seas. It\'s inhabbited by only some scientists and terraformers. Because while the planet has abundant mass and water, its settlers are still looking for efficient ways to beat the cold. All that is subject to change though. Ever since the surrounding skies were discovered by asteroid miners, these humble beginnings have started to look more promising.',
+            info: 'Located within an asteroid cloud, planet humble is a simple freezing ocean world with glaciers and seas. It\'s inhabbited by only some scientists and terraformers. While the planet has abundant mass and water, settlers are still looking for efficient ways to beat the cold. All that is subject to change though. Ever since the surrounding skies were discovered by asteroid miners, these humble beginnings have started to look more promising.',
             asset: 'planet.humble',
             x: 0,
             y: 0,
@@ -145,9 +150,11 @@ export class World extends Container implements IScene {
                 })
             ]
         });
+        humble.discovered = true;
         this.groups.get('planets')?.addChild(humble);
         this.objects.push(humble);
         this.player.latestPlanet = humble;
+        this.planets.push(humble);
 
         let mycen = new Planet({
             name: 'Mycen',
@@ -205,6 +212,7 @@ export class World extends Container implements IScene {
         });
         this.groups.get('planets')?.addChild(mycen);
         this.objects.push(mycen);
+        this.planets.push(mycen);
 
         // asteroids
         new AsteroidField(1000,-3000);
@@ -273,6 +281,30 @@ export class World extends Container implements IScene {
         this.planetGroup.position.set(x * .4, y * .4);
     }
 
+    public resize(width: number, height: number){
+        console.log('resizing '+width+' - '+height);
+    }
+
+    public onDestroy() {
+
+        // this.background.destroy();
+        this.stars1.destroy();
+        this.stars2.destroy();
+        this.stars3.destroy();
+        this.stars4.destroy();
+
+        this.player.onDestroy();
+        this.player.destroy();
+        this.objects.forEach(object => object.destroy());
+
+        Keyboard.removeEvent('KeyP');
+    }
+
+    public pauseTrigger() {
+        if(!this.paused) this.paused = true;
+        else this.paused = false;
+    }
+
     private track(target: DisplayObject){
         // get position of center of screen
         const stageXHalf = Manager.width/2;
@@ -300,29 +332,5 @@ export class World extends Container implements IScene {
         }
 
         // console.log(this.x, this.y);
-    }
-
-    public resize(width: number, height: number){
-        console.log('resizing '+width+' - '+height);
-    }
-
-    public onDestroy() {
-
-        // this.background.destroy();
-        this.stars1.destroy();
-        this.stars2.destroy();
-        this.stars3.destroy();
-        this.stars4.destroy();
-
-        this.player.onDestroy();
-        this.player.destroy();
-        this.objects.forEach(object => object.destroy());
-
-        Keyboard.removeEvent('KeyP');
-    }
-
-    public pauseTrigger() {
-        if(!this.paused) this.paused = true;
-        else this.paused = false;
-    }
+    }    
 }

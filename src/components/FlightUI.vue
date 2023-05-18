@@ -163,6 +163,7 @@ watch(() => marketLow.value, () => {
             class="bg-orange-300 h-full transition-all"
             :class="'w-[' + fuelPercent + '%]'"
           />
+          <p class="w-full text-center text-sm mt-3">{{ GameStateService.headingText.value }}</p> 
           <transition>
             <div v-show="fuelPercent <= 30">
               <p

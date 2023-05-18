@@ -55,6 +55,9 @@ class GameStateService {
 
     public upgrades: Ref<Array<Upgrade>> = ref([]);
 
+    public chosenHeading: Ref<number> = ref(0);
+    public headingText: Ref<string> = ref('');
+
     public upgradePercent: ComputedRef<number> = computed(() => {
         const total = this.upgrades.value.length;
         const active = this.upgrades.value.filter(x => x.active).length;

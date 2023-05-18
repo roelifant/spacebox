@@ -12,6 +12,7 @@ export class Planet extends Sprite implements IGameObject {
 
     public name: string;
     public info: string;
+    public discovered: boolean = false;
 
     public needs: Array<Cargo>;
     public products: Array<CargoProduct>;

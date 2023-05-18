@@ -14,6 +14,7 @@ import { Planet } from "./Planet";
 import { IGameObject } from "../interfaces/IGameObject";
 import { Asteroid } from "./Asteroid";
 import { World } from "../scenes/World";
+import { IHeadingOption } from "../interfaces/IHeadingOption";
 
 export class Player extends Sprite implements IPhysics{
 
@@ -22,15 +23,17 @@ export class Player extends Sprite implements IPhysics{
     public drag: number;
     public momentum: Vector;
     public collisionWeight: number = 3;
-    private lastAngle: number;
-    private emitter: Emitter;
 
     public canLand: boolean = false;
     public landed: boolean = false;
     public latestPlanet: Planet|null = null;
     public respawnPoint: Vector|null = null;
+    public headings: Array<IHeadingOption> = [];
 
-    constructor(texture: string){
+    private lastAngle: number;
+    private emitter: Emitter;
+
+    constructor(texture: string) {
         super();
 
         this.maxSpeed = .5;
@@ -54,7 +57,7 @@ export class Player extends Sprite implements IPhysics{
         this.emitter.emit = true;
     }
 
-    public update(){
+    public update() {
 
         const world: World = <World>Manager.scene;
 
@@ -183,8 +186,10 @@ export class Player extends Sprite implements IPhysics{
                 this.latestPlanet.y + world.planetGroup.y
             );
 
-            if(!GameStateService.gameOver.value) this.canLand = true;
-
+            if(!GameStateService.gameOver.value) {
+                 this.canLand = true;
+                 this.latestPlanet.discovered = true;
+            }
         }, this);
         GameStateService.canLand.value = this.canLand;
 
@@ -214,12 +219,8 @@ export class Player extends Sprite implements IPhysics{
         if(accelerating) GameStateService.inventory.value.fuel-= .015 * Manager.time;
         if(breaking) GameStateService.inventory.value.fuel-= .015 * Manager.time;
         GameStateService.inventory.value.fuel-= (this.momentum.length * .015) * Manager.time;
-        
-    }
 
-    private getAngle(velocityX: number, velocityY: number): number{
-        if(Math.abs(velocityX) < 0.00001 && Math.abs(velocityY) < 0.00001) return this.lastAngle;
-        return (Math.atan2(velocityY, velocityX) * 180 / Math.PI) - 90;
+        this.calculateHeadings();
     }
 
     public shoot(x: number, y: number){
@@ -276,5 +277,42 @@ export class Player extends Sprite implements IPhysics{
         } else {
             Manager.scene.y += (oldY - y);
         }
+    }
+
+
+
+    private getAngle(velocityX: number, velocityY: number): number {
+        if(Math.abs(velocityX) < 0.00001 && Math.abs(velocityY) < 0.00001) return this.lastAngle;
+        return (Math.atan2(velocityY, velocityX) * 180 / Math.PI) - 90;
+    }
+
+    private calculateHeadings(): void {
+        const world: World = <World>Manager.scene;
+        const positionVector = new Vector(this.position.x, this.position.y);
+
+        this.headings = world.planets
+        .filter(planet => planet.discovered)
+        .map(planet => {
+            const planetVector = new Vector(
+                planet.position.x + world.planetGroup.position.x,
+                planet.position.y + world.planetGroup.position.y
+            );
+
+            return {
+                distance: Math.floor(positionVector.distance(planetVector)),
+                name: planet.name,
+                object: planet
+            }
+        });
+
+        let index = GameStateService.chosenHeading.value;
+        if(index < this.headings.length - 1) {
+            GameStateService.chosenHeading.value = 0;
+            index = 0;
+        }
+
+        const heading = this.headings[index];
+        const distanceString = (Math.floor(heading.distance)/1000).toFixed(2);
+        GameStateService.headingText.value = heading.name+' ('+distanceString+' parsecs)';
     }
 }
