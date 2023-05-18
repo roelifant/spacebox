@@ -297,9 +297,11 @@ export class Player extends Sprite implements IPhysics{
                 planet.position.x + world.planetGroup.position.x,
                 planet.position.y + world.planetGroup.position.y
             );
+            let distance = positionVector.distance(planetVector) - 500;
+            if(distance < 0) distance = 0;
 
             return {
-                distance: Math.floor(positionVector.distance(planetVector)),
+                distance: Math.floor(distance),
                 name: planet.name,
                 object: planet
             }
@@ -312,7 +314,8 @@ export class Player extends Sprite implements IPhysics{
         }
 
         const heading = this.headings[index];
-        const distanceString = (Math.floor(heading.distance)/1000).toFixed(2);
-        GameStateService.headingText.value = heading.name+' ('+distanceString+' parsecs)';
+        let distanceString = ' ('+(Math.floor(heading.distance)/1000).toFixed(2)+' parsecs)';
+        if(heading.distance === 0) distanceString = '';
+        GameStateService.headingText.value = heading.name+distanceString;
     }
 }
