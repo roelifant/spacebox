@@ -313,24 +313,29 @@ export class Player extends Sprite implements IPhysics {
             }
         });
 
+        if(this.headings.length > 1) GameStateService.multipleHeadingOptions.value = true;
+
         let index = GameStateService.chosenHeading.value;
-        if(index < this.headings.length - 1) {
+        if(index > this.headings.length - 1) {
             GameStateService.chosenHeading.value = 0;
             index = 0;
         }
+        if(index < 0) {
+            index = this.headings.length - 1;
+        }
 
         const heading = this.headings[index];
-        let distanceString = ' ('+(Math.floor(heading.distance)/1000).toFixed(2)+' parsecs)';
+        let distanceString = ' ('+(Math.floor(heading.distance)/1000).toFixed(2)+' pc)';
         if(heading.distance === 0) {
             distanceString = '';
             this.radar.show = false;
         } else {
             this.radar.show = true;
-            GameStateService.headingPosition.value = new Vector(
-                heading.object.position.x + world.planetGroup.position.x,
-                heading.object.position.x + world.planetGroup.position.y,
-            );
         }
+        GameStateService.headingPosition.value = new Vector(
+                heading.object.position.x + world.planetGroup.position.x,
+                heading.object.position.y + world.planetGroup.position.y,
+            );
         GameStateService.headingText.value = heading.name+distanceString;
 
         this.radar.position.set(this.position.x, this.position.y);

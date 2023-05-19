@@ -59,6 +59,7 @@ class GameStateService {
     public chosenHeading: Ref<number> = ref(0);
     public headingText: Ref<string> = ref('');
     public headingPosition: Ref<Vector> = ref(new Vector(0,0))
+    public multipleHeadingOptions: Ref<boolean> = ref(false);
 
     public upgradePercent: ComputedRef<number> = computed(() => {
         const total = this.upgrades.value.length;

@@ -1,3 +1,9 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@layer components {
+    .no-focus-style {
+        @apply focus:border-0 focus-visible:border-0 focus:ring-0 focus-visible:ring-0 focus:ring-transparent focus-visible:ring-transparent focus:outline-none focus-visible:outline-none;
+    }
+}

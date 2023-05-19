@@ -9,7 +9,7 @@ export class Radar extends Sprite  implements IGameObject {
     public tags: Array<string> = ['radar'];
     public show: boolean = true;
 
-    private fullOpacity: number = .2;
+    private fullOpacity: number = .3;
     private visibility: number = 0;
 
     constructor(){
@@ -18,7 +18,7 @@ export class Radar extends Sprite  implements IGameObject {
         this.texture = Manager.getTexture('player.radar');
 
         this.anchor.set(.5, .5);
-        this.scale.set(.5,.5);
+        this.scale.set(.5,-.5);
         this.alpha = 0;
 
         const world = <World>Manager.scene;
@@ -28,12 +28,12 @@ export class Radar extends Sprite  implements IGameObject {
     }
 
     update() {
-        // direction
-        const angle = (new Vector(this.position.x, this.position.y))
-            .subtract(GameStateService.headingPosition.value)
-            .angle();
 
-        this.angle = angle-180;
+        // direction
+        const positionVec = new Vector(this.position.x, this.position.y);
+        const target = GameStateService.headingPosition.value;
+        const angle = positionVec.subtract(target).normalize().angle();
+        if(angle) this.angle = angle;
 
         // opacity
         if(this.show && this.visibility < 1){

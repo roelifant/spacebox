@@ -92,10 +92,41 @@ export class Vector {
         return ((Math.PI * 2) - radian) * (180 / Math.PI);
     }
 
-    distance(vector: Vector){
+    distance(vector: Vector): number {
         if(this.components.length > 2 || vector.components.length > 2) {
             throw Error('This method only works for two-dimensional vectors!');
         }
         return Math.sqrt(Math.pow((this.x - vector.x), 2) + Math.pow((this.y - vector.y), 2));
+    }
+
+    angleTo(vector: Vector): number {
+        if(this.components.length > 2 || vector.components.length > 2) {
+            throw Error('This method only works for two-dimensional vectors');
+        }
+
+        const diff = this.subtract(vector);
+        const theta = Math.atan2(diff.x, diff.y);
+        return theta * (180 / Math.PI);
+    }
+
+    flipComponent(component: number): Vector {
+        if(component < 1 || component > this.components.length) throw Error('Vector does not have a '+component+'th component');
+        
+        const vector = new Vector(...this.components);
+        vector.components[component - 1] = -vector.components[component - 1];
+        
+        return vector;
+    }
+
+    flipX(): Vector{
+        return this.flipComponent(1);
+    }
+
+    flipY(): Vector{
+        return this.flipComponent(2);
+    }
+
+    flipZ(): Vector{
+        return this.flipComponent(3);
     }
 }
