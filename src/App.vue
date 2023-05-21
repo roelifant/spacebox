@@ -8,6 +8,7 @@
   import LoadUI from './components/LoadUI.vue';
   import PlanetUI from './components/PlanetUI.vue';
   import GameOverUI from './components/GameOverUI.vue';
+  import MobileWarningScreen from './components/MobileWarningScreen.vue';
 
 
   onMounted(() => {
@@ -27,6 +28,7 @@
   <GameOverUI/>
   <PlanetUI/>
   <FlightUI/>
+  <MobileWarningScreen/>
 </template>
 
 <style scoped>
