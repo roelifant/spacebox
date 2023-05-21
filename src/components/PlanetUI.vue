@@ -66,6 +66,63 @@
         itemInfoType.value = type;
     }
 
+    const showCargoInfo = (cargo: Cargo) => {
+        let name, info;
+        const type = 'cargo';
+
+        if(cargo === Cargo.Matter){
+            name = 'Matter';
+            info = 'All sorts of materials are traded between planets for their mass alone. In this trade the nature and the origin of the materials are not important, as long as they are not dangerous or inpractical to transport. While matter is considered the cheapest of all interstellar cargo it is invaluable for terraformers looking to alter the gravitational pull of their world, since a planet\'s gravity is dictated by its mass. Usually such amorphous matter is mined from asteroids along with ice and minerals, but some planets will also sell it if they don\'t need the gravity.'
+        }
+
+        if(cargo === Cargo.Water){
+            name = 'Water';
+            info = 'Since it\'s the juice of life, all settled planets need water. Usually water is mined in the form of ice from asteroids, allthough this process is more expensive than mining simple matter. There are also enough worlds that have too much ice on their surface and don\'t mind selling it to traders.'
+        }
+
+        if(cargo === Cargo.Flora){
+            name = 'Flora';
+            info = 'Once a difficult resource to comeby, flora are now transported freely throughout the galaxy. As primary producers, plants are needed to form the fundament of any biological climate. They do not grow in the cold void of space, so they must be obtained from planets.';
+        }
+
+        if(cargo === Cargo.Minerals){
+            name = 'Minerals';
+            info = 'Not all matter is equal. Some elements, molecules or crystaloid structures are expensive to recreate through synthetic processes. Because of this there is a demand for special, valuable materials found in rare asteroids or on planets that have the geology to naturally produce them. Minerals are considerably more valuable than ordinary matter and so they are more expensive to buy, but also more profitable to sell.';
+        }
+
+        if(cargo === Cargo.Fauna){
+            name = 'Fauna';
+            info = 'Biodiversity is invaluable. While some are just exotic pets, most fauna cargo are important collections of eukaryotes or invertibrates that any healthy world needs to maintain life. Not all life is easy to transport though, and this is what makes fauna more pricey than their flora counterparts.';
+        }
+
+        if(cargo === Cargo.Fungi){
+            name = 'Fungi';
+            info = 'The often forgotten, but vital part of any eco system. Fungi are transported all over the galaxy to stabilize climates and for medicinal and scientific purposes.';
+        }
+
+        if(cargo === Cargo.Energy){
+            name = 'Energy';
+            info = 'Just like your ship needs fuel, civilisations need to keep their lights on too. While many planets have their energy needs taken care of, other worlds are desperate to power their cities. Interstaller traders taking care of this demand, are not unheard of.';
+        }
+
+        if(cargo === Cargo.Weaponry){
+            name = 'Weaponry';
+            info = 'There is no business more profitable than war. Profitable as it is though, traders should beware that not all worlds appreciate the import of weapons.';
+        }
+
+        if(cargo === Cargo.Technology){
+            name = 'Technology';
+            info = 'Robotics, medicine, tools and even new theoretical methods. Few worlds are advanced enough, or even willing, to share their scientific findings and feats of engineering with others. But those that do will make a great profit and so will you when you.';
+        }
+
+        if(cargo === Cargo.Wisdom){
+            name = 'Wisdom';
+            info = 'One might not expect that the most intangible exports of all, could also be the most profitable. But that in itself requires much wisdom to understand. Culture, philosophy, religion and grand ideas of alien nature are in demand all over the galaxy. However, beware that some worlds might not appreciate rogue traders selling new ideas to people, that conflict with the ideas that those in power have already sold...';
+        }
+
+        if(name && info) showItemInfo(name, info, type);
+    }
+
     const hideItemInfo = () => {
         itemInfo.value = null;
         itemInfoName.value = null;
@@ -88,7 +145,7 @@
             <div class="w-full border-2 p-4 flex justify-between">
                 <div class="w-3/12 relative">
                     <div class="absolute transition-opacity duration-300" :class="{'opacity-0': !itemInfo}">
-                        <h2 class="text-lg font-bold">{{ itemInfoName }} <span class="text-gray-500">({{ itemInfoType }})</span> </h2>
+                        <h2 class="text-lg font-bold">{{ itemInfoName }} <span class="text-gray-500 font-normal text-sm">({{ itemInfoType }})</span> </h2>
                         <p class="text-sm">{{ itemInfo }}</p>
                     </div>
                     <div class="absolute transition-opacity duration-300" :class="{'opacity-0': !!itemInfo}">
@@ -134,6 +191,8 @@
 
                                 <div
                                     class="border-2 flex items-center gap-2 w-full"
+                                    @mouseenter="showCargoInfo(cargo.key)"
+                                    @mouseleave="hideItemInfo()"
                                     v-for="cargo in selling" :key="cargo.key"
                                 >
                                     <div class="w-14 h-14 flex justify-center items-center border-r-2">
