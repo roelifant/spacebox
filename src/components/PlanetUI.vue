@@ -1,11 +1,15 @@
 <script setup lang="ts">
-    import { computed } from 'vue';
+    import { Ref, computed, onMounted, ref } from 'vue';
     import GameStateService from '../game/services/GameStateService';
     import PlanetUIService from '../game/services/PlanetUIService';
     import Market from '../game/services/Market';
     import { Cargo } from '../game/enums/Cargo';
     import { Upgrade } from '../game/objects/Upgrade';
     import {title} from '../game/utils/StringManipulation';
+
+    const itemInfoName: Ref<string|null> = ref(null);
+    const itemInfoType: Ref<string|null> = ref(null);
+    const itemInfo: Ref<string|null> = ref(null);
 
     const onTakeOffButtonClick = (e: Event) => {
         (<HTMLButtonElement>e.target).blur();
@@ -54,7 +58,18 @@
             }
         });
     return upgrades;
-    })
+    });
+
+    const showItemInfo = (name: string, info: string, type: string) => {
+        itemInfo.value = info;
+        itemInfoName.value = name;
+        itemInfoType.value = type;
+    }
+
+    const hideItemInfo = () => {
+        itemInfo.value = null;
+        itemInfoName.value = null;
+    }
 </script>
 
 <template>
@@ -71,9 +86,15 @@
         <div class="mx-auto w-full mt-20 px-6">
             <h1 class="text-2xl font-bold mb-2">{{ PlanetUIService.planet?.name}}</h1>
             <div class="w-full border-2 p-4 flex justify-between">
-                <div class="w-3/12">
-                    <h2 class="text-lg font-bold">Info</h2>
-                    <p class="text-sm">{{ PlanetUIService.planet?.info}}</p>
+                <div class="w-3/12 relative">
+                    <div class="absolute transition-opacity duration-300" :class="{'opacity-0': !itemInfo}">
+                        <h2 class="text-lg font-bold">{{ itemInfoName }} <span class="text-gray-500">({{ itemInfoType }})</span> </h2>
+                        <p class="text-sm">{{ itemInfo }}</p>
+                    </div>
+                    <div class="absolute transition-opacity duration-300" :class="{'opacity-0': !!itemInfo}">
+                        <h2 class="text-lg font-bold">Planet info</h2>
+                        <p class="text-sm">{{ PlanetUIService.planet?.info }}</p>
+                    </div>
                 </div>
                 <div class="w-9/12 pl-12">
 
@@ -144,6 +165,8 @@
                             <div class="grid grid-cols-3 xl:grid-cols-4 w-full py-2 gap-2">
                                 <div
                                     class="border-2 flex items-center gap-2 w-full"
+                                    @mouseenter="showItemInfo(upgrade.name, upgrade.description, 'upgrade')"
+                                    @mouseleave="hideItemInfo()"
                                     v-for="upgrade in upgrades" :key="upgrade.key"
                                 >
                                     
@@ -156,7 +179,9 @@
                                         <p class="text-xs">§ {{ upgrade.price }}</p>
                                     </div>
 
-                                    <button @click="upgrade.purchase()" :disabled="!upgrade.canBuy()"
+                                    <button
+                                        @click="upgrade.purchase()"
+                                        :disabled="!upgrade.canBuy()"
                                         class="
                                             border-2
                                             text-white
@@ -181,3 +206,15 @@
         </div>
     </div>
 </template>
+
+<style scoped>
+.v-enter-active,
+.v-leave-active {
+  transition: opacity 0.3s ease;
+}
+
+.v-enter-from,
+.v-leave-to {
+  opacity: 0;
+}
+</style>

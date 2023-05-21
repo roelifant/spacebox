@@ -181,7 +181,7 @@ export class World extends Container implements IScene {
                 new Upgrade({
                     key: 'cargo_fungi',
                     name: 'Fungi cargo module',
-                    description: 'Allows you to keep and maintain fungi habitats on your spaceship, so they can be transported and traded across the galaxy.',
+                    description: 'Allows you to keep and maintain fungi habitats on your spaceship, so fungi can be transported and traded across the galaxy.',
                     icon: 'upgrades/fungiStorage.png',
                     price: 1000
                 }),
