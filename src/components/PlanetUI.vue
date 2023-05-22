@@ -176,7 +176,7 @@
                                 >
                                     
                                     <div class="w-14 h-14 flex justify-center items-center border-r-2">
-                                        <img :src="'./img/icons/Matter.png'" alt="fuel" class="w-8">
+                                        <img :src="'./img/icons/Fuel.png'" alt="fuel" class="w-10 h-10 object-contain">
                                     </div>
 
                                     <div class="flex flex-col h-full justify-center pl-2 overflow-hidden flex-grow">
@@ -208,7 +208,7 @@
                                     v-for="cargo in selling" :key="cargo.key"
                                 >
                                     <div class="w-14 h-14 flex justify-center items-center border-r-2">
-                                        <img :src="'./img/icons/'+title(cargo.key)+'.png'" :alt="cargo.key" class="w-8">
+                                        <img :src="'./img/icons/'+title(cargo.key)+'.png'" :alt="cargo.key" class="w-10 h-10 object-contain">
                                     </div>
 
                                     <div class="flex flex-col h-full justify-center pl-2 overflow-hidden flex-grow">
@@ -242,7 +242,7 @@
                                 >
                                     
                                     <div class="w-14 h-14 flex justify-center items-center border-r-2">
-                                        <img :src="'./img/icons/'+upgrade.icon" alt="matter" class="w-8">
+                                        <img :src="'./img/icons/'+upgrade.icon" alt="matter" class="w-10 h-10 object-contain">
                                     </div>
 
                                     <div class="flex flex-col h-full justify-center pl-2 overflow-hidden flex-grow">
