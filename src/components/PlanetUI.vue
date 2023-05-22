@@ -123,6 +123,14 @@
         if(name && info) showItemInfo(name, info, type);
     }
 
+    const showFuelInfo = () => {
+        showItemInfo(
+            'Fuel',
+            'Needed to travel through space. The more manoeuvres you make (turning, breaking, accelerating,...) the more fuel you will spend while flying.',
+            'basics'
+        );
+    }
+
     const hideItemInfo = () => {
         itemInfo.value = null;
         itemInfoName.value = null;
@@ -157,11 +165,15 @@
 
                     <h2 class="text-lg font-bold border-b-2 pb-1">Shop</h2>
 
-                            <h3 class="text-md pt-4">Basic</h3>
+                            <h3 class="text-md pt-4">Basics</h3>
 
                             <div class="grid grid-cols-3 xl:grid-cols-4 w-full py-2 gap-2">
                                 
-                                <div class="border-2 flex items-center w-full gap-2">
+                                <div
+                                    @mouseenter="showFuelInfo()"
+                                    @mouseleave="hideItemInfo()"
+                                    class="border-2 flex items-center w-full gap-2"
+                                >
                                     
                                     <div class="w-14 h-14 flex justify-center items-center border-r-2">
                                         <img :src="'./img/icons/Matter.png'" alt="fuel" class="w-8">
