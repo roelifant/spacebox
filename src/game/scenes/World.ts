@@ -156,9 +156,9 @@ export class World extends Container implements IScene {
         this.player.latestPlanet = humble;
         this.planets.push(humble);
 
-        let mycen = new Planet({
+        const mycen = new Planet({
             name: 'Mycen',
-            info: 'Lorem ipsum.',
+            info: 'Despite being an unstable planet, Mycen harbors a very interesting eco system. Giant roots from fungus networks grow between the cracks that seperate the continents, creating strange hanging mushroom jungles where equally strange alien creatures float around in the damp atmosphere. There may not be much ground to stand on, but this low gravity world is a sight to behold.',
             asset: 'planet.mycen',
             x: 2000,
             y: -5000,
@@ -213,6 +213,64 @@ export class World extends Container implements IScene {
         this.groups.get('planets')?.addChild(mycen);
         this.objects.push(mycen);
         this.planets.push(mycen);
+
+        const oer = new Planet({
+            name: 'Oer',
+            info: 'The jungles on Oer get so dense that explorers have compared the darkness on the forest floors to that of black holes. The climate is seemingly inpenetrable, thanks to the large, dangerous wildlife that inhabbits it. Traders are cautioned not to wander too far from the space ports, as the slow deforestation process tends to draw monstrous beasts out that won\'t go down without a fight.',
+            asset: 'planet.oer',
+            x: 5000,
+            y: 1000,
+            needs: [Cargo.Technology, Cargo.Weaponry],
+            products: [
+                {
+                    type: Cargo.Flora,
+                    max: 12
+                },
+                {
+                    type: Cargo.Fauna,
+                    max: 4
+                },
+                {
+                    type: Cargo.Minerals,
+                    max: 2
+                }
+            ],
+            upgrades: [
+                new Upgrade({
+                    key: 'cargo_fauna',
+                    name: 'Fauna cargo module',
+                    description: 'Allows you to keep and maintain habitats for fauna on your spaceship, so fauna can be transported and traded across the galaxy.',
+                    icon: 'upgrades/faunaStorage.png',
+                    price: 2000
+                }),
+                new Upgrade({
+                    key: 'cargo_capacity',
+                    name: 'Cargo capacity',
+                    description: 'Increase your available cargo space so you can carry 5 more of any cargo types.',
+                    price: 250,
+                    stackWith: 'cargo_capacity',
+                    icon: 'upgrades/cargoExpansion.png',
+                    action: () => {
+                        GameStateService.inventory.value.maxCargo += 5;
+                    }
+                }),
+                new Upgrade({
+                    key: 'fuel_capacity',
+                    name: 'Fuel capacity',
+                    description: 'Increase your fuel capacity so you can fly longer distances without needing to refuel.',
+                    price: 250,
+                    stackWith: 'fuel_capacity',
+                    icon: 'upgrades/extraFuel.png',
+                    action: () => {
+                        GameStateService.inventory.value.maxFuel += 250;
+                        GameStateService.inventory.value.fuel += 250;
+                    }
+                })
+            ]
+        });
+        this.groups.get('planets')?.addChild(oer);
+        this.objects.push(oer);
+        this.planets.push(oer);
 
         // asteroids
         new AsteroidField(1000,-3000);
