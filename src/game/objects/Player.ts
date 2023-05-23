@@ -299,10 +299,7 @@ export class Player extends Sprite implements IPhysics {
         this.headings = world.planets
         .filter(planet => planet.discovered)
         .map(planet => {
-            const planetVector = new Vector(
-                planet.position.x + world.planetGroup.position.x,
-                planet.position.y + world.planetGroup.position.y
-            );
+            const planetVector = planet.parallaxPosition;
             let distance = positionVector.distance(planetVector) - 500;
             if(distance < 0) distance = 0;
 
@@ -332,10 +329,7 @@ export class Player extends Sprite implements IPhysics {
         } else {
             this.radar.show = true;
         }
-        GameStateService.headingPosition.value = new Vector(
-                heading.object.position.x + world.planetGroup.position.x,
-                heading.object.position.y + world.planetGroup.position.y,
-            );
+        GameStateService.headingPosition.value = heading.object.parallaxPosition;
         GameStateService.headingText.value = heading.name+distanceString;
 
         this.radar.position.set(this.position.x, this.position.y);

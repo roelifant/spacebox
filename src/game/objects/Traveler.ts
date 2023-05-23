@@ -7,6 +7,7 @@ import * as particles from '@pixi/particle-emitter';
 import emitterSettings from "./../../assets/json/emitter.json";
 import { IGameObject } from "../interfaces/IGameObject";
 import { World } from "../scenes/World";
+import { Planet } from "./Planet";
 
 export class Traveler extends Sprite implements IPhysics, IGameObject {
     public tags: Array<string> = ['ship', 'traveler'];
@@ -18,8 +19,8 @@ export class Traveler extends Sprite implements IPhysics, IGameObject {
     public collisionWeight: number = 3;
 
     private lastAngle: number = 0;
-
     private emitter: Emitter;
+    private target: Planet|null = null;
 
     constructor() {
         super();
@@ -44,16 +45,21 @@ export class Traveler extends Sprite implements IPhysics, IGameObject {
     }
 
     public update() {
-        const world: World = <World>Manager.scene;
+        if(this.target) {
+            const targetPosition = this.target.parallaxPosition;
+            const positionVector = new Vector(this.position.x, this.position.y);
 
-        const target = new Vector(world.player.position.x, world.player.position.y);
-        const direction = (new Vector(this.position.x, this.position.y)).subtract(target).normalize();
-        const acceleration = direction.scale(this.acceleration);
+            if(targetPosition.distance(positionVector) > 400 ) {
+                const direction = positionVector.subtract(targetPosition).normalize();
+                const acceleration = direction.scale(this.acceleration);
 
-        if(!!acceleration.length) {
-            this.momentum = this.momentum.add(acceleration);
+                if(!!acceleration.length) this.momentum = this.momentum.add(acceleration);
+            } else {
+                this.target = null;
+            }
+        } else {
+            this.selectNewTarget();
         }
-
 
         /**
          *  Particles
@@ -96,5 +102,13 @@ export class Traveler extends Sprite implements IPhysics, IGameObject {
     private getAngle(velocityX: number, velocityY: number): number {
         if(Math.abs(velocityX) < 0.00001 && Math.abs(velocityY) < 0.00001) return this.lastAngle;
         return (Math.atan2(velocityY, velocityX) * 180 / Math.PI) - 90;
+    }
+
+    private selectNewTarget(){
+        const world: World = <World>Manager.scene;
+
+        const newTarget = world.planets[Math.floor(world.planets.length*Math.random())];
+
+        this.target = newTarget;
     }
 }

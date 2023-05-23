@@ -5,6 +5,7 @@ import PlanetConfig, { CargoProduct, PlanetCargoInventory } from "../interfaces/
 import { Manager } from "../Manager";
 import { World } from "../scenes/World";
 import { Upgrade } from "./Upgrade";
+import { Vector } from "../utils/Vector";
 
 export class Planet extends Sprite implements IGameObject {
 
@@ -30,6 +31,15 @@ export class Planet extends Sprite implements IGameObject {
         weaponry: 0,
         wisdom: 0,
     };
+
+    public get parallaxPosition() {
+        const world = <World>Manager.scene;
+
+        return new Vector (
+            world.planetGroup.position.x + this.position.x,
+            world.planetGroup.position.y + this.position.y,
+        );
+    }
 
     constructor(config: PlanetConfig){
         super();
