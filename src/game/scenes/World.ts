@@ -23,7 +23,8 @@ import { Traveler } from "../objects/Traveler";
 export class World extends Container implements IScene {
 
     public player: Player;
-    public traveler: Traveler;
+    public traveler1: Traveler;
+    public traveler2: Traveler;
     public objects: Array<IGameObject> = [];
     public planets: Array<Planet> = [];
     public particles: ParticleContainer;
@@ -50,6 +51,8 @@ export class World extends Container implements IScene {
         Manager.setLoadingScene(this);
 
         this.scheduler = new Scheduler();
+        this.x = Manager.width/2;
+        this.y = Manager.height/2;
 
         // background
         // this.background = new Background('sky');
@@ -81,16 +84,21 @@ export class World extends Container implements IScene {
 
         // set player
         this.player = new Player('player');
-        this.x = Manager.width/2;
-        this.y = Manager.height/2;
+        
         this.addChild(this.player);
 
         // add traveler
-        this.traveler = new Traveler();
-        this.x = Manager.width/2;
-        this.y = Manager.height/2;
-        this.objects.push(this.traveler);
-        this.addChild(this.traveler);
+        this.traveler1 = new Traveler();
+        this.traveler1.x = 5000;
+        this.traveler1.y = -2500;
+        this.objects.push(this.traveler1);
+        this.addChild(this.traveler1);
+
+        this.traveler2 = new Traveler();
+        this.traveler2.x = -5000;
+        this.traveler2.y = -10000;
+        this.objects.push(this.traveler2);
+        this.addChild(this.traveler2);
         
         // this.background.startTracking(this.player);
 
@@ -281,10 +289,129 @@ export class World extends Container implements IScene {
         this.objects.push(oer);
         this.planets.push(oer);
 
+        const swept = new Planet({
+            name: 'Swept',
+            info: 'There is no hotter or dryer landscape than the deserts of Swept. Heat is emmited from the very core of the planet itself, which the settlers use to power their habitats. Energy is even exported to other planets. Despite this lucrative trade, the deserts remain a difficult place for settlers to endure without spiritual guidance.',
+            asset: 'planet.swept',
+            x: 10000,
+            y: -6000,
+            needs: [Cargo.Water, Cargo.Wisdom],
+            products: [
+                {
+                    type: Cargo.Energy,
+                    max: 5
+                },
+                {
+                    type: Cargo.Matter,
+                    max: 4
+                },
+                {
+                    type: Cargo.Fauna,
+                    max: 3
+                }
+            ],
+            upgrades: [
+                new Upgrade({
+                    key: 'cargo_energy',
+                    name: 'energy cargo module',
+                    description: 'Allows you to store raw energy on your spaceship, so it can be transported and traded across the galaxy.',
+                    icon: 'upgrades/energyStorage.png',
+                    price: 3000
+                }),
+                new Upgrade({
+                    key: 'cargo_capacity',
+                    name: 'Cargo capacity',
+                    description: 'Increase your available cargo space so you can carry 5 more of any cargo types.',
+                    price: 250,
+                    stackWith: 'cargo_capacity',
+                    icon: 'upgrades/cargoExpansion.png',
+                    action: () => {
+                        GameStateService.inventory.value.maxCargo += 5;
+                    }
+                }),
+                new Upgrade({
+                    key: 'fuel_capacity',
+                    name: 'Fuel capacity',
+                    description: 'Increase your fuel capacity so you can fly longer distances without needing to refuel.',
+                    price: 250,
+                    stackWith: 'fuel_capacity',
+                    icon: 'upgrades/extraFuel.png',
+                    action: () => {
+                        GameStateService.inventory.value.maxFuel += 250;
+                        GameStateService.inventory.value.fuel += 250;
+                    }
+                })
+            ]
+        });
+        this.groups.get('planets')?.addChild(swept);
+        this.objects.push(swept);
+        this.planets.push(swept);
+
+        const noctar = new Planet({
+            name: 'Noctar',
+            info: 'Far away from any sun, all the light on this world come from its cities which are vast and span across the entire planet. This night world has the largest population of any planet in the galaxy, and is responsable for almost all technological innovations in recent galactic memory.',
+            asset: 'planet.noctar',
+            x: 12000,
+            y: 8000,
+            needs: [Cargo.Fungi, Cargo.Wisdom],
+            products: [
+                {
+                    type: Cargo.Technology,
+                    max: 5
+                },
+                {
+                    type: Cargo.Energy,
+                    max: 3
+                },
+                {
+                    type: Cargo.Weaponry,
+                    max: 1
+                }
+            ],
+            upgrades: [
+                new Upgrade({
+                    key: 'cargo_technology',
+                    name: 'energy cargo module',
+                    description: 'Allows you to distribute robotics, medicine, formula\'s, tools and patents.',
+                    icon: 'upgrades/technologyStorage.png',
+                    price: 6000
+                }),
+                new Upgrade({
+                    key: 'cargo_capacity',
+                    name: 'Cargo capacity',
+                    description: 'Increase your available cargo space so you can carry 5 more of any cargo types.',
+                    price: 250,
+                    stackWith: 'cargo_capacity',
+                    icon: 'upgrades/cargoExpansion.png',
+                    action: () => {
+                        GameStateService.inventory.value.maxCargo += 5;
+                    }
+                }),
+                new Upgrade({
+                    key: 'fuel_capacity',
+                    name: 'Fuel capacity',
+                    description: 'Increase your fuel capacity so you can fly longer distances without needing to refuel.',
+                    price: 250,
+                    stackWith: 'fuel_capacity',
+                    icon: 'upgrades/extraFuel.png',
+                    action: () => {
+                        GameStateService.inventory.value.maxFuel += 250;
+                        GameStateService.inventory.value.fuel += 250;
+                    }
+                })
+            ]
+        });
+        this.groups.get('planets')?.addChild(noctar);
+        this.objects.push(noctar);
+        this.planets.push(noctar);
+
         // asteroids
         new AsteroidField(1000,-3000);
         new AsteroidField(-2000,2500);
         new AsteroidField(-3500,-1500);
+        new AsteroidField(5000,-2500);
+        new AsteroidField(13000,-7000);
+        new AsteroidField(6000,3000);
 
         // set interactions
         this.on('pointertap', () => {

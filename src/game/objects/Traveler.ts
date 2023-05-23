@@ -27,7 +27,7 @@ export class Traveler extends Sprite implements IPhysics, IGameObject {
 
         this.maxSpeed = .5;
         this.momentum = new Vector(0,0);
-        this.acceleration = 0.005;
+        this.acceleration = 0.003;
         this.drag = 0.001;
 
         this.texture = Manager.getTexture('ship.traveler');
