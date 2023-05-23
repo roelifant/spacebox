@@ -137,12 +137,12 @@ export class Player extends Sprite implements IPhysics {
          *  Particles
          */
         this.emitter.updateSpawnPos(this.x, this.y);
-        if(new Vector(this.momentum.x, this.momentum.y).length < 0.1){
+        if(this.momentum.length < 0.1){
             this.emitter.emit = false;
-        } else if(new Vector(this.momentum.x, this.momentum.y).length < 0.3) {
+        } else if(this.momentum.length < 0.3) {
             this.emitter.emit = true;
             this.emitter.frequency = 0.01;
-        } else if(new Vector(this.momentum.x, this.momentum.y).length < 0.7) {
+        } else if(this.momentum.length < 0.7) {
             this.emitter.emit = true;
             this.emitter.frequency = 0.005;
         } else {

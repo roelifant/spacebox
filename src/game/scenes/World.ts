@@ -18,10 +18,12 @@ import Market from "../services/Market";
 import { AsteroidField } from "../objects/AsteroidField";
 import { Upgrade } from "../objects/Upgrade";
 import { IHeadingOption } from "../interfaces/IHeadingOption";
+import { Traveler } from "../objects/Traveler";
 
 export class World extends Container implements IScene {
 
     public player: Player;
+    public traveler: Traveler;
     public objects: Array<IGameObject> = [];
     public planets: Array<Planet> = [];
     public particles: ParticleContainer;
@@ -82,6 +84,13 @@ export class World extends Container implements IScene {
         this.x = Manager.width/2;
         this.y = Manager.height/2;
         this.addChild(this.player);
+
+        // add traveler
+        this.traveler = new Traveler();
+        this.x = Manager.width/2;
+        this.y = Manager.height/2;
+        this.objects.push(this.traveler);
+        this.addChild(this.traveler);
         
         // this.background.startTracking(this.player);
 
