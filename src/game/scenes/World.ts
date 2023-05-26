@@ -42,7 +42,7 @@ export class World extends Container implements IScene {
     private stars3: WrappingBackground;
     private stars4: WrappingBackground;
 
-    private target: Target;
+    // private target: Target;
 
     
 
@@ -349,7 +349,7 @@ export class World extends Container implements IScene {
 
         const noctar = new Planet({
             name: 'Noctar',
-            info: 'Far away from any sun, all the light on this world come from its cities which are vast and span across the entire planet. This night world has the largest population of any planet in the galaxy, and is responsable for almost all technological innovations in recent galactic memory.',
+            info: 'Far away from any sun, all the light on this world comes from its cities which are vast and span across the entire planet. This night world has the largest population of any planet in the galaxy, and is responsable for almost all technological innovations in recent galactic memory.',
             asset: 'planet.noctar',
             x: 12000,
             y: 8000,
@@ -419,11 +419,11 @@ export class World extends Container implements IScene {
         }, this);
         this.interactive = true;
 
-        this.target = new Target();
-        this.target.x = 300;
-        this.target.y = 300;
-        this.addChild(this.target);
-        this.objects.push(this.target);
+        // this.target = new Target();
+        // this.target.x = 300;
+        // this.target.y = 300;
+        // this.addChild(this.target);
+        // this.objects.push(this.target);
 
         /** keyboard events */
         Keyboard.registerEvent('KeyP', () => this.pauseTrigger());

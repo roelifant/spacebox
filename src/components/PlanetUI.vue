@@ -112,7 +112,7 @@
 
         if(cargo === Cargo.Technology){
             name = 'Technology';
-            info = 'Robotics, medicine, tools and even new theoretical methods. Few worlds are advanced enough, or even willing, to share their scientific findings and feats of engineering with others. But those that do will make a great profit and so will you when you.';
+            info = 'Robotics, medicine, tools and even new theoretical methods. Few worlds are advanced enough, or even willing, to share their scientific findings and feats of engineering with others. But those that do will make a great profit and so will you.';
         }
 
         if(cargo === Cargo.Wisdom){

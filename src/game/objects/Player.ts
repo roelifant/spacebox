@@ -24,16 +24,15 @@ export class Player extends Sprite implements IPhysics {
     public drag: number;
     public momentum: Vector;
     public collisionWeight: number = 3;
+    public radar: Radar|undefined;
 
     public canLand: boolean = false;
     public landed: boolean = false;
     public latestPlanet: Planet|null = null;
     public respawnPoint: Vector|null = null;
-    public headings: Array<IHeadingOption> = [];
 
     private lastAngle: number;
     private emitter: Emitter;
-    private radar: Radar|undefined;
 
     constructor(texture: string) {
         super();

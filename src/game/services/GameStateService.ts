@@ -6,6 +6,7 @@ import { Manager } from "../Manager";
 import { Upgrade } from "../objects/Upgrade";
 import { World } from "../scenes/World";
 import { Vector } from "../utils/Vector";
+import { IHeadingOption } from "../interfaces/IHeadingOption";
 
 class GameStateService {
     public canLand: Ref<boolean> = ref(false);
@@ -56,6 +57,7 @@ class GameStateService {
 
     public upgrades: Ref<Array<Upgrade>> = ref([]);
 
+    public headings: Array<IHeadingOption> = [];
     public chosenHeading: Ref<number> = ref(0);
     public headingText: Ref<string> = ref('');
     public headingPosition: Ref<Vector> = ref(new Vector(0,0))
@@ -110,6 +112,54 @@ class GameStateService {
 
         this.gameOver.value = false;
         Manager.continueScene();
+    }
+
+    updateHeadings(): void {
+        const world = <World>Manager.scene;
+        const player = world.player;
+        const radar = player.radar;
+
+        if(!radar) return;
+
+        const positionVector = new Vector(player.position.x, player.position.y);
+
+        this.headings = world.planets
+        .filter(planet => planet.discovered)
+        .map(planet => {
+            const planetVector = planet.parallaxPosition;
+            let distance = positionVector.distance(planetVector) - 500;
+            if(distance < 0) distance = 0;
+
+            return {
+                distance: Math.floor(distance),
+                name: planet.name,
+                object: planet
+            }
+        });
+
+        if(this.headings.length > 1) this.multipleHeadingOptions.value = true;
+
+        let index = this.chosenHeading.value;
+        if(index > this.headings.length - 1) {
+            this.chosenHeading.value = 0;
+            index = 0;
+        }
+        if(index < 0) {
+            index = this.headings.length - 1;
+        }
+
+        const heading = this.headings[index];
+        let distanceString = ' ('+(Math.floor(heading.distance)/1000).toFixed(2)+' pc)';
+        if(heading.distance === 0) {
+            distanceString = '';
+            radar.show = false;
+        } else {
+            radar.show = true;
+        }
+        this.headingPosition.value = heading.object.parallaxPosition;
+        this.headingText.value = heading.name+distanceString;
+
+        radar.position.set(player.position.x, player.position.y);
     }
 }
 

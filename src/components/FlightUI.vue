@@ -34,12 +34,14 @@ const onHeadingLeft = (e: Event) => {
   (<HTMLButtonElement>e.target).blur();
 
   GameStateService.chosenHeading.value--;
+  GameStateService.updateHeadings();
 }
 const onHeadingRight = (e: Event) => {
   e.preventDefault();
   (<HTMLButtonElement>e.target).blur();
 
   GameStateService.chosenHeading.value++;
+  GameStateService.updateHeadings();
 }
 
 const fuelPercent: ComputedRef = computed(() => {
