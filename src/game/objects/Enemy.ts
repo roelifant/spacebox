@@ -1,35 +1,37 @@
-import {Sprite} from "pixi.js";
+import { Sprite } from "pixi.js";
 import { IPhysics } from "../interfaces/IPhysics";
+import { IGameObject } from "../interfaces/IGameObject";
 import { Vector } from "../utils/Vector";
 import { Manager } from "../Manager";
 import { Emitter, upgradeConfig } from "@pixi/particle-emitter";
 import emitterSettings from "./../../assets/json/emitter.json";
-import { IGameObject } from "../interfaces/IGameObject";
 import { World } from "../scenes/World";
 import { Planet } from "./Planet";
+import { Player } from "./Player";
 
-export class Traveler extends Sprite implements IPhysics, IGameObject {
-    public tags: Array<string> = ['ship', 'traveler'];
+export class Enemy extends Sprite implements IPhysics, IGameObject {
+    public tags: Array<string> = ['ship', 'enemy'];
     
     public maxSpeed: number = .5;
-    public acceleration: number = 0.003;
-    public drag: number = 0.001;
+    public acceleration: number = 0.0035;
+    public drag: number = 0.0015;
     public momentum: Vector = new Vector(0,0);
     public collisionWeight: number = 3;
 
     private lastAngle: number = 0;
     private emitter: Emitter;
-    private target: Planet|null = null;
-
-    constructor() {
+    private target: Planet|Player|null = null;
+    private chasing: boolean = false;
+    
+    constructor(texture: string) {
         super();
 
-        this.texture = Manager.getTexture('ship.traveler');
-
-        this.anchor.set(.5,.5);
+        this.texture = Manager.getTexture(texture);
+        this.tint = 0xed5d5d;
 
         const particleTexture = Manager.getTexture('player');
 
+        this.anchor.set(.5,.5);
         this.scale.set(.5, .5);
 
         this.emitter = new Emitter(Manager.scene.particles, upgradeConfig(emitterSettings, [particleTexture]));
@@ -39,17 +41,47 @@ export class Traveler extends Sprite implements IPhysics, IGameObject {
     }
 
     public update() {
+        
+        const world = <World>Manager.scene;
+        const position = new Vector(this.position.x, this.position.y);
+        const playerPosition = new Vector(world.player.x, world.player.y);
+
+        // detect player
+        const playerDistance = position.distance(playerPosition);
+    
+
+        if(playerDistance <= 750) {
+            this.chasing = true;
+            this.target = world.player;
+        }
+
+        if(playerDistance >= 1750) {
+            this.chasing = false;
+            this.selectNewTarget();
+        }
+
         if(this.target) {
-            const targetPosition = this.target.parallaxPosition;
-            const positionVector = new Vector(this.position.x, this.position.y);
-
-            if(targetPosition.distance(positionVector) > 400 ) {
-                const direction = positionVector.subtract(targetPosition).normalize();
-                const acceleration = direction.scale(this.acceleration);
-
-                if(!!acceleration.length) this.momentum = this.momentum.add(acceleration);
+            let targetPosition;
+            if(!this.chasing && this.target instanceof Planet) {
+                targetPosition = this.target.parallaxPosition;
+                if(targetPosition.distance(position) > 400 ) {
+                    const direction = position.subtract(targetPosition).normalize();
+                    const acceleration = direction.scale(this.acceleration);
+    
+                    if(!!acceleration.length) this.momentum = this.momentum.add(acceleration);
+                } else {
+                    this.chasing = false;
+                    this.target = null;
+                }
             } else {
-                this.target = null;
+                targetPosition = playerPosition;
+
+                let direction = position.subtract(targetPosition).normalize();
+                if(playerDistance < 125) {
+                    direction = direction.flipX().flipY();
+                }
+                const acceleration = direction.scale(this.acceleration);
+                if(!!acceleration.length) this.momentum = this.momentum.add(acceleration);
             }
         } else {
             this.selectNewTarget();

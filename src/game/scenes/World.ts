@@ -7,11 +7,9 @@ import {Player} from "../objects/Player";
 import { Planet } from "../objects/Planet";
 import {Mouse} from "../Mouse";
 import {IGameObject} from "../interfaces/IGameObject";
-import {Target} from "../objects/Target";
 import { WrappingBackground } from "../objects/WrappingBackground";
 import { Keyboard } from "../Keyboard";
 import GameStateService from "../services/GameStateService";
-import { Asteroid } from "../objects/Asteroid";
 import { Cargo } from "../enums/Cargo";
 import Scheduler from "../services/Scheduler";
 import Market from "../services/Market";
@@ -19,12 +17,14 @@ import { AsteroidField } from "../objects/AsteroidField";
 import { Upgrade } from "../objects/Upgrade";
 import { IHeadingOption } from "../interfaces/IHeadingOption";
 import { Traveler } from "../objects/Traveler";
+import { Enemy } from "../objects/Enemy";
 
 export class World extends Container implements IScene {
 
     public player: Player;
     public traveler1: Traveler;
     public traveler2: Traveler;
+    public enemies: Array<Enemy> = [];
     public objects: Array<IGameObject> = [];
     public planets: Array<Planet> = [];
     public particles: ParticleContainer;
@@ -84,7 +84,7 @@ export class World extends Container implements IScene {
 
         // set player
         this.player = new Player('player');
-        
+        this.objects.push(this.player);
         this.addChild(this.player);
 
         // add traveler
@@ -99,6 +99,16 @@ export class World extends Container implements IScene {
         this.traveler2.y = -10000;
         this.objects.push(this.traveler2);
         this.addChild(this.traveler2);
+
+        const enemyCount = 3;
+        for (let i = 0; i < enemyCount; i++) {
+            const enemy = new Enemy('ship.pirate');
+            enemy.x = 5000;
+            enemy.y = -3000;
+            this.objects.push(enemy);
+            this.enemies.push(enemy);
+            this.addChild(enemy);
+        }
         
         // this.background.startTracking(this.player);
 
@@ -447,7 +457,6 @@ export class World extends Container implements IScene {
         if(!this.paused){
             Group.shared.update();
 
-            this.player.update();
             this.objects.forEach(object => object.update());
             // this.background.update();
             this.stars1.update();
