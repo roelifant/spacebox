@@ -100,7 +100,7 @@ export class World extends Container implements IScene {
         this.objects.push(this.traveler2);
         this.addChild(this.traveler2);
 
-        const enemyCount = 3;
+        const enemyCount = 20;
         for (let i = 0; i < enemyCount; i++) {
             const enemy = new Enemy('ship.pirate');
             enemy.x = 5000;

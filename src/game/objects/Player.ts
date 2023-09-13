@@ -48,7 +48,7 @@ export class Player extends Sprite implements IPhysics, IGameObject {
 
         this.anchor.set(0.5, 0.5);
 
-        const particleTexture = Manager.getTexture(texture);
+        const particleTexture = Manager.getTexture('particles.exhaust');
 
         this.scale.set(.5, .5);
 

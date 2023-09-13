@@ -8,6 +8,7 @@ import emitterSettings from "./../../assets/json/emitter.json";
 import { World } from "../scenes/World";
 import { Planet } from "./Planet";
 import { Player } from "./Player";
+import GameStateService from "../services/GameStateService";
 
 export class Enemy extends Sprite implements IPhysics, IGameObject {
     public tags: Array<string> = ['ship', 'enemy'];
@@ -29,7 +30,7 @@ export class Enemy extends Sprite implements IPhysics, IGameObject {
         this.texture = Manager.getTexture(texture);
         this.tint = 0xed5d5d;
 
-        const particleTexture = Manager.getTexture('player');
+        const particleTexture = Manager.getTexture('particles.exhaust');
 
         this.anchor.set(.5,.5);
         this.scale.set(.5, .5);
@@ -91,18 +92,24 @@ export class Enemy extends Sprite implements IPhysics, IGameObject {
          *  Particles
          */
         this.emitter.updateSpawnPos(this.x, this.y);
-        if(this.momentum.length < 0.1){
-            this.emitter.emit = false;
-        } else if(this.momentum.length < 0.3) {
-            this.emitter.emit = true;
-            this.emitter.frequency = 0.01;
-        } else if(this.momentum.length < 0.7) {
-            this.emitter.emit = true;
-            this.emitter.frequency = 0.005;
+        
+        if(playerPosition.distance(position) < 1250) {
+            if(this.momentum.length < 0.1){
+                this.emitter.emit = false;
+            } else if(this.momentum.length < 0.3) {
+                this.emitter.emit = true;
+                this.emitter.frequency = 0.01;
+            } else if(this.momentum.length < 0.7) {
+                this.emitter.emit = true;
+                this.emitter.frequency = 0.005;
+            } else {
+                this.emitter.emit = true;
+                this.emitter.frequency = 0.001;
+            }
         } else {
-            this.emitter.emit = true;
-            this.emitter.frequency = 0.001;
+            this.emitter.emit = false;
         }
+        
 
         /**
          * Throttle momentum

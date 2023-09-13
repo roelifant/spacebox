@@ -22,8 +22,11 @@ import asteroid3 from './../assets/img/objects/asteroids/asteroid3.png';
 import asteroid4 from './../assets/img/objects/asteroids/asteroid4.png';
 import asteroid5 from './../assets/img/objects/asteroids/asteroid5.png';
 
+import exhaustParticle from './../assets/img/objects/exhaustParticle.png';
+
 export const assets = [
     // particles
+    {name: 'particles.exhaust', url: exhaustParticle},
 
     // stars
     {name:'stars.1', url: stars1},

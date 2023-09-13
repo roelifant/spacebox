@@ -28,7 +28,7 @@ export class Traveler extends Sprite implements IPhysics, IGameObject {
 
         this.anchor.set(.5,.5);
 
-        const particleTexture = Manager.getTexture('player');
+        const particleTexture = Manager.getTexture('particles.exhaust');
 
         this.scale.set(.5, .5);
 
@@ -39,6 +39,10 @@ export class Traveler extends Sprite implements IPhysics, IGameObject {
     }
 
     public update() {
+        const world = <World>Manager.scene;
+        const position = new Vector(this.position.x, this.position.y);
+        const playerPosition = new Vector(world.player.x, world.player.y);
+
         if(this.target) {
             const targetPosition = this.target.parallaxPosition;
             const positionVector = new Vector(this.position.x, this.position.y);
@@ -59,17 +63,22 @@ export class Traveler extends Sprite implements IPhysics, IGameObject {
          *  Particles
          */
         this.emitter.updateSpawnPos(this.x, this.y);
-        if(this.momentum.length < 0.1){
-            this.emitter.emit = false;
-        } else if(this.momentum.length < 0.3) {
-            this.emitter.emit = true;
-            this.emitter.frequency = 0.01;
-        } else if(this.momentum.length < 0.7) {
-            this.emitter.emit = true;
-            this.emitter.frequency = 0.005;
+        if(playerPosition.distance(position) < 1250) {
+        
+            if(this.momentum.length < 0.1){
+                this.emitter.emit = false;
+            } else if(this.momentum.length < 0.3) {
+                this.emitter.emit = true;
+                this.emitter.frequency = 0.01;
+            } else if(this.momentum.length < 0.7) {
+                this.emitter.emit = true;
+                this.emitter.frequency = 0.005;
+            } else {
+                this.emitter.emit = true;
+                this.emitter.frequency = 0.001;
+            }
         } else {
-            this.emitter.emit = true;
-            this.emitter.frequency = 0.001;
+            this.emitter.emit = false;
         }
 
         /**
