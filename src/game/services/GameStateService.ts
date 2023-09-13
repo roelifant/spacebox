@@ -111,6 +111,10 @@ class GameStateService {
         }
 
         this.gameOver.value = false;
+
+        // continue NPC emitters
+        world.freezeNPCEmitters(false);
+
         Manager.continueScene();
     }
 

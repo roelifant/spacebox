@@ -476,6 +476,7 @@ export class World extends Container implements IScene {
         if(GameStateService.inventory.value.fuel <= 0){
             GameStateService.gameOver.value = true;
             GameStateService.gameOverMessage.value = 'You ran out of fuel...';
+            this.freezeNPCEmitters(true);
             Manager.pauseScene();
         }
     }
@@ -504,8 +505,20 @@ export class World extends Container implements IScene {
     }
 
     public pauseTrigger() {
-        if(!this.paused) this.paused = true;
-        else this.paused = false;
+        if(!this.paused) {
+            this.freezeNPCEmitters(true);
+            this.paused = true;
+        } else {
+            this.freezeNPCEmitters(false);
+            this.paused = false;
+        }
+    }
+
+    public freezeNPCEmitters(value: boolean) {
+        // pause NPC emitters
+        this.enemies.forEach(enemy => enemy.pauseEmitter(value))
+        this.traveler1.pauseEmitter(value);
+        this.traveler2.pauseEmitter(value);
     }
 
     private track(target: DisplayObject){

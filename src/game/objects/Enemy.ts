@@ -132,6 +132,10 @@ export class Enemy extends Sprite implements IPhysics, IGameObject {
         }
     }
 
+    public pauseEmitter(boolean: boolean){
+        this.emitter.autoUpdate = !boolean;
+    }
+
 
     
     private getAngle(velocityX: number, velocityY: number): number {
