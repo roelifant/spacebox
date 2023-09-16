@@ -192,7 +192,7 @@ export class Manager {
             } else  {
                 Manager.currentScene.removeChild(child);
             }
-            let index = Manager.currentScene.objects.indexOf(child);
+            const index = Manager.currentScene.objects.indexOf(child);
             Manager.currentScene.objects.splice(index, 1);
         }
     }

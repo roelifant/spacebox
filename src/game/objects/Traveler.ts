@@ -3,7 +3,7 @@ import { IPhysics } from "../interfaces/IPhysics";
 import { Vector } from "../utils/Vector";
 import { Manager } from "../Manager";
 import { Emitter, upgradeConfig } from "@pixi/particle-emitter";
-import emitterSettings from "./../../assets/json/emitter.json";
+import emitterSettings from "./../../assets/json/exhaustEmitter.json";
 import { IGameObject } from "../interfaces/IGameObject";
 import { World } from "../scenes/World";
 import { Planet } from "./Planet";

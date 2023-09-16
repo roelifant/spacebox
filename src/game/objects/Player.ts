@@ -6,7 +6,7 @@ import {Emitter, upgradeConfig} from "@pixi/particle-emitter";
 import {Vector} from "../utils/Vector";
 import {Target} from "./Target";
 import {IPhysics} from "../interfaces/IPhysics";
-import emitterSettings from "./../../assets/json/emitter.json";
+import emitterSettings from "./../../assets/json/exhaustEmitter.json";
 import GameStateService from "../services/GameStateService";
 import PlanetUIService from "../services/PlanetUIService";
 import { Planet } from "./Planet";

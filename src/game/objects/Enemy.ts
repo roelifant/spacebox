@@ -4,11 +4,12 @@ import { IGameObject } from "../interfaces/IGameObject";
 import { Vector } from "../utils/Vector";
 import { Manager } from "../Manager";
 import { Emitter, upgradeConfig } from "@pixi/particle-emitter";
-import emitterSettings from "./../../assets/json/emitter.json";
+import emitterSettings from "./../../assets/json/exhaustEmitter.json";
 import { World } from "../scenes/World";
 import { Planet } from "./Planet";
 import { Player } from "./Player";
 import { IHasEmitter } from "../interfaces/IHasEmitter";
+import { Explosion } from "./Explosion";
 
 export class Enemy extends Sprite implements IPhysics, IGameObject, IHasEmitter {
     public tags: Array<string> = ['ship', 'enemy'];
@@ -95,7 +96,6 @@ export class Enemy extends Sprite implements IPhysics, IGameObject, IHasEmitter 
          */
         this.tint = 0xed5d5d;
         Manager.circleCollideWith(['bullet'], (bullet: IGameObject) => {
-            console.log('hit!');
             this.tint = 0xffffff;
             this.takeDamage();
             Manager.remove(bullet, 'bullets');
@@ -161,7 +161,15 @@ export class Enemy extends Sprite implements IPhysics, IGameObject, IHasEmitter 
         this.alive = false;
         this.emitter.emit = false;
         Manager.remove(this, 'ships');
+        this.explode();
         setTimeout(() => this.emitter.destroy(), 2500);
+    }
+
+    private explode() {
+        new Explosion(this.x, this.y, 250, 4000, {color: {
+            start: '#ed5d5d',
+            end: "#ff843d"
+        }});
     }
     
     private getAngle(velocityX: number, velocityY: number): number {

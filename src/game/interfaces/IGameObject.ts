@@ -1,6 +1,6 @@
 import {DisplayObject} from "pixi.js";
 
-export interface IGameObject extends DisplayObject{
+export interface IGameObject extends DisplayObject {
     update(): void;
     tags: Array<string>;
 }
