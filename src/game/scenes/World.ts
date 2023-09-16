@@ -1,4 +1,4 @@
-import {Container, DisplayObject, ParticleContainer} from "pixi.js";
+import {Container, DisplayObject, Graphics, ParticleContainer} from "pixi.js";
 import {IScene} from "../interfaces/IScene";
 import {Manager} from "../Manager";
 import {Group} from "tweedle.js";
@@ -18,13 +18,14 @@ import { Upgrade } from "../objects/Upgrade";
 import { IHeadingOption } from "../interfaces/IHeadingOption";
 import { Traveler } from "../objects/Traveler";
 import { Enemy } from "../objects/Enemy";
+import { IHasEmitter } from "../interfaces/IHasEmitter";
 
 export class World extends Container implements IScene {
 
     public player: Player;
     public traveler1: Traveler;
     public traveler2: Traveler;
-    public enemies: Array<Enemy> = [];
+    public shipsGroup: Container;
     public objects: Array<IGameObject> = [];
     public planets: Array<Planet> = [];
     public particles: ParticleContainer;
@@ -82,6 +83,11 @@ export class World extends Container implements IScene {
         this.addChild(bulletsGroup);
         this.groups.set('bullets', bulletsGroup);
 
+        // add ships group
+        this.shipsGroup = new Container();
+        this.addChild(this.shipsGroup);
+        this.groups.set('ships', this.shipsGroup);
+
         // set player
         this.player = new Player('player');
         this.objects.push(this.player);
@@ -92,13 +98,13 @@ export class World extends Container implements IScene {
         this.traveler1.x = 5000;
         this.traveler1.y = -2500;
         this.objects.push(this.traveler1);
-        this.addChild(this.traveler1);
+        this.shipsGroup.addChild(this.traveler1);
 
         this.traveler2 = new Traveler();
         this.traveler2.x = -5000;
         this.traveler2.y = -10000;
         this.objects.push(this.traveler2);
-        this.addChild(this.traveler2);
+        this.shipsGroup.addChild(this.traveler2);
 
         const enemyCount = 20;
         for (let i = 0; i < enemyCount; i++) {
@@ -106,8 +112,7 @@ export class World extends Container implements IScene {
             enemy.x = 5000;
             enemy.y = -3000;
             this.objects.push(enemy);
-            this.enemies.push(enemy);
-            this.addChild(enemy);
+            this.shipsGroup.addChild(enemy);
         }
         
         // this.background.startTracking(this.player);
@@ -451,8 +456,6 @@ export class World extends Container implements IScene {
     }
 
     public update(){
-
-        this.player.pauseEmitter(this.paused);
         
         if(!this.paused){
             Group.shared.update();
@@ -476,7 +479,7 @@ export class World extends Container implements IScene {
         if(GameStateService.inventory.value.fuel <= 0){
             GameStateService.gameOver.value = true;
             GameStateService.gameOverMessage.value = 'You ran out of fuel...';
-            this.freezeNPCEmitters(true);
+            this.freezeEmitters(true);
             Manager.pauseScene();
         }
     }
@@ -506,19 +509,21 @@ export class World extends Container implements IScene {
 
     public pauseTrigger() {
         if(!this.paused) {
-            this.freezeNPCEmitters(true);
+            this.freezeEmitters(true);
             this.paused = true;
         } else {
-            this.freezeNPCEmitters(false);
+            this.freezeEmitters(false);
             this.paused = false;
         }
     }
 
-    public freezeNPCEmitters(value: boolean) {
-        // pause NPC emitters
-        this.enemies.forEach(enemy => enemy.pauseEmitter(value))
-        this.traveler1.pauseEmitter(value);
-        this.traveler2.pauseEmitter(value);
+    public freezeEmitters(value: boolean) {
+        // pause emitters
+        this.objects.forEach(object => {
+            if(object.tags.includes('ship')) {
+                (<IHasEmitter><any>object).pauseEmitter(value)
+            }
+        });
     }
 
     private track(target: DisplayObject){

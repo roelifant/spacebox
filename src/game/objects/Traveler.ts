@@ -7,8 +7,9 @@ import emitterSettings from "./../../assets/json/emitter.json";
 import { IGameObject } from "../interfaces/IGameObject";
 import { World } from "../scenes/World";
 import { Planet } from "./Planet";
+import { IHasEmitter } from "../interfaces/IHasEmitter";
 
-export class Traveler extends Sprite implements IPhysics, IGameObject {
+export class Traveler extends Sprite implements IPhysics, IGameObject, IHasEmitter {
     public tags: Array<string> = ['ship', 'traveler'];
     
     public maxSpeed: number = .5;
@@ -16,9 +17,9 @@ export class Traveler extends Sprite implements IPhysics, IGameObject {
     public drag: number = 0.001;
     public momentum: Vector = new Vector(0,0);
     public collisionWeight: number = 3;
+    public emitter: Emitter;
 
     private lastAngle: number = 0;
-    private emitter: Emitter;
     private target: Planet|null = null;
 
     constructor() {
@@ -102,8 +103,8 @@ export class Traveler extends Sprite implements IPhysics, IGameObject {
         }
     }
 
-    public pauseEmitter(boolean: boolean){
-        this.emitter.autoUpdate = !boolean;
+    public pauseEmitter(value: boolean){
+        this.emitter.autoUpdate = !value;
     }
 
 

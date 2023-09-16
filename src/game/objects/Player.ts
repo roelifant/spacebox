@@ -15,8 +15,9 @@ import { Asteroid } from "./Asteroid";
 import { World } from "../scenes/World";
 import { IHeadingOption } from "../interfaces/IHeadingOption";
 import { Radar } from "./Radar";
+import { IHasEmitter } from "../interfaces/IHasEmitter";
 
-export class Player extends Sprite implements IPhysics, IGameObject {
+export class Player extends Sprite implements IPhysics, IGameObject, IHasEmitter {
     public tags: Array<string> = ['ship', 'player'];
 
     public maxSpeed: number;
@@ -30,9 +31,9 @@ export class Player extends Sprite implements IPhysics, IGameObject {
     public landed: boolean = false;
     public latestPlanet: Planet|null = null;
     public respawnPoint: Vector|null = null;
+    public emitter: Emitter;
 
     private lastAngle: number;
-    private emitter: Emitter;
 
     constructor(texture: string) {
         super();
@@ -237,8 +238,8 @@ export class Player extends Sprite implements IPhysics, IGameObject {
         this.emitter.destroy();
     }
 
-    public pauseEmitter(boolean: boolean){
-        this.emitter.autoUpdate = !boolean;
+    public pauseEmitter(value: boolean){
+        this.emitter.autoUpdate = !value;
     }
 
     public land(){

@@ -8,9 +8,9 @@ import emitterSettings from "./../../assets/json/emitter.json";
 import { World } from "../scenes/World";
 import { Planet } from "./Planet";
 import { Player } from "./Player";
-import GameStateService from "../services/GameStateService";
+import { IHasEmitter } from "../interfaces/IHasEmitter";
 
-export class Enemy extends Sprite implements IPhysics, IGameObject {
+export class Enemy extends Sprite implements IPhysics, IGameObject, IHasEmitter {
     public tags: Array<string> = ['ship', 'enemy'];
     
     public maxSpeed: number = .5;
@@ -18,11 +18,13 @@ export class Enemy extends Sprite implements IPhysics, IGameObject {
     public drag: number = 0.0015;
     public momentum: Vector = new Vector(0,0);
     public collisionWeight: number = 3;
+    public emitter: Emitter;
 
     private lastAngle: number = 0;
-    private emitter: Emitter;
     private target: Planet|Player|null = null;
     private chasing: boolean = false;
+    private health: number = 3;
+    private alive: boolean = true;
     
     constructor(texture: string) {
         super();
@@ -89,11 +91,23 @@ export class Enemy extends Sprite implements IPhysics, IGameObject {
         }
 
         /**
+         * getting hit
+         */
+        this.tint = 0xed5d5d;
+        Manager.circleCollideWith(['bullet'], (bullet: IGameObject) => {
+            console.log('hit!');
+            this.tint = 0xffffff;
+            this.takeDamage();
+            Manager.remove(bullet, 'bullets');
+        }, this);
+
+
+        /**
          *  Particles
          */
         this.emitter.updateSpawnPos(this.x, this.y);
         
-        if(playerPosition.distance(position) < 1250) {
+        if(playerDistance < 1250 && this.alive) {
             if(this.momentum.length < 0.1){
                 this.emitter.emit = false;
             } else if(this.momentum.length < 0.3) {
@@ -132,11 +146,23 @@ export class Enemy extends Sprite implements IPhysics, IGameObject {
         }
     }
 
-    public pauseEmitter(boolean: boolean){
-        this.emitter.autoUpdate = !boolean;
+    public pauseEmitter(value: boolean){
+        this.emitter.autoUpdate = !value;
     }
 
+    private takeDamage(damage: number = 1) {
+        this.health -= damage;
+        if(this.health <= 0) {
+            this.die();
+        }
+    }
 
+    private die() {
+        this.alive = false;
+        this.emitter.emit = false;
+        Manager.remove(this, 'ships');
+        setTimeout(() => this.emitter.destroy(), 2500);
+    }
     
     private getAngle(velocityX: number, velocityY: number): number {
         if(Math.abs(velocityX) < 0.00001 && Math.abs(velocityY) < 0.00001) return this.lastAngle;

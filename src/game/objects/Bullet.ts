@@ -4,11 +4,11 @@ import {Vector} from "../utils/Vector";
 import {IGameObject} from "../interfaces/IGameObject";
 
 export class Bullet extends Sprite implements IGameObject {
+    public tags: Array<string> = ['bullet'];
 
     private speed: number = .5;
     private expiration: number;
     private direction: Vector;
-    public tags: Array<string> = ['bullet'];
     private startingVelocityX: number = 0;
     private startingVelocityY: number = 0;
 
@@ -33,7 +33,7 @@ export class Bullet extends Sprite implements IGameObject {
         this.startingVelocityY = startingVelocityY;
     }
 
-    update(){
+    public update(){
         this.x = this.x + (this.direction.normalize().x * (this.speed * Manager.time));
         this.y = this.y + (this.direction.normalize().y * (this.speed * Manager.time));
         this.x -= this.startingVelocityX * Manager.time;
@@ -42,6 +42,7 @@ export class Bullet extends Sprite implements IGameObject {
 
         if(Date.now() > this.expiration){
             Manager.remove(this, 'bullets');
+            this.destroy();
         }
     }
 }
