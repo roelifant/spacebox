@@ -12,10 +12,26 @@ export class Bullet extends Sprite implements IGameObject {
     private startingVelocityX: number = 0;
     private startingVelocityY: number = 0;
 
-    constructor(x: number, y: number, startingVelocityX: number, startingVelocityY: number){
+    constructor(
+        x: number,
+        y: number,
+        startingVelocityX: number,
+        startingVelocityY: number,
+        tags: Array<string> = []
+    ){
         super();
 
+        this.tags = this.tags.concat(tags);
+
         this.texture = Manager.getTexture('bullet');
+
+        if(this.tags.includes('playedBullet')) {
+            this.tint = 0xe8e8e8;
+        }
+
+        if(this.tags.includes('enemyBullet')) {
+            this.tint = 0xdba7ac;
+        }
 
         // this.anchor.set(0.5, 0.5);
 
@@ -24,9 +40,7 @@ export class Bullet extends Sprite implements IGameObject {
         this.scale.set(0.1, 0.1);
 
         this.expiration = Date.now() + 8000;
-        let relativeX = x - (Manager.width/2);
-        let relativeY = y - (Manager.height/2);
-        this.direction = new Vector(relativeX, relativeY);
+        this.direction = new Vector(x, y);
         this.angle = this.direction.angle();
 
         this.startingVelocityX = startingVelocityX;

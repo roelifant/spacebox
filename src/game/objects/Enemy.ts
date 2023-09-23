@@ -10,6 +10,7 @@ import { Planet } from "./Planet";
 import { Player } from "./Player";
 import { IHasEmitter } from "../interfaces/IHasEmitter";
 import { Explosion } from "./Explosion";
+import { Bullet } from "./Bullet";
 
 export class Enemy extends Sprite implements IPhysics, IGameObject, IHasEmitter {
     public tags: Array<string> = ['ship', 'enemy'];
@@ -26,6 +27,8 @@ export class Enemy extends Sprite implements IPhysics, IGameObject, IHasEmitter 
     private chasing: boolean = false;
     private health: number = 3;
     private alive: boolean = true;
+    private shooting: boolean = false;
+    private shotsFired: number = 0;
     
     constructor(texture: string) {
         super();
@@ -45,14 +48,12 @@ export class Enemy extends Sprite implements IPhysics, IGameObject, IHasEmitter 
     }
 
     public update() {
-        
         const world = <World>Manager.scene;
         const position = new Vector(this.position.x, this.position.y);
         const playerPosition = new Vector(world.player.x, world.player.y);
 
         // detect player
         const playerDistance = position.distance(playerPosition);
-    
 
         if(playerDistance <= 750) {
             this.chasing = true;
@@ -62,6 +63,19 @@ export class Enemy extends Sprite implements IPhysics, IGameObject, IHasEmitter 
         if(playerDistance >= 1750) {
             this.chasing = false;
             this.selectNewTarget();
+        }
+
+        // shoot
+        if(!this.shooting && playerDistance <= 650) {
+            this.shooting = true;
+            this.shoot();
+            this.shotsFired++;
+            if(this.shotsFired >= 3) {
+                this.shotsFired = 0;
+                setTimeout(() => this.shooting = false, 1000);
+            } else {
+                setTimeout(() => this.shooting = false, 200);
+            }
         }
 
         if(this.target) {
@@ -96,9 +110,11 @@ export class Enemy extends Sprite implements IPhysics, IGameObject, IHasEmitter 
          */
         this.tint = 0xed5d5d;
         Manager.circleCollideWith(['bullet'], (bullet: IGameObject) => {
-            this.tint = 0xffffff;
-            this.takeDamage();
-            Manager.remove(bullet, 'bullets');
+            if(bullet.tags.includes('playerBullet')) {
+                this.tint = 0xffffff;
+                this.takeDamage();
+                Manager.remove(bullet, 'bullets');
+            }
         }, this);
 
 
@@ -183,5 +199,34 @@ export class Enemy extends Sprite implements IPhysics, IGameObject, IHasEmitter 
         const newTarget = world.planets[Math.floor(world.planets.length*Math.random())];
 
         this.target = newTarget;
+    }
+
+    private shoot() {
+        const world = <World>Manager.scene;
+        const player = world.player;
+        
+        const xWobble = (-.5 + (Math.random() * 1)) * 100;
+        const yWobble = (-.5 + (Math.random() * 1)) * 100;
+        const x = player.x + xWobble;
+        const y = player.y + yWobble;
+        const direction = new Vector(x, y).subtract(new Vector(this.x, this.y));
+
+        // the bullet will get the enemy's momentum
+        // but they will also try to match the player's momentum
+        const bulletMomentum = new Vector(
+            this.momentum.x/2 + player.momentum.x,
+            this.momentum.y/2 + player.momentum.y
+        ).scale(.5);
+
+        let bullet = new Bullet(
+            direction.x,
+            direction.y,
+            bulletMomentum.x,
+            bulletMomentum.y,
+            ['enemyBullet']
+        );
+        Manager.add(bullet, 'bullets');
+        bullet.x = this.x;
+        bullet.y = this.y;
     }
 }

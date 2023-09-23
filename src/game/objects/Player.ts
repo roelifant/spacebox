@@ -13,7 +13,6 @@ import { Planet } from "./Planet";
 import { IGameObject } from "../interfaces/IGameObject";
 import { Asteroid } from "./Asteroid";
 import { World } from "../scenes/World";
-import { IHeadingOption } from "../interfaces/IHeadingOption";
 import { Radar } from "./Radar";
 import { IHasEmitter } from "../interfaces/IHasEmitter";
 
@@ -228,7 +227,9 @@ export class Player extends Sprite implements IPhysics, IGameObject, IHasEmitter
     }
 
     public shoot(x: number, y: number){
-        let bullet = new Bullet(x, y, this.momentum.x, this.momentum.y);
+        const relativeX = x - (Manager.width/2);
+        const relativeY = y - (Manager.height/2);
+        let bullet = new Bullet(relativeX, relativeY, this.momentum.x, this.momentum.y, ['playerBullet']);
         Manager.add(bullet, 'bullets');
         bullet.x = this.x;
         bullet.y = this.y;
