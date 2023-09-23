@@ -27,6 +27,18 @@
         GameStateService.gainFuel(150);
     }
 
+    const canBuyRepair = computed(() => GameStateService.inventory.value.money >= 25 && GameStateService.inventory.value.hull < GameStateService.inventory.value.maxHull);
+    const repairPrice = computed(() => (GameStateService.inventory.value.maxHull - GameStateService.inventory.value.hull) * 25);
+    const needsRepair  = computed(() => GameStateService.inventory.value.maxHull !== GameStateService.inventory.value.hull);
+
+    const buyRepair = (e: Event) => {
+        (<HTMLButtonElement>e.target).blur();
+
+        if(!canBuyRepair.value) return;
+        GameStateService.inventory.value.money -= repairPrice.value;
+        GameStateService.inventory.value.hull = GameStateService.inventory.value.maxHull;
+    }
+
     const buyCargo = (e: Event, cargo: Cargo) => {
         (<HTMLButtonElement>e.target).blur();
 
@@ -131,6 +143,14 @@
         );
     }
 
+    const showRepairInfo = () => {
+        showItemInfo(
+            'Repair',
+            'Repair your damaged ship. Costs more depending on the damage.',
+            'basics'
+        );
+    }
+
     const hideItemInfo = () => {
         itemInfo.value = null;
         itemInfoName.value = null;
@@ -193,6 +213,36 @@
                                         " :class="{
                                             'cursor-pointer opacity-100 hover:bg-white hover:text-black': canBuyFuel,
                                             'opacity-50 hover:bg-transparent hover:text-white': !canBuyFuel
+                                            }">
+                                        buy
+                                    </button>
+                                </div>
+
+                                <div
+                                    @mouseenter="showRepairInfo()"
+                                    @mouseleave="hideItemInfo()"
+                                    v-show="needsRepair"
+                                    class="border-2 flex items-center w-full gap-2"
+                                >
+                                    
+                                    <div class="w-14 h-14 flex justify-center items-center border-r-2">
+                                        <img :src="'./img/icons/Fuel.png'" alt="fuel" class="w-10 h-10 object-contain">
+                                    </div>
+
+                                    <div class="flex flex-col h-full justify-center pl-2 overflow-hidden flex-grow">
+                                        <p class="truncate text-sm"><span class="font-bold">Repair</span></p>
+                                        <p class="text-xs">§ {{ repairPrice }}</p>
+                                    </div>
+                                    <button @click="buyRepair($event)" :disabled="!canBuyRepair"
+                                        class="
+                                            border-2
+                                            text-white
+                                            uppercase text-xs font-bold
+                                            px-2 py-1 transition-colors
+                                            ml-auto mr-2
+                                        " :class="{
+                                            'cursor-pointer opacity-100 hover:bg-white hover:text-black': canBuyRepair,
+                                            'opacity-50 hover:bg-transparent hover:text-white': !canBuyRepair
                                             }">
                                         buy
                                     </button>
