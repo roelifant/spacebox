@@ -12,5 +12,7 @@ export default interface Inventory {
     wisdom: number,
     weaponry: number,
     technology: number,
-    maxCargo: number
+    maxCargo: number,
+    hull: number,
+    maxHull: number
 }

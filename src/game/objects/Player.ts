@@ -15,6 +15,7 @@ import { Asteroid } from "./Asteroid";
 import { World } from "../scenes/World";
 import { Radar } from "./Radar";
 import { IHasEmitter } from "../interfaces/IHasEmitter";
+import { Explosion } from "./Explosion";
 
 export class Player extends Sprite implements IPhysics, IGameObject, IHasEmitter {
     public tags: Array<string> = ['ship', 'player'];
@@ -31,6 +32,7 @@ export class Player extends Sprite implements IPhysics, IGameObject, IHasEmitter
     public latestPlanet: Planet|null = null;
     public respawnPoint: Vector|null = null;
     public emitter: Emitter;
+    public exploded: boolean = false;
 
     private lastAngle: number;
 
@@ -61,6 +63,9 @@ export class Player extends Sprite implements IPhysics, IGameObject, IHasEmitter
     }
 
     public update() {
+
+        if(this.exploded) this.alpha = 0;
+        else this.alpha = 1;
 
         const world: World = <World>Manager.scene;
 
@@ -133,10 +138,22 @@ export class Player extends Sprite implements IPhysics, IGameObject, IHasEmitter
         }
 
         /**
+         * getting hit
+         */
+        this.tint = 0x5894f5;
+        Manager.circleCollideWith(['bullet'], (bullet: IGameObject) => {
+            if(bullet.tags.includes('enemyBullet')) {
+                this.tint = 0xff0000;
+                this.takeDamage();
+                Manager.remove(bullet, 'bullets');
+            }
+        }, this);
+
+        /**
          *  Particles
          */
         this.emitter.updateSpawnPos(this.x, this.y);
-        if(this.momentum.length < 0.1){
+        if(this.momentum.length < 0.1 || this.exploded){
             this.emitter.emit = false;
         } else if(this.momentum.length < 0.3) {
             this.emitter.emit = true;
@@ -196,32 +213,34 @@ export class Player extends Sprite implements IPhysics, IGameObject, IHasEmitter
         }, this);
         GameStateService.canLand.value = this.canLand;
 
-        /**
-         * Throttle momentum
-         */
-        if(this.momentum.length > this.maxSpeed){
-            this.momentum = this.momentum.normalize().scale(this.maxSpeed);
+        if(!this.exploded) {
+            /**
+             * Throttle momentum
+             */
+            if(this.momentum.length > this.maxSpeed){
+                this.momentum = this.momentum.normalize().scale(this.maxSpeed);
+            }
+
+            /**
+             *  Translate momentum into movement
+             */
+            this.y = this.y - (this.momentum.y * Manager.time);
+            this.x = this.x - (this.momentum.x * Manager.time);
+
+            // calculate angle
+            if(this.momentum.length > 0.03) {
+                let angle = this.getAngle(this.momentum.x * Manager.time, this.momentum.y * Manager.time);
+                this.lastAngle = angle;
+                this.angle = angle;
+            }
+
+            /**
+             *  Fuel drain
+             */ 
+            if(accelerating) GameStateService.inventory.value.fuel-= .015 * Manager.time;
+            if(breaking) GameStateService.inventory.value.fuel-= .015 * Manager.time;
+            GameStateService.inventory.value.fuel-= (this.momentum.length * .015) * Manager.time;
         }
-
-        /**
-         *  Translate momentum into movement
-         */
-        this.y = this.y - (this.momentum.y * Manager.time);
-        this.x = this.x - (this.momentum.x * Manager.time);
-
-        // calculate angle
-        if(this.momentum.length > 0.03) {
-            let angle = this.getAngle(this.momentum.x * Manager.time, this.momentum.y * Manager.time);
-            this.lastAngle = angle;
-            this.angle = angle;
-        }
-
-        /**
-         *  Fuel drain
-         */ 
-        if(accelerating) GameStateService.inventory.value.fuel-= .015 * Manager.time;
-        if(breaking) GameStateService.inventory.value.fuel-= .015 * Manager.time;
-        GameStateService.inventory.value.fuel-= (this.momentum.length * .015) * Manager.time;
 
         GameStateService.updateHeadings();
     }
@@ -289,5 +308,23 @@ export class Player extends Sprite implements IPhysics, IGameObject, IHasEmitter
     private getAngle(velocityX: number, velocityY: number): number {
         if(Math.abs(velocityX) < 0.00001 && Math.abs(velocityY) < 0.00001) return this.lastAngle;
         return (Math.atan2(velocityY, velocityX) * 180 / Math.PI) - 90;
+    }
+
+    private takeDamage(damage: number = 1) {
+        GameStateService.inventory.value.hull -= damage;
+        if(GameStateService.inventory.value.hull <= 0) {
+            this.explode();
+            setTimeout(() => {
+                GameStateService.shipDestroyed.value = true;
+            }, 1250)
+        }
+    }
+
+    private explode() {
+        this.exploded = true;
+        new Explosion(this.x, this.y, 200, 4000, {color: {
+            start: '#5894f5',
+            end: "#ff843d"
+        }});
     }
 }

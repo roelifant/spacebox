@@ -55,18 +55,21 @@ export class Enemy extends Sprite implements IPhysics, IGameObject, IHasEmitter 
         // detect player
         const playerDistance = position.distance(playerPosition);
 
-        if(playerDistance <= 750) {
+        if(playerDistance <= 750 && !world.player.exploded) {
             this.chasing = true;
             this.target = world.player;
+        } else if(world.player.exploded) {
+            this.chasing = true;
+            this.selectNewTarget();
         }
 
-        if(playerDistance >= 1750) {
+        if(this.chasing && playerDistance >= 1750) {
             this.chasing = false;
             this.selectNewTarget();
         }
 
         // shoot
-        if(!this.shooting && playerDistance <= 650) {
+        if(!world.player.exploded && !this.shooting && playerDistance <= 650) {
             this.shooting = true;
             this.shoot();
             this.shotsFired++;
@@ -182,7 +185,7 @@ export class Enemy extends Sprite implements IPhysics, IGameObject, IHasEmitter 
     }
 
     private explode() {
-        new Explosion(this.x, this.y, 250, 4000, {color: {
+        new Explosion(this.x, this.y, 200, 4000, {color: {
             start: '#ed5d5d',
             end: "#ff843d"
         }});

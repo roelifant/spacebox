@@ -479,8 +479,12 @@ export class World extends Container implements IScene {
         if(GameStateService.inventory.value.fuel <= 0){
             GameStateService.gameOver.value = true;
             GameStateService.gameOverMessage.value = 'You ran out of fuel...';
-            this.freezeEmitters(true);
-            Manager.pauseScene();
+            this.handleGameOver();
+        }
+        if(GameStateService.shipDestroyed.value){
+            GameStateService.gameOver.value = true;
+            GameStateService.gameOverMessage.value = 'Pirates destroyed your ship...';
+            this.handleGameOver();
         }
     }
 
@@ -553,5 +557,10 @@ export class World extends Container implements IScene {
         }
 
         // console.log(this.x, this.y);
-    }    
+    }
+
+    private handleGameOver() {
+        this.freezeEmitters(true);
+        Manager.pauseScene();
+    }
 }

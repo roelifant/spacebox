@@ -11,6 +11,7 @@ import { IHeadingOption } from "../interfaces/IHeadingOption";
 class GameStateService {
     public canLand: Ref<boolean> = ref(false);
     public landed: Ref<boolean> = ref(false);
+    public shipDestroyed: Ref<boolean> = ref(false);
     public inventory: Ref<Inventory> = ref({
         fuel: 500.00,
         maxFuel: 500,
@@ -26,6 +27,8 @@ class GameStateService {
         weaponry: 0,
         technology: 0,
         maxCargo: 10,
+        hull: 4,
+        maxHull: 4
     });
 
     public totalCargo: ComputedRef<number> = computed(() => {
@@ -89,6 +92,8 @@ class GameStateService {
     }
 
     respawn(){
+        this.shipDestroyed.value = false;
+
         this.inventory.value.matter = 0;
         this.inventory.value.water = 0;
         this.inventory.value.flora = 0;
@@ -101,10 +106,14 @@ class GameStateService {
         this.inventory.value.technology = 0;
 
         this.inventory.value.fuel = this.inventory.value.maxFuel;
+        this.inventory.value.hull = this.inventory.value.maxHull;
+
 
         this.minedMatter.value = 0;
 
         const world = <World>Manager.scene;
+
+        world.player.exploded = false;
 
         if(world.player && world.player.respawnPoint){
             world.player.teleport(world.player.respawnPoint.x, world.player.respawnPoint.y, false);
