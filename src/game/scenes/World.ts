@@ -1,4 +1,4 @@
-import {Container, DisplayObject, Graphics, ParticleContainer} from "pixi.js";
+import {Container, DisplayObject, ParticleContainer} from "pixi.js";
 import {IScene} from "../interfaces/IScene";
 import {Manager} from "../Manager";
 import {Group} from "tweedle.js";
@@ -42,8 +42,6 @@ export class World extends Container implements IScene {
     private stars2: WrappingBackground;
     private stars3: WrappingBackground;
     private stars4: WrappingBackground;
-
-    // private target: Target;
 
     
 
@@ -434,12 +432,6 @@ export class World extends Container implements IScene {
         }, this);
         this.interactive = true;
 
-        // this.target = new Target();
-        // this.target.x = 300;
-        // this.target.y = 300;
-        // this.addChild(this.target);
-        // this.objects.push(this.target);
-
         /** keyboard events */
         Keyboard.registerEvent('KeyP', () => this.pauseTrigger());
         Keyboard.registerEvent('Space', () => {
@@ -542,8 +534,6 @@ export class World extends Container implements IScene {
         let xDiff = x - stageXHalf;
         let yDiff = y - stageYHalf;
 
-        // console.log(target.getGlobalPosition());
-
         if(x > 0){
             this.x = this.x - xDiff;
         } else {
@@ -555,8 +545,6 @@ export class World extends Container implements IScene {
         } else {
             this.y = this.y + yDiff;
         }
-
-        // console.log(this.x, this.y);
     }
 
     private handleGameOver() {
