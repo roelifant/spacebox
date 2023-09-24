@@ -246,6 +246,7 @@ export class Player extends Sprite implements IPhysics, IGameObject, IHasEmitter
     }
 
     public shoot(x: number, y: number){
+        GameStateService.inventory.value.ammo--;
         const relativeX = x - (Manager.width/2);
         const relativeY = y - (Manager.height/2);
         let bullet = new Bullet(relativeX, relativeY, this.momentum.x, this.momentum.y, ['playerBullet']);

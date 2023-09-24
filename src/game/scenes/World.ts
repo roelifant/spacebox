@@ -428,7 +428,7 @@ export class World extends Container implements IScene {
 
         // set interactions
         this.on('pointertap', () => {
-            this.player.shoot(Mouse.x, Mouse.y);
+            if(GameStateService.inventory.value.ammo > 0) this.player.shoot(Mouse.x, Mouse.y);
         }, this);
         this.interactive = true;
 

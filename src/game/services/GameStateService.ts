@@ -28,7 +28,9 @@ class GameStateService {
         technology: 0,
         maxCargo: 10,
         hull: 4,
-        maxHull: 4
+        maxHull: 4,
+        ammo: 30,
+        maxAmmo: 30
     });
 
     public totalCargo: ComputedRef<number> = computed(() => {
@@ -86,6 +88,11 @@ class GameStateService {
         if(this.inventory.value.fuel > this.inventory.value.maxFuel) this.inventory.value.fuel = this.inventory.value.maxFuel;
     }
 
+    gainAmmo(amount: number){
+        this.inventory.value.ammo += amount;
+        if(this.inventory.value.ammo > this.inventory.value.maxAmmo) this.inventory.value.ammo = this.inventory.value.maxAmmo;
+    }
+
     updateMarketState(low: Cargo, high: Cargo) {
         this.marketLow.value = low;
         this.marketHigh.value = high;
@@ -108,6 +115,7 @@ class GameStateService {
         this.inventory.value.fuel = this.inventory.value.maxFuel;
         this.inventory.value.hull = this.inventory.value.maxHull;
 
+        this.inventory.value.ammo = Math.ceil(this.inventory.value.ammo / 10) * 10;
 
         this.minedMatter.value = 0;
 

@@ -39,6 +39,16 @@
         GameStateService.inventory.value.hull = GameStateService.inventory.value.maxHull;
     }
 
+    const canBuyAmmo = computed(() => GameStateService.inventory.value.money >= 25 && GameStateService.inventory.value.ammo < GameStateService.inventory.value.maxAmmo);
+
+    const buyAmmo = (e: Event) => {
+        (<HTMLButtonElement>e.target).blur();
+
+        if(!canBuyFuel.value) return;
+        GameStateService.inventory.value.money -= 25;
+        GameStateService.gainAmmo(10);
+    }
+
     const buyCargo = (e: Event, cargo: Cargo) => {
         (<HTMLButtonElement>e.target).blur();
 
@@ -151,6 +161,14 @@
         );
     }
 
+    const showAmmoInfo = () => {
+        showItemInfo(
+            'Ammunition',
+            'Stock up on ammunition to defend yourself from raiding pirates. Each clip holds 10 bullets.',
+            'basics'
+        );
+    }
+
     const hideItemInfo = () => {
         itemInfo.value = null;
         itemInfoName.value = null;
@@ -213,6 +231,35 @@
                                         " :class="{
                                             'cursor-pointer opacity-100 hover:bg-white hover:text-black': canBuyFuel,
                                             'opacity-50 hover:bg-transparent hover:text-white': !canBuyFuel
+                                            }">
+                                        buy
+                                    </button>
+                                </div>
+
+                                <div
+                                    @mouseenter="showAmmoInfo()"
+                                    @mouseleave="hideItemInfo()"
+                                    class="border-2 flex items-center w-full gap-2"
+                                >
+                                    
+                                    <div class="w-14 h-14 flex justify-center items-center border-r-2">
+                                        <img :src="'./img/icons/Fuel.png'" alt="fuel" class="w-10 h-10 object-contain">
+                                    </div>
+
+                                    <div class="flex flex-col h-full justify-center pl-2 overflow-hidden flex-grow">
+                                        <p class="truncate text-sm"><span class="font-bold">Ammunition</span></p>
+                                        <p class="text-xs">§ 25</p>
+                                    </div>
+                                    <button @click="buyAmmo($event)" :disabled="!canBuyAmmo"
+                                        class="
+                                            border-2
+                                            text-white
+                                            uppercase text-xs font-bold
+                                            px-2 py-1 transition-colors
+                                            ml-auto mr-2
+                                        " :class="{
+                                            'cursor-pointer opacity-100 hover:bg-white hover:text-black': canBuyAmmo,
+                                            'opacity-50 hover:bg-transparent hover:text-white': !canBuyAmmo
                                             }">
                                         buy
                                     </button>

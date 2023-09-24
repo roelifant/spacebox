@@ -14,5 +14,7 @@ export default interface Inventory {
     technology: number,
     maxCargo: number,
     hull: number,
-    maxHull: number
+    maxHull: number,
+    ammo: number,
+    maxAmmo: number
 }
