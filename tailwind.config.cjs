@@ -6,6 +6,14 @@ const generateWidthClasses = () => {
   return classes;
 }
 
+const generateHeightClasses = () => {
+  const classes = [];
+  for (let i = 0; i <= 100; i++) {
+    classes.push('h-['+i+'%]');
+  }
+  return classes;
+}
+
 /** @type {import('tailwindcss').Config} */
 module.exports = {
   content: [
@@ -16,6 +24,7 @@ module.exports = {
     options: {
       safelist: [
         ...generateWidthClasses(),
+        ...generateHeightClasses(),
         'bg-cargo-matter',
         'bg-cargo-flora',
         'bg-cargo-water',

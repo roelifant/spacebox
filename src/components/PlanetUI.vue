@@ -186,7 +186,7 @@
         'opacity-0': !PlanetUIService.shown.value,
         'pointer-events-auto': PlanetUIService.shown.value
     }">
-        <div class="mx-auto w-full mt-20 px-6">
+        <div class="mx-auto w-full mt-20 px-8">
             <h1 class="text-2xl font-bold mb-2">{{ PlanetUIService.planet?.name}}</h1>
             <div class="w-full border-2 p-4 flex justify-between">
                 <div class="w-3/12 relative">
