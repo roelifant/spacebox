@@ -131,7 +131,7 @@ export class World extends Container implements IScene {
         this.groups.get('stars')?.addChild(this.stars4);
 
         // planets
-        let humble = new Planet({
+        const humble = new Planet({
             name: 'Humble',
             info: 'Located within an asteroid cloud, planet humble is a simple freezing ocean world with glaciers and seas. It\'s inhabbited by only some scientists and terraformers. While the planet has abundant mass and water, settlers are still looking for efficient ways to beat the cold. All that is subject to change though. Ever since the surrounding skies were discovered by asteroid miners, these humble beginnings have started to look more promising.',
             asset: 'planet.humble',
@@ -458,6 +458,52 @@ export class World extends Container implements IScene {
         this.groups.get('planets')?.addChild(noctar);
         this.objects.push(noctar);
         this.planets.push(noctar);
+
+        const grasp = new Planet({
+            name: 'Grasp',
+            info: 'A group of colonists who wished to flee from the stress of technology, build the great gardens of Grasp. Since this pleasant world already provides plenty of water and geothermic energy, there is nothing more the inhabitants need. They are a culture of writers and philosophers that do little besides strolling through the gardens and admiring the exotic wildlife they\'ve imported from faraway worlds.',
+            asset: 'planet.grasp',
+            x: -6000,
+            y: 10000,
+            needs: [Cargo.Flora, Cargo.Fauna],
+            products: [
+                {
+                    type: Cargo.Wisdom,
+                    max: 8
+                },
+                {
+                    type: Cargo.Water,
+                    max: 4
+                },
+                {
+                    type: Cargo.Energy,
+                    max: 2
+                }
+            ],
+            upgrades: [
+                new Upgrade({
+                    key: 'cargo_wisdom',
+                    name: 'Wisdom cargo module',
+                    description: 'With this telephatic cargo module, you will be able to transfer wisdom across the galaxy!',
+                    icon: 'upgrades/wisdomStorage.png',
+                    price: 10000
+                }),
+                new Upgrade({
+                    key: 'cargo_capacity',
+                    name: 'Cargo capacity',
+                    description: 'Increase your available cargo space so you can carry 5 more of any cargo types.',
+                    price: 250,
+                    stackWith: 'cargo_capacity',
+                    icon: 'upgrades/cargoExpansion.png',
+                    action: () => {
+                        GameStateService.inventory.value.maxCargo += 5;
+                    }
+                }),
+            ]
+        });
+        this.groups.get('planets')?.addChild(grasp);
+        this.objects.push(grasp);
+        this.planets.push(grasp);
 
         // asteroids
         new AsteroidField(1000,-3000);

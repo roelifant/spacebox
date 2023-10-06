@@ -44,7 +44,7 @@ const canBuyAmmo = computed(() => GameStateService.inventory.value.money >= 25 &
 const buyAmmo = (e: Event) => {
     (<HTMLButtonElement>e.target).blur();
 
-    if (!canBuyFuel.value) return;
+    if (!canBuyAmmo.value) return;
     GameStateService.inventory.value.money -= 25;
     GameStateService.gainAmmo(10);
 }

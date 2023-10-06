@@ -15,7 +15,7 @@ class GameStateService {
     public inventory: Ref<Inventory> = ref({
         fuel: 500.00,
         maxFuel: 500,
-        money: 300,
+        money: 500,
         matter: 3,
         water: 2,
         flora: 1,
