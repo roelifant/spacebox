@@ -182,7 +182,19 @@ export class World extends Container implements IScene {
                         GameStateService.inventory.value.maxFuel += 250;
                         GameStateService.inventory.value.fuel += 250;
                     }
-                })
+                }),
+                new Upgrade({
+                    key: 'hull_improvement',
+                    name: 'Hull improvement',
+                    description: 'Make your ship\'s hull stronger, so you can take more shots from enemies before crashing.',
+                    price: 300,
+                    stackWith: 'hull_improvement',
+                    icon: 'upgrades/extraHealth.png',
+                    action: () => {
+                        GameStateService.inventory.value.maxHull++;
+                        GameStateService.inventory.value.hull++;
+                    }
+                }),
             ]
         });
         humble.discovered = true;
@@ -242,7 +254,19 @@ export class World extends Container implements IScene {
                         GameStateService.inventory.value.maxFuel += 250;
                         GameStateService.inventory.value.fuel += 250;
                     }
-                })
+                }),
+                new Upgrade({
+                    key: 'hull_improvement',
+                    name: 'Hull improvement',
+                    description: 'Make your ship\'s hull stronger, so you can take more shots from enemies before crashing.',
+                    price: 300,
+                    stackWith: 'hull_improvement',
+                    icon: 'upgrades/extraHealth.png',
+                    action: () => {
+                        GameStateService.inventory.value.maxHull++;
+                        GameStateService.inventory.value.hull++;
+                    }
+                }),
             ]
         });
         this.groups.get('planets')?.addChild(mycen);
@@ -312,7 +336,19 @@ export class World extends Container implements IScene {
                         GameStateService.inventory.value.maxFuel += 250;
                         GameStateService.inventory.value.fuel += 250;
                     }
-                })
+                }),
+                new Upgrade({
+                    key: 'hull_improvement',
+                    name: 'Hull improvement',
+                    description: 'Make your ship\'s hull stronger, so you can take more shots from enemies before crashing.',
+                    price: 300,
+                    stackWith: 'hull_improvement',
+                    icon: 'upgrades/extraHealth.png',
+                    action: () => {
+                        GameStateService.inventory.value.maxHull++;
+                        GameStateService.inventory.value.hull++;
+                    }
+                }),
             ]
         });
         this.groups.get('planets')?.addChild(oer);
@@ -381,6 +417,18 @@ export class World extends Container implements IScene {
                     icon: 'upgrades/cargoExpansion.png',
                     action: () => {
                         GameStateService.inventory.value.maxCargo += 5;
+                    }
+                }),
+                new Upgrade({
+                    key: 'hull_improvement',
+                    name: 'Hull improvement',
+                    description: 'Make your ship\'s hull stronger, so you can take more shots from enemies before crashing.',
+                    price: 300,
+                    stackWith: 'hull_improvement',
+                    icon: 'upgrades/extraHealth.png',
+                    action: () => {
+                        GameStateService.inventory.value.maxHull++;
+                        GameStateService.inventory.value.hull++;
                     }
                 }),
             ]
@@ -453,6 +501,18 @@ export class World extends Container implements IScene {
                         GameStateService.inventory.value.ammo += 10;
                     }
                 }),
+                new Upgrade({
+                    key: 'hull_improvement',
+                    name: 'Hull improvement',
+                    description: 'Make your ship\'s hull stronger, so you can take more shots from enemies before crashing.',
+                    price: 300,
+                    stackWith: 'hull_improvement',
+                    icon: 'upgrades/extraHealth.png',
+                    action: () => {
+                        GameStateService.inventory.value.maxHull++;
+                        GameStateService.inventory.value.hull++;
+                    }
+                }),
             ]
         });
         this.groups.get('planets')?.addChild(noctar);
@@ -497,6 +557,18 @@ export class World extends Container implements IScene {
                     icon: 'upgrades/cargoExpansion.png',
                     action: () => {
                         GameStateService.inventory.value.maxCargo += 5;
+                    }
+                }),
+                new Upgrade({
+                    key: 'hull_improvement',
+                    name: 'Hull improvement',
+                    description: 'Make your ship\'s hull stronger, so you can take more shots from enemies before crashing.',
+                    price: 300,
+                    stackWith: 'hull_improvement',
+                    icon: 'upgrades/extraHealth.png',
+                    action: () => {
+                        GameStateService.inventory.value.maxHull++;
+                        GameStateService.inventory.value.hull++;
                     }
                 }),
             ]
