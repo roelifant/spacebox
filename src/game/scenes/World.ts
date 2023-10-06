@@ -279,6 +279,18 @@ export class World extends Container implements IScene {
                     price: 2000
                 }),
                 new Upgrade({
+                    key: 'ammo_expansion',
+                    name: 'Ammo expansion',
+                    description: 'Increase the ammount of ammunition you can carry.',
+                    price: 150,
+                    stackWith: 'ammo_expansion',
+                    icon: 'upgrades/ammoExpansion.png',
+                    action: () => {
+                        GameStateService.inventory.value.maxAmmo += 10;
+                        GameStateService.inventory.value.ammo += 10;
+                    }
+                }),
+                new Upgrade({
                     key: 'cargo_capacity',
                     name: 'Cargo capacity',
                     description: 'Increase your available cargo space so you can carry 5 more of any cargo types.',
@@ -337,17 +349,6 @@ export class World extends Container implements IScene {
                     price: 3000
                 }),
                 new Upgrade({
-                    key: 'cargo_capacity',
-                    name: 'Cargo capacity',
-                    description: 'Increase your available cargo space so you can carry 5 more of any cargo types.',
-                    price: 250,
-                    stackWith: 'cargo_capacity',
-                    icon: 'upgrades/cargoExpansion.png',
-                    action: () => {
-                        GameStateService.inventory.value.maxCargo += 5;
-                    }
-                }),
-                new Upgrade({
                     key: 'fuel_capacity',
                     name: 'Fuel capacity',
                     description: 'Increase your fuel capacity so you can fly longer distances without needing to refuel.',
@@ -358,7 +359,30 @@ export class World extends Container implements IScene {
                         GameStateService.inventory.value.maxFuel += 250;
                         GameStateService.inventory.value.fuel += 250;
                     }
-                })
+                }),
+                new Upgrade({
+                    key: 'ammo_expansion',
+                    name: 'Ammo expansion',
+                    description: 'Increase the ammount of ammunition you can carry.',
+                    price: 150,
+                    stackWith: 'ammo_expansion',
+                    icon: 'upgrades/ammoExpansion.png',
+                    action: () => {
+                        GameStateService.inventory.value.maxAmmo += 10;
+                        GameStateService.inventory.value.ammo += 10;
+                    }
+                }),
+                new Upgrade({
+                    key: 'cargo_capacity',
+                    name: 'Cargo capacity',
+                    description: 'Increase your available cargo space so you can carry 5 more of any cargo types.',
+                    price: 250,
+                    stackWith: 'cargo_capacity',
+                    icon: 'upgrades/cargoExpansion.png',
+                    action: () => {
+                        GameStateService.inventory.value.maxCargo += 5;
+                    }
+                }),
             ]
         });
         this.groups.get('planets')?.addChild(swept);
@@ -416,7 +440,19 @@ export class World extends Container implements IScene {
                         GameStateService.inventory.value.maxFuel += 250;
                         GameStateService.inventory.value.fuel += 250;
                     }
-                })
+                }),
+                new Upgrade({
+                    key: 'ammo_expansion',
+                    name: 'Ammo expansion',
+                    description: 'Increase the ammount of ammunition you can carry.',
+                    price: 150,
+                    stackWith: 'ammo_expansion',
+                    icon: 'upgrades/ammoExpansion.png',
+                    action: () => {
+                        GameStateService.inventory.value.maxAmmo += 10;
+                        GameStateService.inventory.value.ammo += 10;
+                    }
+                }),
             ]
         });
         this.groups.get('planets')?.addChild(noctar);
