@@ -19,6 +19,7 @@ import { IHeadingOption } from "../interfaces/IHeadingOption";
 import { Traveler } from "../objects/Traveler";
 import { Enemy } from "../objects/Enemy";
 import { IHasEmitter } from "../interfaces/IHasEmitter";
+import { Vector } from "../utils/Vector";
 
 export class World extends Container implements IScene {
 
@@ -104,7 +105,7 @@ export class World extends Container implements IScene {
         this.objects.push(this.traveler2);
         this.shipsGroup.addChild(this.traveler2);
 
-        const enemyCount = 10;
+        const enemyCount = 3;
         for (let i = 0; i < enemyCount; i++) {
             const enemy = new Enemy('ship.pirate');
             enemy.x = 5000;
@@ -112,6 +113,10 @@ export class World extends Container implements IScene {
             this.objects.push(enemy);
             this.shipsGroup.addChild(enemy);
         }
+
+        this.scheduler.set(() => {
+            this.spawnEnemies();
+        }, 30, true);
         
         // this.background.startTracking(this.player);
 
@@ -550,5 +555,35 @@ export class World extends Container implements IScene {
     private handleGameOver() {
         this.freezeEmitters(true);
         Manager.pauseScene();
+    }
+
+    private spawnEnemies() {
+        const maxEnemyCount = 3 + (Math.floor(GameStateService.upgradePercent.value)/10);
+        const currentEnemyCount = this.objects.filter(obj => obj.tags.includes('ship') && obj.tags.includes('enemy')).length;
+        
+        if(currentEnemyCount < maxEnemyCount) {
+            const playerPosition = new Vector(this.player.position.x, this.player.position.y);
+
+            const spawnPositions = [
+                {x: playerPosition.x - 5000, y: playerPosition.y - 5000},
+                {x: playerPosition.x, y: playerPosition.y - 5000},
+                {x: playerPosition.x + 5000, y: playerPosition.y - 5000},
+                {x: playerPosition.x + 5000, y: playerPosition.y},
+                {x: playerPosition.x + 5000, y: playerPosition.y + 5000},
+                {x: playerPosition.x, y: playerPosition.y + 5000},
+                {x: playerPosition.x - 5000, y: playerPosition.y + 5000},
+                {x: playerPosition.x - 5000, y: playerPosition.y},
+            ]
+
+            const spawnPosition = spawnPositions[Math.floor(spawnPositions.length*Math.random())];
+
+            const enemy = new Enemy('ship.pirate');
+            enemy.x = spawnPosition.x;
+            enemy.y = spawnPosition.y;
+            this.objects.push(enemy);
+            this.shipsGroup.addChild(enemy);
+
+            console.log('spawned enemy');
+        }
     }
 }

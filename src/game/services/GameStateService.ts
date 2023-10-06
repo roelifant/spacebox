@@ -116,6 +116,7 @@ class GameStateService {
         this.inventory.value.hull = this.inventory.value.maxHull;
 
         this.inventory.value.ammo = Math.ceil(this.inventory.value.ammo / 10) * 10;
+        if(this.inventory.value.ammo === 0) this.inventory.value.ammo = 10;
 
         this.minedMatter.value = 0;
 
