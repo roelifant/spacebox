@@ -577,6 +577,41 @@ export class World extends Container implements IScene {
         this.objects.push(grasp);
         this.planets.push(grasp);
 
+        const wart = new Planet({
+            name: 'Wart',
+            info: 'A world of wet wastelands, often called "the mud planet". Although Wart has fertile soil, it lacks plants to make use of it. The planet is mostly used for mineral mining and weapons testing.',
+            asset: 'planet.wart',
+            x: -10000,
+            y: -15000,
+            needs: [Cargo.Flora, Cargo.Energy],
+            products: [
+                {
+                    type: Cargo.Minerals,
+                    max: 8
+                },
+                {
+                    type: Cargo.Fauna,
+                    max: 5
+                },
+                {
+                    type: Cargo.Weaponry,
+                    max: 5
+                }
+            ],
+            upgrades: [
+                new Upgrade({
+                    key: 'cargo_weaponry',
+                    name: 'Weaponry cargo module',
+                    description: 'Use this module to smuggle weaponry onto planets without being detected. The weapons trade is often considered immoral, but it\'s equally profitable.',
+                    icon: 'upgrades/weaponryStorage.png',
+                    price: 8000
+                }),
+            ]
+        });
+        this.groups.get('planets')?.addChild(wart);
+        this.objects.push(wart);
+        this.planets.push(wart);
+
         // asteroids
         new AsteroidField(1000,-3000);
         new AsteroidField(-2000,2500);
