@@ -16,6 +16,7 @@ import { World } from "../scenes/World";
 import { Radar } from "./Radar";
 import { IHasEmitter } from "../interfaces/IHasEmitter";
 import { Explosion } from "./Explosion";
+import { Drop } from "./Drop";
 
 export class Player extends Sprite implements IPhysics, IGameObject, IHasEmitter {
     public tags: Array<string> = ['ship', 'player'];
@@ -191,6 +192,11 @@ export class Player extends Sprite implements IPhysics, IGameObject, IHasEmitter
             }
         }, this);
         if(!onAsteroid){ GameStateService.miningProgress.value = 0}
+
+        /**
+         * Drops
+         */
+        Manager.circleCollideWith(['drop'], (drop: Drop) => drop.collect(), this);
 
         /**
          *      Planets

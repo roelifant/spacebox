@@ -11,6 +11,7 @@ import { Player } from "./Player";
 import { IHasEmitter } from "../interfaces/IHasEmitter";
 import { Explosion } from "./Explosion";
 import { Bullet } from "./Bullet";
+import { Drop } from "./Drop";
 
 export class Enemy extends Sprite implements IPhysics, IGameObject, IHasEmitter {
     public tags: Array<string> = ['ship', 'enemy'];
@@ -180,6 +181,7 @@ export class Enemy extends Sprite implements IPhysics, IGameObject, IHasEmitter 
         this.alive = false;
         this.emitter.emit = false;
         Manager.remove(this, 'ships');
+        new Drop(this.x, this.y);
         this.explode();
         setTimeout(() => this.emitter.destroy(), 2500);
     }

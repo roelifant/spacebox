@@ -6,6 +6,10 @@ import traveler from './../assets/img/objects/ships/spaceship2_white.png';
 import pirate from './../assets/img/objects/ships/enemy1_white.png';
 import radar from './../assets/img/objects/radar2.png';
 
+import dropFuel from './../assets/img/objects/drops/dropFuel.png';
+import dropAmmo from './../assets/img/objects/drops/dropBullets.png';
+import dropMoney from './../assets/img/objects/drops/dropMoney.png';
+
 import bullet from './../assets/img/objects/projectiles/bullet.png';
 
 import planetHumble from './../assets/img/objects/planets/planet.png';
@@ -37,6 +41,11 @@ export const assets = [
     {name: 'player.radar', url: radar},
     {name: 'ship.traveler', url: traveler},
     {name: 'ship.pirate', url: pirate},
+
+    // drops
+    {name: 'drop.fuel', url: dropFuel},
+    {name: 'drop.ammo', url: dropAmmo},
+    {name: 'drop.money', url: dropMoney},
 
     // projectiles
     {name: 'bullet', url: bullet},

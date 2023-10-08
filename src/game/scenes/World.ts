@@ -31,6 +31,7 @@ export class World extends Container implements IScene {
     public planets: Array<Planet> = [];
     public particles: ParticleContainer;
     public asteroidGroup: Container;
+    public dropGroup: Container;
     public groups: Map<string, Container> = new Map<string, Container>();
     public planetGroup: Container;
 
@@ -76,6 +77,11 @@ export class World extends Container implements IScene {
         this.asteroidGroup = new Container();
         this.addChild(this.asteroidGroup);
         this.groups.set('asteroids', this.asteroidGroup);
+
+        // add asteroids Group
+        this.dropGroup = new Container();
+        this.addChild(this.dropGroup);
+        this.groups.set('drops', this.dropGroup);
 
         // add bullets group
         const bulletsGroup = new Container();
