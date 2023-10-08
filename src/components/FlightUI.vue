@@ -217,6 +217,21 @@ watch(() => marketLow.value, () => {
               </p>
             </div>
           </transition>
+          <transition>
+            <div v-show="hullPercent < 50">
+              <p class="
+                    text-red-500 text-center
+                    uppercase
+                    font-bold
+                    text-sm
+                    mt-3
+                    animate-pulse
+                  ">
+                <i class="fa-solid fa-triangle-exclamation pr-1" /> badly damaged
+                <i class="fa-solid fa-triangle-exclamation pl-1" />
+              </p>
+            </div>
+          </transition>
       </div>
       <div class="w-4/12 flex justify-end items-start py-1">
         <div class="flex items-center pr-10 gap-2">
