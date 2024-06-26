@@ -43,7 +43,7 @@ export class Player extends Sprite implements IPhysics, IGameObject, IHasEmitter
         this.maxSpeed = .5;
         this.momentum = new Vector(0, 0);
         this.acceleration = 0.005;
-        this.drag = 0.001;
+        this.drag = 0.0015;
         this.lastAngle = 0;
         this.tint = 0x5894f5;
 
@@ -89,51 +89,17 @@ export class Player extends Sprite implements IPhysics, IGameObject, IHasEmitter
             }
 
         } else {
-            if(Keyboard.get('KeyS') || Keyboard.get('ArrowDown')){
-                // down
-                if(Math.abs(this.momentum.y) < this.maxSpeed) {
-                    this.momentum.y -= this.acceleration;
-                }
-                accelerating = true;
+
+            const direction = this.getAccelerationDirection();
+
+            if(!!direction) {
+                // accelerate
+                const accelerationVector = direction.setLength(this.acceleration);
+                this.momentum = this.momentum.add(accelerationVector);
             } else {
-                if(Math.abs(this.momentum.y) > 0 && this.momentum.y < 0){
-                    this.momentum.y += this.drag;
-                }
-            }
-    
-            if(Keyboard.get('KeyW') || Keyboard.get('ArrowUp')){
-                // up
-                if(Math.abs(this.momentum.y) < this.maxSpeed) {
-                    this.momentum.y += this.acceleration;
-                }
-                accelerating = true;
-            } else {
-                if(Math.abs(this.momentum.y) > 0 && this.momentum.y > 0){
-                    this.momentum.y -= this.drag;
-                }
-            }
-    
-            if(Keyboard.get('KeyD') || Keyboard.get('ArrowRight')){
-                // right
-                if(Math.abs(this.momentum.x) < this.maxSpeed) {
-                    this.momentum.x -= this.acceleration;
-                }
-                accelerating = true;
-            } else {
-                if(Math.abs(this.momentum.x) > 0 && this.momentum.x < 0){
-                    this.momentum.x += this.drag;
-                }
-            }
-    
-            if(Keyboard.get('KeyA') || Keyboard.get('ArrowLeft')){
-                // left
-                if(Math.abs(this.momentum.x) < this.maxSpeed) {
-                    this.momentum.x += this.acceleration;
-                }
-                accelerating = true;
-            } else {
-                if(Math.abs(this.momentum.x) > 0 && this.momentum.x > 0){
-                    this.momentum.x -= this.drag;
+                // drag
+                if(this.momentum.length > 0) {
+                    this.momentum = this.momentum.subtractLength(this.drag);
                 }
             }
         }
@@ -230,8 +196,8 @@ export class Player extends Sprite implements IPhysics, IGameObject, IHasEmitter
             /**
              *  Translate momentum into movement
              */
-            this.y = this.y - (this.momentum.y * Manager.time);
-            this.x = this.x - (this.momentum.x * Manager.time);
+            this.y = this.y + (this.momentum.y * Manager.time);
+            this.x = this.x + (this.momentum.x * Manager.time);
 
             // calculate angle
             if(this.momentum.length > 0.03) {
@@ -314,7 +280,7 @@ export class Player extends Sprite implements IPhysics, IGameObject, IHasEmitter
 
     private getAngle(velocityX: number, velocityY: number): number {
         if(Math.abs(velocityX) < 0.00001 && Math.abs(velocityY) < 0.00001) return this.lastAngle;
-        return (Math.atan2(velocityY, velocityX) * 180 / Math.PI) - 90;
+        return (Math.atan2(velocityY, velocityX) * 180 / Math.PI) + 90;
     }
 
     private takeDamage(damage: number = 1) {
@@ -333,5 +299,49 @@ export class Player extends Sprite implements IPhysics, IGameObject, IHasEmitter
             start: '#5894f5',
             end: "#ff843d"
         }});
+    }
+
+    private getAccelerationDirection(): Vector|null {
+        const down = Keyboard.get('KeyS') || Keyboard.get('ArrowDown');
+        const up = Keyboard.get('KeyW') || Keyboard.get('ArrowUp');
+        const left = Keyboard.get('KeyA') || Keyboard.get('ArrowLeft');
+        const right = Keyboard.get('KeyD') || Keyboard.get('ArrowRight');
+
+        if(down || up || left || right) {
+
+            if(down && left) {
+                return (new Vector(-1, 1)).normalize();
+            }
+
+            if(down && right) {
+                return (new Vector(1, 1)).normalize();
+            }
+
+            if(up && left) {
+                return (new Vector(-1, -1)).normalize();
+            }
+
+            if(up && right) {
+                return (new Vector(1, -1)).normalize();
+            }
+
+            if(up) {
+                return new Vector(0, -1);
+            }
+
+            if(down) {
+                return new Vector(0, 1);
+            }
+
+            if(left) {
+                return new Vector(-1, 0);
+            }
+
+            if(right) {
+                return new Vector(1, 0);
+            }
+        }
+
+        return null;
     }
 }

@@ -44,7 +44,7 @@ const onHeadingRight = (e: Event) => {
   GameStateService.updateHeadings();
 }
 
-const fuelPercent: ComputedRef = computed(() => {
+const fuelPercent = computed(() => {
   if (GameStateService.inventory.value.fuel < 0) return 0;
   else
     return Math.floor(

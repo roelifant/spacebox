@@ -50,8 +50,8 @@ export class Bullet extends Sprite implements IGameObject {
     public update(){
         this.x = this.x + (this.direction.normalize().x * (this.speed * Manager.time));
         this.y = this.y + (this.direction.normalize().y * (this.speed * Manager.time));
-        this.x -= this.startingVelocityX * Manager.time;
-        this.y -= this.startingVelocityY * Manager.time;
+        this.x += this.startingVelocityX * Manager.time;
+        this.y += this.startingVelocityY * Manager.time;
 
 
         if(Date.now() > this.expiration){

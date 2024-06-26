@@ -52,7 +52,7 @@ export class Traveler extends Sprite implements IPhysics, IGameObject, IHasEmitt
                 const direction = positionVector.subtract(targetPosition).normalize();
                 const acceleration = direction.scale(this.acceleration);
 
-                if(!!acceleration.length) this.momentum = this.momentum.add(acceleration);
+                if(!!acceleration.length) this.momentum = this.momentum.subtract(acceleration);
             } else {
                 this.target = null;
             }
@@ -86,14 +86,14 @@ export class Traveler extends Sprite implements IPhysics, IGameObject, IHasEmitt
          * Throttle momentum
          */
         if(this.momentum.length > this.maxSpeed){
-            this.momentum = this.momentum.normalize().scale(this.maxSpeed);
+            this.momentum = this.momentum.setLength(this.maxSpeed);
         }
 
         /**
          *  Translate momentum into movement
          */
-        this.y = this.y - (this.momentum.y * Manager.time);
-        this.x = this.x - (this.momentum.x * Manager.time);
+        this.y = this.y + (this.momentum.y * Manager.time);
+        this.x = this.x + (this.momentum.x * Manager.time);
 
         // calculate angle
         if(this.momentum.length > 0.03) {
@@ -111,7 +111,7 @@ export class Traveler extends Sprite implements IPhysics, IGameObject, IHasEmitt
     
     private getAngle(velocityX: number, velocityY: number): number {
         if(Math.abs(velocityX) < 0.00001 && Math.abs(velocityY) < 0.00001) return this.lastAngle;
-        return (Math.atan2(velocityY, velocityX) * 180 / Math.PI) - 90;
+        return (Math.atan2(velocityY, velocityX) * 180 / Math.PI) + 90;
     }
 
     private selectNewTarget(){
