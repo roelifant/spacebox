@@ -11,6 +11,8 @@ import gsap from 'gsap';
 import MarketTable from "./molecules/MarketTable.vue";
 import Heading from "./molecules/Heading.vue";
 import TopBars from "./molecules/TopBars.vue";
+import TopWarnings from "./molecules/TopWarnings.vue";
+import ProgressBar from "./molecules/ProgressBar.vue";
 
 const paused: Ref<boolean> = ref(false);
 
@@ -30,26 +32,6 @@ const onPauseButton = (e: Event) => {
     Manager.pauseScene();
   }
 };
-
-const fuelPercent = computed(() => {
-  if (GameStateService.inventory.value.fuel < 0) return 0;
-  else
-    return Math.floor(
-      (GameStateService.inventory.value.fuel /
-        GameStateService.inventory.value.maxFuel) *
-      100
-    );
-});
-
-const hullPercent: ComputedRef = computed(() => {
-  if (GameStateService.inventory.value.hull < 0) return 0;
-  else
-    return Math.floor(
-      (GameStateService.inventory.value.hull /
-        GameStateService.inventory.value.maxHull) *
-      100
-    );
-});
 
 const ammoClipPercent: ComputedRef = computed(() => {
   const clip = Math.floor(GameStateService.inventory.value.ammo/10)*10;
@@ -141,48 +123,10 @@ watch(() => GameStateService.inventory.value.money, (currentMoney) => {
       <div class="w-4/12 p-1 flex flex-col items-center">
           <TopBars/>
           <Heading/>
-          <transition>
-            <div v-show="fuelPercent <= 30">
-              <p class="
-                    text-red-500 text-center
-                    uppercase
-                    font-bold
-                    text-sm
-                    mt-3
-                    animate-pulse
-                  ">
-                <i class="fa-solid fa-triangle-exclamation pr-1" /> low fuel
-                <i class="fa-solid fa-triangle-exclamation pl-1" />
-              </p>
-            </div>
-          </transition>
-          <transition>
-            <div v-show="hullPercent < 50">
-              <p class="
-                    text-red-500 text-center
-                    uppercase
-                    font-bold
-                    text-sm
-                    mt-3
-                    animate-pulse
-                  ">
-                <i class="fa-solid fa-triangle-exclamation pr-1" /> badly damaged
-                <i class="fa-solid fa-triangle-exclamation pl-1" />
-              </p>
-            </div>
-          </transition>
+          <TopWarnings/>
       </div>
       <div class="w-4/12 flex justify-end items-start py-1">
-        <div class="flex items-center pr-10 gap-2">
-          <p v-if="GameStateService.upgradePercent.value === 100" class="text-yellow-300 text-xs uppercase">Complete</p>
-          <p v-else class="text-xs uppercase">progress</p>
-          <div class="w-32 border-2 border-white h-2">
-            <div
-              :class="['w-[' + GameStateService.upgradePercent.value + '%]', { 'bg-yellow-300': GameStateService.upgradePercent.value === 100 }]"
-              class="h-full bg-white transition-all" />
-          </div>
-          <!-- <p class="text-xs">{{GameStateService.upgradePercent?.value}}%</p> -->
-        </div>
+        <ProgressBar/>
         <p class="px-2 font-bold text-lgl bg-gray-600 text-gray-400" :class="{ 'pop-animation': moneyPopAnimation }">
           §
           <span class="text-white">{{
