@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import ArrowIcon from "../icons/ArrowIcon.vue";
 import GameStateService from "../../game/services/GameStateService";
 
 const onHeadingLeft = (e: Event) => {

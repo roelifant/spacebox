@@ -8,9 +8,9 @@ import PlanetUIService from '../game/services/PlanetUIService';
 import Market from '../game/services/Market';
 import { Cargo } from '../game/enums/Cargo';
 import gsap from 'gsap';
-import ArrowIcon from "./icons/ArrowIcon.vue";
 import MarketTable from "./molecules/MarketTable.vue";
 import Heading from "./molecules/Heading.vue";
+import TopBars from "./molecules/TopBars.vue";
 
 const paused: Ref<boolean> = ref(false);
 
@@ -139,15 +139,7 @@ watch(() => GameStateService.inventory.value.money, (currentMoney) => {
         <MarketTable/>
       </div>
       <div class="w-4/12 p-1 flex flex-col items-center">
-        <div class="w-full border-2 border-white h-4 p-0.5">
-          <div class="bg-orange-300 h-full transition-all" :class="'w-[' + fuelPercent + '%]'" />
-        </div>
-        <div class="w-full border-2 border-white h-4 p-0.5 relative healthbar-container-clip mt-1">
-          <div class="w-full h-full relative healthbar-clip">
-            <div class="bg-green-400 h-2 transition-all absolute z-10" :class="'w-[' + hullPercent + '%]'" />
-            <div class="bg-red-500 h-2 transition-all delay-150 duration-700 absolute" :class="'w-[' + hullPercent + '%]'" />
-          </div>
-        </div>
+          <TopBars/>
           <Heading/>
           <transition>
             <div v-show="fuelPercent <= 30">
