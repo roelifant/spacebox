@@ -9,6 +9,7 @@ import Market from '../game/services/Market';
 import { Cargo } from '../game/enums/Cargo';
 import gsap from 'gsap';
 import ArrowIcon from "./icons/ArrowIcon.vue";
+import MarketTable from "./molecules/MarketTable.vue";
 
 const paused: Ref<boolean> = ref(false);
 
@@ -131,18 +132,6 @@ watch(() => GameStateService.inventory.value.money, (currentMoney) => {
   gsap.to(animatedMoney.value, { value: currentMoney, duration: .5 });
 });
 
-const marketHigh: ComputedRef<Cargo> = computed(() => GameStateService.marketHigh.value);
-const marketLow: ComputedRef<Cargo> = computed(() => GameStateService.marketLow.value);
-const marketHighAnimation: Ref<boolean> = ref(false);
-const marketLowAnimation: Ref<boolean> = ref(false);
-watch(() => marketHigh.value, () => {
-  marketHighAnimation.value = true;
-  setTimeout(() => marketHighAnimation.value = false, 1000);
-});
-watch(() => marketLow.value, () => {
-  marketLowAnimation.value = true;
-  setTimeout(() => marketLowAnimation.value = false, 1000);
-});
 </script>
 
 <template>
@@ -161,25 +150,7 @@ watch(() => marketLow.value, () => {
     <!-- header -->
     <div class="w-full h-12 flex justify-between items-start px-1.5">
       <div class="w-4/12 flex">
-        <div class="grid grid-cols-[45px_auto] pt-1">
-          <p :class="{ 'flash-animation': marketHighAnimation }"
-            class="text-xs border-2 border-white p-1 border-r-0 bg-gray-300 text-black font-bold uppercase text-center">
-            high</p>
-          <p class="text-xs border-2 border-white p-1 px-2 uppercase transition-all" :class="'bg-cargo-' + marketHigh">
-            <span class="block" :class="{ 'pop-animation': marketHighAnimation }">
-              {{ marketHigh }}
-            </span>
-          </p>
-          <p :class="{ 'flash-animation': marketLowAnimation }"
-            class="text-xs border-2 border-white p-1 border-r-0 border-t-0 bg-gray-500 text-black font-bold uppercase text-center">
-            Low</p>
-          <p class="text-xs border-2 border-white p-1 px-2 border-t-0 uppercase transition-all"
-            :class="'bg-cargo-' + marketLow">
-            <span class="block" :class="{ 'pop-animation': marketLowAnimation }">
-              {{ marketLow }}
-            </span>
-          </p>
-        </div>
+        <MarketTable/>
       </div>
       <div class="w-4/12 p-1 flex flex-col items-center">
         <div class="w-full border-2 border-white h-4 p-0.5">
