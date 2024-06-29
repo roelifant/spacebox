@@ -14,6 +14,7 @@ import TopBars from "./molecules/TopBars.vue";
 import TopWarnings from "./molecules/TopWarnings.vue";
 import ProgressBar from "./molecules/ProgressBar.vue";
 import MoneyCounter from "./atoms/MoneyCounter.vue";
+import AmmunitionBar from "./atoms/AmmunitionBar.vue";
 
 const paused: Ref<boolean> = ref(false);
 
@@ -33,13 +34,6 @@ const onPauseButton = (e: Event) => {
     Manager.pauseScene();
   }
 };
-
-const ammoClipPercent: ComputedRef = computed(() => {
-  const clip = Math.floor(GameStateService.inventory.value.ammo/10)*10;
-  const excess = GameStateService.inventory.value.ammo - clip;
-  console.log(excess);
-  return (excess / 10) * 100;
-});
 
 const miningPercent: ComputedRef = computed(() => {
   return (
@@ -152,18 +146,7 @@ const onSell = (cargo: Cargo) => {
 
     <!-- ammunition -->
     <div class="absolute right-2 top-[50%] translate-y-[-50%] border-white border-2 flex flex-col-reverse h-32 w-4 p-0.5 gap-1">
-      <div
-      v-for="clip in Math.ceil(GameStateService.inventory.value.maxAmmo / 10)"
-      class="w-full flex-grow flex flex-col justify-end"
-      >
-        <div
-          v-if="clip >= Math.ceil((GameStateService.inventory.value.ammo+1) / 10) && (clip-1) * 10 < GameStateService.inventory.value.ammo"
-          class="w-full bg-white"
-          :class="['h-['+ammoClipPercent+'%]']"
-        />
-        <div v-else-if="GameStateService.inventory.value.ammo > (clip*10)-1" class="w-full h-full bg-white" />
-        <div v-else class="w-full h-full" />
-      </div>
+      <AmmunitionBar/>
     </div>
 
     <!-- bottom -->
