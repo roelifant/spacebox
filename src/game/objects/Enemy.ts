@@ -30,6 +30,17 @@ export class Enemy extends Sprite implements IPhysics, IGameObject, IHasEmitter 
     private alive: boolean = true;
     private shooting: boolean = false;
     private shotsFired: number = 0;
+
+    private get dynamicAcceleration() {
+        if(this.chasing && this.target instanceof Player) {
+            const halfAcc = (this.acceleration/2);
+            const playerAccPercent = this.target.momentum.length / this.target.maxSpeed;
+
+            return halfAcc + (halfAcc * playerAccPercent);
+        }
+
+        return this.acceleration;
+    }
     
     constructor(texture: string) {
         super();
@@ -88,7 +99,7 @@ export class Enemy extends Sprite implements IPhysics, IGameObject, IHasEmitter 
                 targetPosition = this.target.parallaxPosition;
                 if(targetPosition.distance(position) > 400 ) {
                     const direction = position.subtract(targetPosition).normalize();
-                    const acceleration = direction.scale(this.acceleration);
+                    const acceleration = direction.scale(this.dynamicAcceleration);
     
                     if(!!acceleration.length) this.momentum = this.momentum.subtract(acceleration);
                 } else {
@@ -102,7 +113,7 @@ export class Enemy extends Sprite implements IPhysics, IGameObject, IHasEmitter 
                 if(playerDistance < 125) {
                     direction = direction.flipX().flipY();
                 }
-                const acceleration = direction.scale(this.acceleration);
+                const acceleration = direction.scale(this.dynamicAcceleration);
                 if(!!acceleration.length) this.momentum = this.momentum.subtract(acceleration);
             }
         } else {
