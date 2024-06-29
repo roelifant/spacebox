@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { Manager } from "../game/Manager";
 import {computed, Ref, ref} from 'vue';
-import GameStateService from '../game/services/GameStateService';
+import GameStateService from '../../game/services/GameStateService';
 
 const respawn = () => GameStateService.respawn();
 </script>
