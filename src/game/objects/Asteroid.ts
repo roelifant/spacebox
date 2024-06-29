@@ -17,6 +17,19 @@ export class Asteroid extends Sprite implements IGameObject {
         'asteroid.5'
     ];
 
+    private tints: Array<number> = [
+        0xffffff,
+        0xf5f5f5,
+        0xededed,
+        0xdedede,
+        0xcfcfcf,
+        0xbababa,
+        0xadadad,
+        0xa3a3a3,
+        0x8a8a8a,
+        0x7a7a7a
+    ];
+
     private spinDirection: boolean;
     private spinSpeed: number;
     
@@ -28,6 +41,8 @@ export class Asteroid extends Sprite implements IGameObject {
         this.field = field;
 
         this.texture = Manager.getTexture(this.assets[Math.floor(Math.random()*this.assets.length)]);
+        this.tint = this.tints[Math.floor(Math.random()*this.tints.length)];
+        
         this.anchor.set(0.5, 0.5);
 
         let flipX = 1;
