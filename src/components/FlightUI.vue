@@ -15,6 +15,7 @@ import TopWarnings from "./molecules/TopWarnings.vue";
 import ProgressBar from "./molecules/ProgressBar.vue";
 import MoneyCounter from "./atoms/MoneyCounter.vue";
 import AmmunitionBar from "./atoms/AmmunitionBar.vue";
+import BottomMessage from "./atoms/BottomMessage.vue";
 
 const paused: Ref<boolean> = ref(false);
 
@@ -151,39 +152,16 @@ const onSell = (cargo: Cargo) => {
 
     <!-- bottom -->
     <div class="w-full px-1.5">
+      
       <!-- Messages -->
       <div class="w-full flex justify-center items-center">
+        <BottomMessage :show="GameStateService.canLand.value && !GameStateService.landed.value" background>
+          Press <span class="text-white">Space</span> to land
+        </BottomMessage>
 
-        <transition>
-          <p v-show="
-            GameStateService.canLand.value && !GameStateService.landed.value
-          " class="
-                bg-gray-600
-                text-gray-400
-                uppercase
-                px-3
-                py-1
-                text-xs
-                font-bold
-              ">
-            Press <span class="text-white">Space</span> to land
-          </p>
-        </transition>
-
-        <transition>
-          <p v-show="
-            minedChunksMessage
-          " class="
-                text-gray-300
-                uppercase
-                px-3
-                py-1
-                text-xs
-                font-bold
-              ">
-            You mined 1 matter chunk
-          </p>
-        </transition>
+        <BottomMessage :show="minedChunksMessage">
+          You mined 1 matter chunk
+        </BottomMessage>
       </div>
 
       <div class="w-full flex justify-between items-end h-16 pb-1">
