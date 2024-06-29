@@ -13,6 +13,7 @@ import Heading from "./molecules/Heading.vue";
 import TopBars from "./molecules/TopBars.vue";
 import TopWarnings from "./molecules/TopWarnings.vue";
 import ProgressBar from "./molecules/ProgressBar.vue";
+import MoneyCounter from "./atoms/MoneyCounter.vue";
 
 const paused: Ref<boolean> = ref(false);
 
@@ -89,16 +90,11 @@ watch(() => PlanetUIService.shown.value, () => {
   }
 })
 
-const moneyPopAnimation: Ref<boolean> = ref(false);
 const onSell = (cargo: Cargo) => {
   Market.sell(cargo);
-  moneyPopAnimation.value = true;
-  setTimeout(() => moneyPopAnimation.value = false, 300);
+  GameStateService.moneyPopAnimation.value = true;
+  setTimeout(() => GameStateService.moneyPopAnimation.value = false, 300);
 }
-const animatedMoney: Ref<any> = ref({ value: GameStateService.inventory.value.money });
-watch(() => GameStateService.inventory.value.money, (currentMoney) => {
-  gsap.to(animatedMoney.value, { value: currentMoney, duration: .5 });
-});
 
 </script>
 
@@ -127,12 +123,7 @@ watch(() => GameStateService.inventory.value.money, (currentMoney) => {
       </div>
       <div class="w-4/12 flex justify-end items-start py-1">
         <ProgressBar/>
-        <p class="px-2 font-bold text-lgl bg-gray-600 text-gray-400" :class="{ 'pop-animation': moneyPopAnimation }">
-          §
-          <span class="text-white">{{
-            Math.floor(animatedMoney.value)
-          }}</span>
-        </p>
+        <MoneyCounter/>
       </div>
     </div>
 

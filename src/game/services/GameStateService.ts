@@ -68,6 +68,8 @@ class GameStateService {
     public headingPosition: Ref<Vector> = ref(new Vector(0,0))
     public multipleHeadingOptions: Ref<boolean> = ref(false);
 
+    public moneyPopAnimation: Ref<boolean> = ref(false);
+
     public upgradePercent: ComputedRef<number> = computed(() => {
         const total = this.upgrades.value.length;
         const active = this.upgrades.value.filter(x => x.active).length;
