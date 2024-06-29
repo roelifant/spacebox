@@ -69,6 +69,8 @@ class GameStateService {
     public multipleHeadingOptions: Ref<boolean> = ref(false);
 
     public moneyPopAnimation: Ref<boolean> = ref(false);
+    public gainedMatter: Ref<boolean> = ref(false);
+    public minedChunksMessage: Ref<boolean> = ref(false);
 
     public upgradePercent: ComputedRef<number> = computed(() => {
         const total = this.upgrades.value.length;

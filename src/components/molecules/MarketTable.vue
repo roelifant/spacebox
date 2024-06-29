@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { computed, ComputedRef, Ref, ref, watch } from "vue";
 import GameStateService from "../../game/services/GameStateService";
+import { Cargo } from '../../game/enums/Cargo';
 
 const marketHigh: ComputedRef<Cargo> = computed(() => GameStateService.marketHigh.value);
 const marketLow: ComputedRef<Cargo> = computed(() => GameStateService.marketLow.value);

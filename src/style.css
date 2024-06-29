@@ -6,4 +6,58 @@
     .no-focus-style {
         @apply focus:border-0 focus-visible:border-0 focus:ring-0 focus-visible:ring-0 focus:ring-transparent focus-visible:ring-transparent focus:outline-none focus-visible:outline-none;
     }
+
+    .jump-animation {
+        animation: jump .3s ease;
+    }
+
+    .pop-animation {
+        animation: pop .3s ease;
+    }
+
+    .flash-animation {
+        animation: flash .5s ease;
+    }
+
+    @keyframes jump {
+        0% {
+            transform: translateY(0)
+        }
+
+        50% {
+            transform: translateY(-10px)
+        }
+
+        100% {
+            transform: translateY(0)
+        }
+    }
+
+    @keyframes pop {
+        0% {
+            transform: scale(1)
+        }
+
+        33% {
+            transform: scale(1.1)
+        }
+
+        100% {
+            transform: scale(1)
+        }
+    }
+
+    @keyframes flash {
+        0% {
+            background-color: auto;
+        }
+
+        33% {
+            background-color: white;
+        }
+
+        100% {
+            background-color: auto;
+        }
+    }
 }

@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import ArrowIcon from "../icons/ArrowIcon.vue";
 import GameStateService from "../../game/services/GameStateService";
+import { Cargo } from '../../game/enums/Cargo';
 
 const onHeadingLeft = (e: Event) => {
   e.preventDefault();

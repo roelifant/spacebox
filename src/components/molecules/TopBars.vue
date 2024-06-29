@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed } from "vue";
+import { computed, ComputedRef } from "vue";
 import GameStateService from "../../game/services/GameStateService";
 
 const fuelPercent = computed(() => {
