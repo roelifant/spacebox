@@ -75,7 +75,7 @@ const upgrades = computed(() => {
     const raw = [...PlanetUIService.upgrades.value];
     let upgrades: Array<Upgrade> = [];
     raw.forEach((upgrade: Upgrade) => {
-        if (!upgrade.active) {
+        if (!upgrade.active && upgrade.unlocked) {
             upgrades.push(upgrade);
         }
     });

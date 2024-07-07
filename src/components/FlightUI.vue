@@ -1,13 +1,9 @@
 <script setup lang="ts">
 import { Manager } from "../game/Manager";
-import { computed, ComputedRef, Ref, ref, watch } from "vue";
+import { computed, ComputedRef, Ref, ref } from "vue";
 import GameStateService from "../game/services/GameStateService";
 import "vue3-circle-progress/dist/circle-progress.css";
 import CircleProgress from "vue3-circle-progress";
-import PlanetUIService from '../game/services/PlanetUIService';
-import Market from '../game/services/Market';
-import { Cargo } from '../game/enums/Cargo';
-import gsap from 'gsap';
 import MarketTable from "./molecules/MarketTable.vue";
 import Heading from "./molecules/Heading.vue";
 import TopBars from "./molecules/TopBars.vue";
@@ -17,6 +13,7 @@ import MoneyCounter from "./atoms/MoneyCounter.vue";
 import AmmunitionBar from "./atoms/AmmunitionBar.vue";
 import BottomMessage from "./atoms/BottomMessage.vue";
 import CargoSummary from "./molecules/CargoSummary.vue";
+import MinedChunks from "./molecules/MinedChunks.vue";
 
 const paused: Ref<boolean> = ref(false);
 
@@ -44,18 +41,6 @@ const miningPercent: ComputedRef = computed(() => {
     100
   );
 });
-
-watch(
-  () => GameStateService.minedMatter.value,
-  () => {
-    if (GameStateService.minedMatter.value === 0) {
-      GameStateService.gainedMatter.value = true;
-      setTimeout(() => (GameStateService.gainedMatter.value = false), 1000);
-    }
-    GameStateService.minedChunksMessage.value = true;
-    setTimeout(() => (GameStateService.minedChunksMessage.value = false), 1500);
-  }
-);
 </script>
 
 <template>
@@ -124,8 +109,8 @@ watch(
           Press <span class="text-white">Space</span> to land
         </BottomMessage>
 
-        <BottomMessage :show="GameStateService.minedChunksMessage.value">
-          You mined 1 matter chunk
+        <BottomMessage :show="!!GameStateService.minedChunksMessage.value">
+          {{ GameStateService.minedChunksMessage.value  }}
         </BottomMessage>
       </div>
 
@@ -133,9 +118,7 @@ watch(
 
         <!-- mined chunks-->
         <div class="w-3/12">
-          <div class="py-1 px-2 w-fit bg-gray-400 font-bold text-sm" :class="{ 'jump-animation': GameStateService.minedChunksMessage.value }">
-            {{ GameStateService.minedMatter.value }}/{{ GameStateService.minedMatterLimit.value }}
-          </div>
+          <MinedChunks/>
         </div>
 
         <div class="w-6/12 flex justify-center items-center gap-2">

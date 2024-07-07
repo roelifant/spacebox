@@ -160,6 +160,13 @@ export class World extends Container implements IScene {
             ],
             upgrades: [
                 new Upgrade({
+                    key: 'ice_mining',
+                    name: 'Ice mining',
+                    description: 'Allows you to harvest the ice from asteroids, allowing you to collect water over time while mining.',
+                    icon: 'upgrades/iceMining.png',
+                    price: 500
+                }),
+                new Upgrade({
                     key: 'cargo_minerals',
                     name: 'Minerals cargo module',
                     description: 'Allows you to transport precious minerals across the galaxy. Minerals are slightly more valuable than raw matter.',
@@ -200,6 +207,48 @@ export class World extends Container implements IScene {
                         GameStateService.inventory.value.maxHull++;
                         GameStateService.inventory.value.hull++;
                     }
+                }),
+                new Upgrade({
+                    key: 'mineral_mining',
+                    requirements: [
+                        'cargo_minerals'
+                    ],
+                    name: 'Mineral mining',
+                    description: 'Allows you to pick up rare minerals while mining asteroids.',
+                    icon: 'upgrades/mineralsMining.png',
+                    price: 1000
+                }),
+                new Upgrade({
+                    key: 'cargo_capacity',
+                    name: 'Cargo capacity',
+                    description: 'Increase your available cargo space so you can carry 5 more of any cargo types.',
+                    price: 250,
+                    stackWith: 'cargo_capacity',
+                    icon: 'upgrades/cargoExpansion.png',
+                    action: () => {
+                        GameStateService.inventory.value.maxCargo += 5;
+                    }
+                }),
+                new Upgrade({
+                    key: 'ice_mining_2',
+                    requirements: [
+                        'ice_mining'
+                    ],
+                    name: 'Advanced ice mining',
+                    description: 'Double the amount of water you harvest from asteroids.',
+                    icon: 'upgrades/iceMining.png',
+                    price: 1250
+                }),
+                new Upgrade({
+                    key: 'mineral_mining_2',
+                    requirements: [
+                        'cargo_minerals',
+                        'mineral_mining'
+                    ],
+                    name: 'Advanced mineral mining',
+                    description: 'Double the amount of minerals you harvest from asteroids.',
+                    icon: 'upgrades/mineralsMining.png',
+                    price: 2000
                 }),
             ]
         });

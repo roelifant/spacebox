@@ -59,6 +59,14 @@ class GameStateService {
 
     public minedMatter: Ref<number> = ref(0);
     public minedMatterLimit: Ref<number> = ref(3);
+    public minedWater: Ref<number> = ref(0);
+    public minedWaterLimit: Ref<number> = ref(3);
+    public minedMinerals: Ref<number> = ref(0);
+    public minedMineralsLimit: Ref<number> = ref(3);
+
+    public gainedMatterChunk: Ref<boolean> = ref(false);
+    public gainedWaterChunk: Ref<boolean> = ref(false);
+    public gainedMineralsChunk: Ref<boolean> = ref(false);
 
     public upgrades: Ref<Array<Upgrade>> = ref([]);
 
@@ -69,8 +77,10 @@ class GameStateService {
     public multipleHeadingOptions: Ref<boolean> = ref(false);
 
     public moneyPopAnimation: Ref<boolean> = ref(false);
+    public minedChunksMessage: Ref<null|string> = ref(null);
     public gainedMatter: Ref<boolean> = ref(false);
-    public minedChunksMessage: Ref<boolean> = ref(false);
+    public gainedWater: Ref<boolean> = ref(false);
+    public gainedMinerals: Ref<boolean> = ref(false);
 
     public upgradePercent: ComputedRef<number> = computed(() => {
         const total = this.upgrades.value.length;
@@ -123,6 +133,8 @@ class GameStateService {
         if(this.inventory.value.ammo === 0) this.inventory.value.ammo = 10;
 
         this.minedMatter.value = 0;
+        this.minedWater.value = 0;
+        this.minedMinerals.value = 0;
 
         const world = <World>Manager.scene;
 

@@ -88,6 +88,56 @@ export class Asteroid extends Sprite implements IGameObject {
 
         console.log('You mined an asteroid!');
 
+        let minedWater = false;
+        let minedMinerals = false;
+
+        if(GameStateService.hasUpgrade('ice_mining')) {
+            let chance = .33;
+            if(GameStateService.hasUpgrade('ice_mining_2')) {
+                chance = .66;
+            }
+
+            if(Math.random() <= chance) {
+                GameStateService.minedWater.value++;
+                if(GameStateService.minedWater.value >= GameStateService.minedWaterLimit.value){
+                    GameStateService.minedWater.value = 0;
+                    GameStateService.inventory.value.water++;
+                }
+
+                minedWater = true;
+            }
+        }
+
+        if(GameStateService.hasUpgrade('cargo_minerals') && GameStateService.hasUpgrade('mineral_mining')) {
+            let chance = .25;
+            if(GameStateService.hasUpgrade('mineral_mining_2')) {
+                chance = .50;
+            }
+
+            if(Math.random() <= chance) {
+                GameStateService.minedMinerals.value++;
+                if(GameStateService.minedMinerals.value >= GameStateService.minedMineralsLimit.value){
+                    GameStateService.minedMinerals.value = 0;
+                    GameStateService.inventory.value.minerals++;
+                }
+
+                minedMinerals = true;
+            }
+        }
+
+        let message = 'You mined 1 matter chunk';
+        if(minedWater) {
+            message = 'You mined 1 matter and 1 ice chunk'
+        }
+        if(minedMinerals) {
+            message = 'You mined 1 matter and 1 minerals chunk'
+        }
+        if(minedWater && minedMinerals) {
+            message = 'You mined 1 matter, 1 ice and 1 minerals chunk'
+        }
+        GameStateService.minedChunksMessage.value = message;
+        setTimeout(() => GameStateService.minedChunksMessage.value = null, 1500);
+
         if(this.field){
             this.field.removeAsteroid(this);
         }
