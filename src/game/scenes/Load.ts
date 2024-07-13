@@ -5,6 +5,7 @@ import {Manager} from "../Manager";
 import {World} from "./World";
 import {IGameObject} from "../interfaces/IGameObject";
 import LoadUI from '../services/LoadUIService';
+import SaveService from "../services/SaveService";
 
 export class Load extends Container implements IScene {
 
@@ -32,6 +33,7 @@ export class Load extends Container implements IScene {
         console.log('loading complete');
         Manager.changeScene(new World());
         Manager.loaded = true;
+        SaveService.setSave('default');
     }
 
     public update(){

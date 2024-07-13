@@ -17,6 +17,7 @@ import { Radar } from "./Radar";
 import { IHasEmitter } from "../interfaces/IHasEmitter";
 import { Explosion } from "./Explosion";
 import { Drop } from "./Drop";
+import SaveService from "../services/SaveService";
 
 export class Player extends Sprite implements IPhysics, IGameObject, IHasEmitter {
     public tags: Array<string> = ['ship', 'player'];
@@ -245,6 +246,8 @@ export class Player extends Sprite implements IPhysics, IGameObject, IHasEmitter
     }
 
     public takeOff(){
+        SaveService.save();
+
         this.landed = false;
         GameStateService.landed.value = false;
         PlanetUIService.hide();

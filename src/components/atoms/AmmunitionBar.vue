@@ -5,7 +5,6 @@ import GameStateService from "../../game/services/GameStateService";
 const ammoClipPercent: ComputedRef = computed(() => {
   const clip = Math.floor(GameStateService.inventory.value.ammo/10)*10;
   const excess = GameStateService.inventory.value.ammo - clip;
-  console.log(excess);
   return (excess / 10) * 100;
 });
 </script>
