@@ -22,7 +22,11 @@ export class Save {
             .filter(x => x.active)
             .map(x => x.key);
 
-        const planets = world.planets.map(p => ({name: p.name, discovered: p.discovered}));
+        const planets = world.planets.map(p => ({
+            name: p.name,
+            discovered: p.discovered,
+            cargo: p.cargoInventory
+        }));
 
         const minedChunks = {
             [Cargo.Matter]: GameStateService.minedMatter.value,
@@ -69,6 +73,7 @@ export class Save {
             const planet = world.planets.find(p => p.name === planetSave.name);
             if(!planet) return;
             planet.discovered = planetSave.discovered;
+            planet.cargoInventory = planetSave.cargo;
         });
 
         // inventory

@@ -108,7 +108,6 @@ export class Vector {
      */
     public toPoint(): IPoint {
         if (this.components.length < 2) throw new Error('Not enough components for point');
-        if (this.components.length > 2) return { x: this.x, y: this.y, z: this.z };
         return { x: this.x, y: this.y };
     }
 
