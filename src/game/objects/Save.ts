@@ -22,7 +22,7 @@ export class Save {
             .filter(x => x.active)
             .map(x => x.key);
 
-        const planets = world.planets.map(p => ({name: p.name}));
+        const planets = world.planets.map(p => ({name: p.name, discovered: p.discovered}));
 
         const minedChunks = {
             [Cargo.Matter]: GameStateService.minedMatter.value,
@@ -30,16 +30,16 @@ export class Save {
             [Cargo.Minerals]: GameStateService.minedMinerals.value,
         }
 
-        const lastPlanet = world.player.latestPlanet?.name ?? this.data?.lastVisitedPlanetName ?? 'Humble';
-
         const enemyCount = world.objects.filter(o => o.tags.includes('enemy')).length;
+
+        const spawnPoint = world.player.respawnPoint?.toPoint() ?? {x: 0, y: 0};
 
         const save: SaveData = {
             upgrades,
             planets,
             inventory: GameStateService.inventory.value,
             minedChunks,
-            lastVisitedPlanetName: lastPlanet,
+            spawnPoint,
             progress: GameStateService.upgradePercent.value,
             market: {},
             enemies: enemyCount
@@ -65,6 +65,11 @@ export class Save {
         });
 
         // planets
+        this.data.planets.forEach(planetSave => {
+            const planet = world.planets.find(p => p.name === planetSave.name);
+            if(!planet) return;
+            planet.discovered = planetSave.discovered;
+        });
 
         // inventory
         GameStateService.inventory.value = this.data.inventory;
@@ -75,9 +80,7 @@ export class Save {
         GameStateService.minedMinerals.value = this.data.minedChunks[Cargo.Minerals];
 
         // last visited planet (position)
-        const planet = world.planets.find(p => p.name === this.data!.lastVisitedPlanetName);
-        // TO DO: fix position
-        world.player.teleport(planet!.parallaxPosition.x, planet!.parallaxPosition.y, false);
+        world.player.teleport(this.data.spawnPoint.x, this.data.spawnPoint.y, false);
 
         // market
 

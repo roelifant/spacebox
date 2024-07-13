@@ -1,10 +1,11 @@
 import { Cargo } from "../enums/Cargo";
 import Inventory from "./Inventory";
+import { IPoint } from "./IPoint";
 
 
 export interface PlanetSaveData {
     name: string,
-    // cargo
+    discovered: boolean,
 }
 
 export interface MinedChunksSaveData {
@@ -22,7 +23,7 @@ export interface SaveData {
     planets: Array<PlanetSaveData>,
     inventory: Inventory,
     minedChunks: MinedChunksSaveData,
-    lastVisitedPlanetName: string,
+    spawnPoint: IPoint,
     progress: number,
     market: MarketSaveData,
     enemies: number

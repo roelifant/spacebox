@@ -1,3 +1,5 @@
+import { IPoint } from "../interfaces/IPoint";
+
 export class Vector {
 
     public components: Array<number>
@@ -97,6 +99,17 @@ export class Vector {
             return radian * (180 / Math.PI);
         }
         return ((Math.PI * 2) - radian) * (180 / Math.PI);
+    }
+
+    /**
+     * Output the vector as a point (x, y, z);
+     * 
+     * @returns IPoint
+     */
+    public toPoint(): IPoint {
+        if (this.components.length < 2) throw new Error('Not enough components for point');
+        if (this.components.length > 2) return { x: this.x, y: this.y, z: this.z };
+        return { x: this.x, y: this.y };
     }
 
     distance(vector: Vector): number {
