@@ -3,6 +3,7 @@ import { SaveData } from "../interfaces/SaveData";
 import { Manager } from "../Manager";
 import { World } from "../scenes/World";
 import GameStateService from "../services/GameStateService";
+import Market from "../services/Market";
 
 export class Save {
     public name: string;
@@ -38,6 +39,12 @@ export class Save {
 
         const spawnPoint = world.player.respawnPoint?.toPoint() ?? {x: 0, y: 0};
 
+        const marketData = {
+            low: Market.low,
+            high: Market.high,
+            cycles: Market.cycles
+        }
+
         const save: SaveData = {
             upgrades,
             planets,
@@ -45,7 +52,7 @@ export class Save {
             minedChunks,
             spawnPoint,
             progress: GameStateService.upgradePercent.value,
-            market: {},
+            market: marketData,
             enemies: enemyCount
         }
 
@@ -87,9 +94,17 @@ export class Save {
         // last visited planet (position)
         world.player.teleport(this.data.spawnPoint.x, this.data.spawnPoint.y, false);
 
+        console.log(this.data.market);
+
         // market
+        Market.low = this.data.market.low;
+        Market.high = this.data.market.high;
+        Market.cycles = this.data.market.cycles;
+        GameStateService.updateMarketState(Market.low, Market.high);
 
         // enemies
+
+        // asteroids
 
         console.log('loaded save from '+this.name);
     }

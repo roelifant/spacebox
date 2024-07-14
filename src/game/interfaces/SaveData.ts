@@ -17,7 +17,9 @@ export interface MinedChunksSaveData {
 }
 
 export interface MarketSaveData {
-
+    low: Cargo,
+    high: Cargo,
+    cycles: number,
 }
 
 export interface SaveData {

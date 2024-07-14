@@ -4,13 +4,13 @@ import Inventory from "../interfaces/Inventory";
 import PlanetUIService from "./PlanetUIService";
 import { World } from "../scenes/World";
 import { Manager } from "../Manager";
+import SaveService from "./SaveService";
 
 class Market {
 
     public low: Cargo;
     public high: Cargo;
-
-    private cycles: number = 0;
+    public cycles: number = 0;
 
     constructor(){
         this.low = Cargo.Water;
@@ -18,14 +18,13 @@ class Market {
     }
 
     init(){
-
         GameStateService.updateMarketState(this.low, this.high);
 
         const world = <World>Manager.scene;
 
         world.scheduler.set(() => {
             this.cycle();
-        }, 60);
+        }, this.getCycleTime());
     }
 
     getBasePrice(cargo: Cargo) {
@@ -199,14 +198,19 @@ class Market {
             low: this.low,
             high: this.high
         });
-        const seconds = (Math.floor(Math.random() * 10) + 5) * 15;
+        const seconds = this.getCycleTime();
         console.log('New cycle in '+seconds+' seconds');
 
         GameStateService.updateMarketState(this.low, this.high);
+        SaveService.save();
 
         world.scheduler.set(() => {
             this.cycle();
         }, seconds);
+    }
+
+    private getCycleTime() {
+        return (Math.floor(Math.random() * 10) + 5) * 15;
     }
 }
 
