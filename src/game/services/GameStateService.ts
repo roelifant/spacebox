@@ -50,6 +50,7 @@ class GameStateService {
 
     public gameOver: Ref<boolean> = ref(false);
     public gameOverMessage: Ref<string> = ref('');
+    public showPauseMenu: Ref<boolean> = ref(false);
 
     public marketHigh: Ref<Cargo> = ref(Cargo.Matter);
     public marketLow: Ref<Cargo> = ref(Cargo.Energy);

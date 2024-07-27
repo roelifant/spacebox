@@ -4,19 +4,19 @@
   import {Keyboard} from "./game/Keyboard";
   import {Mouse} from "./game/Mouse";
   import { onMounted } from '@vue/runtime-core';
-  import FlightUI from './components/FlightUI.vue';
-  import LoadUI from './components/LoadUI.vue';
-  import PlanetUI from './components/PlanetUI.vue';
+  import FlightUI from './components/organisms/FlightUI.vue';
+  import LoadUI from './components/organisms/LoadUI.vue';
+  import PlanetUI from './components/organisms/PlanetUI.vue';
   import GameOverUI from './components/molecules/GameOverUI.vue';
-  import MobileWarningScreen from './components/MobileWarningScreen.vue';
-
+  import MobileWarningScreen from './components/organisms/MobileWarningScreen.vue';
+  import PauseMenu from './components/organisms/PauseMenu.vue';
 
   onMounted(() => {
     Manager.init(0x000000);
 
     Keyboard.init();
     Mouse.init();
-    Manager.changeScene(new Load())
+    Manager.changeScene(new Load());
   });
 </script>
 
@@ -28,6 +28,7 @@
   <GameOverUI/>
   <PlanetUI/>
   <FlightUI/>
+  <PauseMenu/>
   <MobileWarningScreen/>
 </template>
 

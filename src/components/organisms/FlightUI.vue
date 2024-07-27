@@ -1,19 +1,19 @@
 <script setup lang="ts">
-import { Manager } from "../game/Manager";
+import { Manager } from "../../game/Manager";
 import { computed, ComputedRef, Ref, ref } from "vue";
-import GameStateService from "../game/services/GameStateService";
+import GameStateService from "../../game/services/GameStateService";
 import "vue3-circle-progress/dist/circle-progress.css";
 import CircleProgress from "vue3-circle-progress";
-import MarketTable from "./molecules/MarketTable.vue";
-import Heading from "./molecules/Heading.vue";
-import TopBars from "./molecules/TopBars.vue";
-import TopWarnings from "./molecules/TopWarnings.vue";
-import ProgressBar from "./molecules/ProgressBar.vue";
-import MoneyCounter from "./atoms/MoneyCounter.vue";
-import AmmunitionBar from "./atoms/AmmunitionBar.vue";
-import BottomMessage from "./atoms/BottomMessage.vue";
-import CargoSummary from "./molecules/CargoSummary.vue";
-import MinedChunks from "./molecules/MinedChunks.vue";
+import MarketTable from "../molecules/MarketTable.vue";
+import Heading from "../molecules/Heading.vue";
+import TopBars from "../molecules/TopBars.vue";
+import TopWarnings from "../molecules/TopWarnings.vue";
+import ProgressBar from "../molecules/ProgressBar.vue";
+import MoneyCounter from "../atoms/MoneyCounter.vue";
+import AmmunitionBar from "../atoms/AmmunitionBar.vue";
+import BottomMessage from "../atoms/BottomMessage.vue";
+import CargoSummary from "../molecules/CargoSummary.vue";
+import MinedChunks from "../molecules/MinedChunks.vue";
 
 const paused: Ref<boolean> = ref(false);
 
@@ -67,7 +67,6 @@ const miningPercent: ComputedRef = computed(() => {
           <TopWarnings/>
       </div>
       <div class="w-4/12 flex justify-end items-start py-1">
-        <ProgressBar/>
         <MoneyCounter/>
       </div>
     </div>

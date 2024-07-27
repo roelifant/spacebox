@@ -1,11 +1,12 @@
 <script setup lang="ts">
 import { Ref, computed, onMounted, ref } from 'vue';
-import GameStateService from '../game/services/GameStateService';
-import PlanetUIService from '../game/services/PlanetUIService';
-import Market from '../game/services/Market';
-import { Cargo } from '../game/enums/Cargo';
-import { Upgrade } from '../game/objects/Upgrade';
-import { title } from '../game/utils/StringManipulation';
+import GameStateService from '../../game/services/GameStateService';
+import PlanetUIService from '../../game/services/PlanetUIService';
+import Market from '../../game/services/Market';
+import { Cargo } from '../../game/enums/Cargo';
+import { Upgrade } from '../../game/objects/Upgrade';
+import { title } from '../../game/utils/StringManipulation';
+import Button from '../atoms/Button.vue';
 
 const itemInfoName: Ref<string | null> = ref(null);
 const itemInfoType: Ref<string | null> = ref(null);
@@ -346,10 +347,9 @@ const hideItemInfo = () => {
                 </div>
             </div>
             <div class="w-full flex justify-end">
-                <button @click="onTakeOffButtonClick($event)"
-                    class="border-2 hover:bg-white hover:text-black text-white uppercase text-sm font-bold px-4 py-2 mt-4 transition-colors">
+                <Button @click="onTakeOffButtonClick($event)">
                     Take off
-                </button>
+                </Button>
             </div>
         </div>
     </div>

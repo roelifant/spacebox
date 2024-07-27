@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { watch, Ref, ref } from "@vue/runtime-core";
-import LoadUIService from "../game/services/LoadUIService";
+import LoadUIService from "../../game/services/LoadUIService";
 
 const ready: Ref<boolean> = ref(false);
 const progress: Ref<number> = ref(0);

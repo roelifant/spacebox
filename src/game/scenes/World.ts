@@ -683,6 +683,7 @@ export class World extends Container implements IScene {
 
         /** keyboard events */
         Keyboard.registerEvent('KeyP', () => this.pauseTrigger());
+        Keyboard.registerEvent('Escape', () => this.pauseTrigger());
         Keyboard.registerEvent('Space', () => {
             if(this.player.canLand && !GameStateService.gameOver.value){
                 if(this.player.landed){
@@ -697,7 +698,6 @@ export class World extends Container implements IScene {
     }
 
     public update(){
-        
         if(!this.paused){
             Group.shared.update();
 
@@ -753,12 +753,23 @@ export class World extends Container implements IScene {
     }
 
     public pauseTrigger() {
+        if(GameStateService.gameOver.value) {
+            return;
+        }
+
+        if(GameStateService.landed.value) {
+            GameStateService.showPauseMenu.value = !GameStateService.showPauseMenu.value;
+            return;
+        }
+
         if(!this.paused) {
             this.freezeEmitters(true);
             this.paused = true;
+            GameStateService.showPauseMenu.value = true;
         } else {
             this.freezeEmitters(false);
             this.paused = false;
+            GameStateService.showPauseMenu.value = false;
         }
     }
 
