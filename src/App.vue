@@ -12,6 +12,7 @@
   import PauseMenu from './components/organisms/PauseMenu.vue';
   import StartScreen from './components/organisms/StartScreen.vue';
   import { ref } from 'vue';
+  import SaveService from './game/services/SaveService';
 
   const showStartScreen = ref(true);
 
@@ -21,6 +22,7 @@
     Manager.init(0x000000);
     Keyboard.init();
     Mouse.init();
+    SaveService.setSave(slot);
     showStartScreen.value = false;
     Manager.changeScene(new Load());
   }

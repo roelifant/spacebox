@@ -31,6 +31,7 @@ const onReload = () => {
             class="
                 flex flex-col justify-center
                 w-40
+                gap-4
             "
         >
             <p class="text-3xl uppercase font-bold text-center">Paused</p>
@@ -38,9 +39,9 @@ const onReload = () => {
                 Continue
             </Button>
             <Button @click="onReload">
-                Reload game
+                Return to menu
             </Button>
-            <ProgressBar class="mt-4"/>
+            <ProgressBar/>
         </div>
         
     </div>

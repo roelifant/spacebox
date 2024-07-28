@@ -347,7 +347,7 @@ const hideItemInfo = () => {
                 </div>
             </div>
             <div class="w-full flex justify-end">
-                <Button @click="onTakeOffButtonClick($event)">
+                <Button class="mt-4" @click="onTakeOffButtonClick($event)">
                     Take off
                 </Button>
             </div>

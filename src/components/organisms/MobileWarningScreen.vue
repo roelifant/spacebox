@@ -5,7 +5,7 @@
     <Transition>
     <div
         v-show="!ignored"
-        class="absolute z-40 top-0 left-0 w-full h-full bg-black flex justify-center flex-col items-center opacity-100 landscape:opacity-0 landscape:pointer-events-none transition-opacity duration-300 gap-2">
+        class="absolute z-50 top-0 left-0 w-full h-full bg-black flex justify-center flex-col items-center opacity-100 landscape:opacity-0 landscape:pointer-events-none transition-opacity duration-300 gap-2">
 
         <div class="text-white text-7xl mt-6 flex justify-between gap-5">
             <i class="fa-solid fa-keyboard w-4/12" />

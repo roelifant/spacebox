@@ -108,4 +108,8 @@ export class Save {
 
         console.log('loaded save from '+this.name);
     }
+
+    public clear() {
+        window.localStorage.removeItem(this.name);
+    }
 }

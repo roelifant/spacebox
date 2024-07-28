@@ -33,7 +33,7 @@ export class Load extends Container implements IScene {
         console.log('loading complete');
         Manager.changeScene(new World());
         Manager.loaded = true;
-        SaveService.setSave('default');
+        SaveService.load();
     }
 
     public update(){

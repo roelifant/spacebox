@@ -5,9 +5,11 @@ class SaveService {
 
     public setSave(name: string) {
         this.saveSlot = new Save(name);
+    }
 
-        if(!!this.saveSlot.data) {
-            this.saveSlot.load();
+    public load(): void {
+        if(!!this.saveSlot?.data) {
+            this.saveSlot?.load()
         }
     }
 
