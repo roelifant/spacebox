@@ -45,7 +45,6 @@ const onReload = () => {
         
     </div>
     </Transition>
-    
 </template>
 
 <style>

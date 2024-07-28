@@ -10,14 +10,20 @@
   import GameOverUI from './components/molecules/GameOverUI.vue';
   import MobileWarningScreen from './components/organisms/MobileWarningScreen.vue';
   import PauseMenu from './components/organisms/PauseMenu.vue';
+  import StartScreen from './components/organisms/StartScreen.vue';
+  import { ref } from 'vue';
 
-  onMounted(() => {
+  const showStartScreen = ref(true);
+
+  const onStart = (slot: string) => {
+    console.log(slot);
+
     Manager.init(0x000000);
-
     Keyboard.init();
     Mouse.init();
+    showStartScreen.value = false;
     Manager.changeScene(new Load());
-  });
+  }
 </script>
 
 <template>
@@ -29,6 +35,7 @@
   <PlanetUI/>
   <FlightUI/>
   <PauseMenu/>
+  <StartScreen v-if="showStartScreen" @start="onStart($event)"/>
   <MobileWarningScreen/>
 </template>
 
